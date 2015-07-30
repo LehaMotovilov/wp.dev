@@ -1,0 +1,14 @@
+# Vendor (e.g. Composer)
+vendor/*
+!vendor/.gitkeep
+composer.phar
+
+# Node Package Manager
+node_modules
+
+# WordPress Core
+/wp
+
+# Uploads
+vendor/*
+!vendor/.gitkeep

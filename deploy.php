@@ -18,7 +18,17 @@
 	// Writable dirs
 	set( 'writable_dirs', ['uploads'] );
 
-	// Default tasks
+	// Restart services
+	task( 'deploy:reload', function () {
+		run('sudo service nginx restart && sudo service php5-fpm restart');
+	} )->desc('Nginx and php5-fpm restart');
+
+	// Run DB migrations
+	task( 'deploy:migrations', function () {
+		run('cd {{release_path}} && vendor/bin/phinx migrate -e development');
+	} )->desc('DB migrations');
+
+	// Run deploy
 	task('deploy', [
 		'deploy:prepare',
 		'deploy:release',
@@ -27,20 +37,10 @@
 		'deploy:writable',
 		'deploy:vendors',
 		'deploy:symlink',
-		'cleanup',
+		'deploy:reload',
+		'deploy:migrations',
+		'cleanup'
 	])->desc('Deploy your project');
 
-	// Custom task
-	task( 'reload', function () {
-		run('sudo service nginx restart');
-		run('sudo service php5-fpm restart');
-	} )->desc('Nginx and php5-fpm restart');
-
-	// Run DB migrations
-	task( 'migrations', function () {
-		run('cd {{release_path}} && vendor/bin/phinx migrate -e development');
-	} )->desc('DB migrations');
-
-	after( 'deploy', 'reload' );
-	after( 'deploy', 'migrations' );
+	// Simple writeln
 	after( 'deploy', 'success' );

@@ -1,0 +1,27 @@
+prod:
+  host: domain.com
+  user: www
+  identity_file: ~
+  stage: production
+  deploy_path: /home/www/
+
+prod.a:
+  host: a.domain.com
+  user: www
+  identity_file: ~
+  stage: production
+  deploy_path: /home/www/
+
+beta:
+  host: beta.domain.com
+  user: www
+  password: pass
+  stage: beta
+  deploy_path: /home/www/
+
+test:
+  host: test.domain.com
+  user: www
+  password: pass
+  stage: beta
+  deploy_path: /home/www/

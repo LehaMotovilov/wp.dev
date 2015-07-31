@@ -15,6 +15,7 @@ vendor/*
 
 # Environment Variables
 /configs/.env
+/configs/deploy.yml
 
 # htaccess and other stuff
 /.htaccess

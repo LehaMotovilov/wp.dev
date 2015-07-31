@@ -29,7 +29,8 @@
 		"wordpress": "4.2.*",
 		"composer/installers": "~1.0",
 		"robmorgan/phinx": "^0.4.4",
-		"vlucas/phpdotenv": "^2.0"
+		"vlucas/phpdotenv": "^2.0",
+		"deployer/deployer": "~3.0"
 	},
 	"installer-paths": {
 		"app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],

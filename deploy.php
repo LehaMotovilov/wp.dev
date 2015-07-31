@@ -36,5 +36,11 @@
 		run('sudo service php5-fpm restart');
 	} )->desc('Nginx and php5-fpm restart');
 
+	// Run DB migrations
+	task( 'migrations', function () {
+		run('vendor/bin/phinx migrate -e development');
+	} )->desc('DB migrations');
+
 	after( 'deploy', 'reload' );
+	after( 'deploy', 'migrations' );
 	after( 'deploy', 'success' );

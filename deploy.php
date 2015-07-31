@@ -1,19 +1,40 @@
 <?php
 
-	// All Deployer recipes are based on `recipe/common.php`.
-	require( __DIR__ . '/vendor/deployer/recipe/wordpress.php' );
+	// Load default tasks
+	require( __DIR__ . '/vendor/deployer/deployer/recipe/common.php' );
 
+	// Load server's configs
 	serverList( __DIR__ . '/configs/deploy.yml' );
 
+	// Repo with project
 	set( 'repository', 'https://github.com/LehaMotovilov/wp.dev' );
 
-	task('reload:nginx', function () {
-	    run('sudo service nginx restart');
-	});
+	// Lets share uploads and vendor folders
+	set( 'shared_dirs', ['uploads', 'vendor'] );
 
-	task('reload:php', function () {
-	    run('sudo service php5-fpm restart');
-	});
+	// Main config with environment variables
+	set( 'shared_files', ['configs/.env'] );
 
-	after('deploy', 'reload:nginx');
-	// after('rollback', 'reload:php-fpm');
+	// Writable dirs
+	set( 'writable_dirs', ['uploads'] );
+
+	// Default tasks
+	task('deploy', [
+		'deploy:prepare',
+		'deploy:release',
+		'deploy:update_code',
+		'deploy:shared',
+		'deploy:writable',
+		'deploy:vendors',
+		'deploy:symlink',
+		'cleanup',
+	])->desc('Deploy your project');
+
+	// Custom task
+	task( 'reload', function () {
+		run('sudo service nginx restart');
+		run('sudo service php5-fpm restart');
+	} )->desc('Nginx and php5-fpm restart');
+
+	after( 'deploy', 'reload' );
+	after( 'deploy', 'success' );

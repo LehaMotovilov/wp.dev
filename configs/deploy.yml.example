@@ -1,27 +1,20 @@
-prod:
-  host: domain.com
-  user: www
-  identity_file: ~
+production:
+  host: site.com
+  user: sshuser
+  password: sshpassword
   stage: production
-  deploy_path: /home/www/
+  deploy_path: /usr/share/nginx/html/
 
-prod.a:
-  host: a.domain.com
-  user: www
-  identity_file: ~
-  stage: production
-  deploy_path: /home/www/
+staging:
+  host: stage.site.com
+  user: sshuser
+  password: sshpassword
+  stage: staging
+  deploy_path: /usr/share/nginx/html/
 
-beta:
-  host: beta.domain.com
-  user: www
-  password: pass
-  stage: beta
-  deploy_path: /home/www/
-
-test:
-  host: test.domain.com
-  user: www
-  password: pass
-  stage: beta
-  deploy_path: /home/www/
+development:
+  host: dev.site.com
+  user: sshuser
+  password: sshpassword
+  stage: development
+  deploy_path: /usr/share/nginx/html/

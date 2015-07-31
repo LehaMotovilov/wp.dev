@@ -12,3 +12,9 @@ node_modules
 # Uploads
 vendor/*
 !vendor/.gitkeep
+
+# Environment Variables
+/configs/.env
+
+# htaccess and other stuff
+/.htaccess

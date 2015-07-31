@@ -1,4 +1,14 @@
 <?php
+
+	/**
+	 * Dynamically load environment variables from file .env
+	 */
+	if ( file_exists( __DIR__ . '/.env' ) ) {
+		$dotenv = new Dotenv\Dotenv( __DIR__ );
+		$dotenv->load();
+		$dotenv->required(['DB_NAME', 'DB_USER', 'DB_PASSWORD', 'WP_HOME', 'WP_SITEURL']);
+	}
+
 	/**
 	 * Set up our global environment constant and load its config first
 	 * Default: development
@@ -6,7 +16,7 @@
 	define( 'WP_ENV', getenv('WP_ENV') ?: 'development' );
 	$env_config = __DIR__ . '/environments/' . WP_ENV . '.php';
 	if ( file_exists( $env_config ) ) {
-		require_once $env_config;
+		require_once( $env_config );
 	}
 
 	/**
@@ -18,9 +28,12 @@
 	/**
 	 * Custom Content Directory.
 	 */
-	define( 'CONTENT_DIR', 		'/app');
-	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . CONTENT_DIR);
-	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR);
+	define( 'CONTENT_DIR', 		'/app' );
+	define( 'UPLOADS_DIR', 		'/uploads' );
+	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . CONTENT_DIR );
+	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
+	define( 'WP_UPLOADS_DIR', 	dirname( __DIR__ ) . UPLOADS_DIR );
+	define( 'WP_UPLOADS_URL', 	WP_HOME . UPLOADS_DIR );
 
 	/**
 	 * DB settings.

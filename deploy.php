@@ -38,7 +38,7 @@
 
 	// Run DB migrations
 	task( 'migrations', function () {
-		run('vendor/bin/phinx migrate -e development');
+		run('cd {{release_path}} && vendor/bin/phinx migrate -e development');
 	} )->desc('DB migrations');
 
 	after( 'deploy', 'reload' );

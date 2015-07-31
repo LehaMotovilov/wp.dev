@@ -12,7 +12,7 @@
 	// Return
 	return [
 		"paths" => [
-			"migrations" => "application/migrations"
+			"migrations" => "migrations"
 		],
 		"environments" => [
 			"default_migration_table" => getenv( 'DB_PREFIX' ) . "phinxlog",

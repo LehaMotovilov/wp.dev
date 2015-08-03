@@ -7,6 +7,7 @@ Another modern WordPress stack.
 * For custom DB migrations - [Phinx](https://phinx.org/)
 * Dependencies and autoload - [Composer](https://getcomposer.org/)
 * For environment variables - [phpdotenv](https://github.com/vlucas/phpdotenv)
+* WP CLI support - [WP CLI](http://wp-cli.org/)
 
 ## How to install?
 

@@ -17,6 +17,7 @@
 	/**
 	 * Debug mode
 	 */
+	define( 'WP_LOCAL_DEV', 	true );
 	define( 'WP_DEBUG',         true );
 	define( 'WP_DEBUG_LOG',     false );
 	define( 'WP_DEBUG_DISPLAY', true );
@@ -24,7 +25,7 @@
 	define( 'SAVEQUERIES',      true );
 
 	/**
-	 *Multisite Settings.
+	 * Multisite Settings.
 	 */
 	define( 'WP_ALLOW_MULTISITE', 	false );
 

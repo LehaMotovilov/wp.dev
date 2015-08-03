@@ -9,6 +9,7 @@
  */
 
 add_filter( 'upload_dir', function( $upload_dir ) {
+	return $upload_dir;
 	// Check if we forgot define uploads path in wp-config.php
 	if ( !defined( 'WP_UPLOADS_DIR' ) || !defined( 'WP_UPLOADS_URL' ) ) {
 		return $upload_dir;

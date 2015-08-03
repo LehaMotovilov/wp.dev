@@ -33,12 +33,12 @@
 		"deployer/deployer": "~3.0"
 	},
 	"installer-paths": {
-		"app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
-		"app/plugins/{$name}/": ["type:wordpress-plugin"],
-		"app/themes/{$name}/": ["type:wordpress-theme"]
+		"web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+		"web/app/plugins/{$name}/": ["type:wordpress-plugin"],
+		"web/app/themes/{$name}/": ["type:wordpress-theme"]
 	},
 	"extra": {
-		"webroot-dir": "wp",
+		"webroot-dir": "web/wp",
 		"webroot-package": "wordpress"
 	}
 }

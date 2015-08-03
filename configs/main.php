@@ -29,11 +29,10 @@
 	 * Custom Content Directory.
 	 */
 	define( 'CONTENT_DIR', 		'/app' );
-	define( 'UPLOADS_DIR', 		'/uploads' );
-	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . CONTENT_DIR );
+	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
 	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
-	define( 'WP_UPLOADS_DIR', 	dirname( __DIR__ ) . UPLOADS_DIR );
-	define( 'WP_UPLOADS_URL', 	WP_HOME . UPLOADS_DIR );
+	// define( 'WP_UPLOADS_DIR', 	dirname( __DIR__ ) . UPLOADS_DIR );
+	// define( 'WP_UPLOADS_URL', 	WP_HOME . UPLOADS_DIR );
 
 	/**
 	 * DB settings.
@@ -83,5 +82,5 @@
 	 * Bootstrap WordPress.
 	 */
 	if ( !defined( 'ABSPATH' ) ) {
-		define( 'ABSPATH', dirname( __DIR__ ) . '/wp/' );
+		define( 'ABSPATH', dirname( __DIR__ ) . '/web/wp/' );
 	}

@@ -7,11 +7,11 @@ composer.phar
 node_modules
 
 # WordPress Core
-/wp
+/web/wp
 
 # Uploads
-vendor/*
-!vendor/.gitkeep
+web/app/uploads/*
+!web/app/uploads/.gitkeep
 
 # Environment Variables
 /configs/.env

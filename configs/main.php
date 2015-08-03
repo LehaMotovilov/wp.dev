@@ -29,13 +29,8 @@
 	 * Custom Content Directory.
 	 */
 	define( 'CONTENT_DIR', 		'/app' );
-	if ( WP_ENV !== 'development' ) {
-		define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/current/web' . CONTENT_DIR );
-		define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
-	} else {
-		define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
-		define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
-	}
+	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
+	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
 
 	/**
 	 * DB settings.

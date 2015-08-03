@@ -18,4 +18,4 @@ web/app/uploads/*
 /configs/deploy.yml
 
 # htaccess and other stuff
-/.htaccess
+.htaccess

@@ -5,7 +5,9 @@ Another modern WordPress stack.
 
 * For deploy - [Deployer](http://deployer.org/)
 * For custom DB migrations - [Phinx](https://phinx.org/)
-* Dependencies and autoload - [Composer](https://getcomposer.org/)
+* PHP Dependencies and autoload - [Composer](https://getcomposer.org/)
+* JS Manager - [Bower](http://bower.io/)
+* JS Task Manager - [Grunt](http://gruntjs.com/)
 * For environment variables - [phpdotenv](https://github.com/vlucas/phpdotenv)
 * WP CLI support - [WP CLI](http://wp-cli.org/)
 

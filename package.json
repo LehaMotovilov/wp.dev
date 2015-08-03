@@ -1,0 +1,14 @@
+{
+  "name": "wp-dev",
+  "version": "1.0.0",
+  "author": "Aleksey Motovilov <lehaqs@gmail.com>",
+  "description": "Another modern WordPress stack.",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.5"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "bower": "^1.4.1"
+  }
+}

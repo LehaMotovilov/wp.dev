@@ -19,3 +19,4 @@ web/app/uploads/*
 
 # htaccess and other stuff
 .htaccess
+.DS_Store

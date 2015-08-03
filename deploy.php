@@ -10,13 +10,13 @@
 	set( 'repository', 'https://github.com/LehaMotovilov/wp.dev' );
 
 	// Lets share uploads and vendor folders
-	set( 'shared_dirs', ['uploads', 'vendor'] );
+	set( 'shared_dirs', ['web/app/uploads', 'vendor'] );
 
 	// Main config with environment variables
 	set( 'shared_files', ['configs/.env'] );
 
 	// Writable dirs
-	set( 'writable_dirs', ['uploads'] );
+	set( 'writable_dirs', ['web/app/uploads'] );
 
 	// Restart services
 	task( 'deploy:reload', function () {

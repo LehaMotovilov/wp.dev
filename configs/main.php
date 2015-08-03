@@ -29,10 +29,13 @@
 	 * Custom Content Directory.
 	 */
 	define( 'CONTENT_DIR', 		'/app' );
-	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
-	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
-	// define( 'WP_UPLOADS_DIR', 	dirname( __DIR__ ) . UPLOADS_DIR );
-	// define( 'WP_UPLOADS_URL', 	WP_HOME . UPLOADS_DIR );
+	if ( WP_ENV !== 'development' ) {
+		define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/current/web' . CONTENT_DIR );
+		define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
+	} else {
+		define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
+		define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
+	}
 
 	/**
 	 * DB settings.

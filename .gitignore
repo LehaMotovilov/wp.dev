@@ -20,3 +20,11 @@ web/app/uploads/*
 # htaccess and other stuff
 .htaccess
 .DS_Store
+
+# WordPress Plugns
+/web/app/plugins/query-monitor
+/web/app/db.php
+
+# Assets
+web/app/themes/leham/assets/vendor/
+!web/app/themes/leham/assets/vendor/.gitkeep

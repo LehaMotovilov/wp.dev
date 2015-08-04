@@ -1,7 +1,14 @@
 <?php
 namespace LM\Modules\Debug;
+
 use LM\Core\Module;
 
+/**
+ * Display simple page with Debug Information.
+ *
+ * @author LehaMotovilov <lehaqs@gmail.com>
+ * @version 1.0
+ */
 class Debug extends Module {
 
 	// All tabs for Debug module.
@@ -9,27 +16,31 @@ class Debug extends Module {
 
 	/**
 	 * Init tabs and setup menu.
+	 * @param array $config
 	 */
-	public function __construct() {
+	public function __construct( $config ) {
+		// Setup Class properties.
+		parent::init( $config );
+
 		// Setup all tabs with debug info.
-		$this->tabs = array(
+		$this->tabs = [
 			'wordpress' => __( 'WordPress', 'lm-framework' ),
 			'php' => __( 'PHP', 'lm-framework' ),
 			'images' => __( 'Images', 'lm-framework' ),
 			'mysql' => __( 'MySQL', 'lm-framework' ),
 			'emails' => __( 'Emails', 'lm-framework' )
-		);
+		];
 
 		// Add menu page
-		add_action( 'admin_menu', array( $this, 'add_menu' ) );
+		add_action( 'admin_menu', [ $this, 'add_menu' ] );
 
 		// Add styles
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_style' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_script' ) );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_style' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_script' ] );
 
 		// Add Ajax Handler
-		add_action( 'wp_ajax_nopriv_lm_send_test_mail', array( $this, 'lm_send_test_mail_callback' ) );
-		add_action( 'wp_ajax_lm_send_test_mail', array( $this, 'lm_send_test_mail_callback' ) );
+		add_action( 'wp_ajax_nopriv_lm_send_test_mail', [ $this, 'lm_send_test_mail_callback' ] );
+		add_action( 'wp_ajax_lm_send_test_mail', [ $this, 'lm_send_test_mail_callback' ] );
 	}
 
 	/**
@@ -59,7 +70,7 @@ class Debug extends Module {
 			wp_register_script(
 				'lm-framework-module-debug', // Script id
 				LM_MODULES_BASE_URL . '/Debug/assets/js/debug-info.js', // Script url
-				array( 'jquery' ), // Dependency
+				[ 'jquery' ], // Dependency
 				'1.0' // Version
 			);
 
@@ -67,10 +78,10 @@ class Debug extends Module {
 			wp_localize_script(
 				'lm-framework-module-debug',
 				'ajax_object',
-				array(
+				[
 					'ajax_nonce' => wp_create_nonce( 'send_email_secure' ),
 					'ajax_url' => admin_url( 'admin-ajax.php' )
-				)
+				]
 			);
 
 			// Load script
@@ -88,7 +99,7 @@ class Debug extends Module {
 			__( 'Debug Info', 'lm-framework' ), // Menu title
 			'manage_options', // Capability
 			'debug_info', // Menu slug
-			array( $this, 'display_debug_page' ) // Callback function
+			[ $this, 'display_debug_page' ] // Callback function
 		);
 	}
 
@@ -112,6 +123,7 @@ class Debug extends Module {
 
 	/**
 	 * Ajax Handler for send test mail.
+	 * @return mixed
 	 */
 	public function lm_send_test_mail_callback() {
 		// Check security field.
@@ -129,7 +141,7 @@ class Debug extends Module {
 		$subject_wp 	= __( 'Test wp_mail', 'lm-framework' );
 		$subject_php 	= __( 'Test php_mail', 'lm-framework' );
 		$message 		= sprintf( __( 'Test message date: %s', 'lm-framework' ), date( 'Y-m-d' ) );
-		$results 		= array();
+		$results 		= [];
 
 		// Send test email via WP Api
 		if ( wp_mail( $email_to, $subject_wp, $message ) ) {

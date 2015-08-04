@@ -6,15 +6,21 @@ namespace LM\Core;
  */
 class Module {
 
-	public function __construct( $config ) {
+	public function init( $config ) {
 		$this->set_properties( $config );
 	}
 
 	/**
 	 * Set properties from config.
 	 * Check if magic setter method exist -> use setParam( $value )
+	 * @param array $config
 	 */
 	private function set_properties( $config ) {
+		// If empty config?
+		if ( empty( $config ) ) {
+			return;
+		}
+
 		// Setup default properties.
 		foreach ( $config as $param => $value ) {
 			if ( property_exists( $this, $param ) ) {

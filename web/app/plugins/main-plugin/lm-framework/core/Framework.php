@@ -71,7 +71,7 @@ class Framework {
 
 		unset( $config['class'] );
 
-		return new $className($config);
+		return new $className( $config );
 	}
 
 }

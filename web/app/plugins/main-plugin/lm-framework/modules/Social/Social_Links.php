@@ -1,9 +1,22 @@
 <?php
 namespace LM\Modules\Social;
+
 use LM\Core\Module;
 
 /**
- * Add settings page with social links.
+ * Display settings page for Social Links
+ *
+ * Example Config:
+ * 'social' => [
+ *		'class' => 'LM\Modules\Social\Social_Links',
+ *		'social_networks' => [ 'facebook', 'google_plus', 'vk' ]
+ * ]
+ *
+ * Example Using:
+ * $social_links = get_option('lm_social_links');
+ *
+ * @author LehaMotovilov <lehaqs@gmail.com>
+ * @version 1.0
  */
 class Social_Links extends Module {
 
@@ -20,38 +33,22 @@ class Social_Links extends Module {
 	/**
 	 * Hold default social networks.
 	 */
-	public $social_default_array = array(
+	public $social_default_array = [
 		'facebook', 'youtube'
-	);
-
-	public function init() {
-
-		parent::init();
-
-		// Init admin settings page.
-		add_action( 'admin_menu', array( $this, 'add_social_page' ) );
-		add_action( 'admin_init', array( $this, 'page_init' ) );
-
-		// Allow to init with empty social networks.
-		// if ( empty( $social_networks ) ) {
-		// 	// Set social networks from config array.
-		// 	$this->social_networks = $this->social_default_array;
-		// }
-	}
+	];
 
 	/**
-	 * Setup admin menu and save social networks config.
-	 *
-	 * @param array $social_networks Contains social links config.
+	 * Init method.
+	 * @param array $config
 	 */
-	// public function __construct( $social_networks ) {
+	public function __construct( $config ) {
+		// Setup Class properties.
+		parent::init( $config );
 
-	// 	// Let's setup default properties.
-	// 	parent::__construct( $social_networks );
-
-
-
-	// }
+		// Init admin settings page.
+		add_action( 'admin_menu', [ $this, 'add_social_page' ] );
+		add_action( 'admin_init', [ $this, 'page_init' ] );
+	}
 
 	/**
 	 * Add setings page.
@@ -63,7 +60,7 @@ class Social_Links extends Module {
 			__( 'Social Links', 'lm-framework' ), // Menu title
 			'manage_options', // Capability
 			'social-links', // Menu slug
-			array( $this, 'render_admin_page' ) // Callback function
+			[ $this, 'render_admin_page' ] // Callback function
 		);
 	}
 
@@ -95,7 +92,7 @@ class Social_Links extends Module {
 		register_setting(
 			'social_links_option_group', // Option group
 			'lm_social_links', // Option name
-			array( $this, 'sanitize' ) // Sanitize
+			[ $this, 'sanitize' ] // Sanitize
 		);
 
 		add_settings_section(
@@ -108,15 +105,15 @@ class Social_Links extends Module {
 		// Let's register field with callback func foreach social network
 		foreach ( $this->social_networks as $social_link ) {
 			// Setup args for display callback function.
-			$args = array(
+			$args = [
 				'id' => $social_link,
 				'label' => ucfirst( $social_link )
-			);
+			];
 
 			add_settings_field(
 				$social_link, // Id
 				ucfirst( str_replace( '_', ' ', $social_link ) ), // Title
-				array( $this, 'display_callback' ), // Callback function
+				[ $this, 'display_callback' ], // Callback function
 				'social-links', // Page on admin area
 				'setting_section_social', // Setting section
 				$args // Args for display function

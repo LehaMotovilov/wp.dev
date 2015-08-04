@@ -2,6 +2,7 @@
 vendor/*
 !vendor/.gitkeep
 composer.phar
+npm-debug.log
 
 # Node Package Manager
 node_modules

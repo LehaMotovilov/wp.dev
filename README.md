@@ -18,5 +18,7 @@ Another modern WordPress stack.
 * ```composer install```
 * ```mv configs/.env.example configs/.env && nano configs/.env```
 * ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
+* ```npm install```
+* ```bower install```
 
 Enjoy :)

@@ -40,5 +40,12 @@
 	"extra": {
 		"webroot-dir": "web/wp",
 		"webroot-package": "wordpress"
+	},
+	"autoload": {
+		"psr-4": {
+			"LM\\Site\\": "web/app/plugins/main-plugin/lm-site/core/",
+			"LM\\Core\\": "web/app/plugins/main-plugin/lm-framework/core/",
+			"LM\\Modules\\": "web/app/plugins/main-plugin/lm-framework/modules/"
+		}
 	}
 }

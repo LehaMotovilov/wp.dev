@@ -25,7 +25,7 @@
 	define( 'SAVEQUERIES',      false );
 
 	/**
-	 *Multisite Settings.
+	 * Multisite Settings.
 	 */
 	define( 'WP_ALLOW_MULTISITE', 	false );
 

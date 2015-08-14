@@ -19,6 +19,7 @@ web/app/uploads/*
 /configs/deploy.yml
 
 # htaccess and other stuff
+.idea/
 .htaccess
 .DS_Store
 

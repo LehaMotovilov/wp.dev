@@ -3,4 +3,4 @@
 /**
  * Load themplate functionality.
  */
-require get_template_directory() . '/includes/theme-init.php';
+require_once( get_template_directory() . '/includes/theme-init.php');

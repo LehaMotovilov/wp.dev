@@ -1,0 +1,3 @@
+<?php
+
+// Template Functions here...

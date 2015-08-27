@@ -91,7 +91,7 @@ class LM_API_Main {
 	 * - validate request
 	 * - run correct action from needed controller
 	 * - return beauty response
-	 * @param $request array Array with request allowed vars.
+	 * @param array $request Array with request allowed vars.
 	 */
 	public function process_request( $request ) {
 		include_once( dirname( __FILE__ ) . '/class-api-helper.php' );
@@ -115,7 +115,7 @@ class LM_API_Main {
 
 	/**
 	 * Run dynamically action from controller.
-	 * @param $request array
+	 * @param array $request
 	 * @return array|object Array of results or WP_Error object
 	 */
 	private function run_action( $request ) {

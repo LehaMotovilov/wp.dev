@@ -7,7 +7,7 @@ class LM_API_Response {
 
 	/**
 	 * Send response.
-	 * @param @response array Response data
+	 * @param array $response Response data
 	 */
 	public static function response( $response ) {
 		// Mitigate possible JSONP Flash attacks
@@ -22,8 +22,7 @@ class LM_API_Response {
 	}
 
 	/**
-	 * Send a HTTP header
-	 *
+	 * Send a HTTP header.
 	 * @param string $key Header key
 	 * @param string $value Header value
 	 */

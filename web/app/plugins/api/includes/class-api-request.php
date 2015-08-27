@@ -42,7 +42,7 @@ class LM_API_Request {
 
 	/**
 	 * First check for request.
-	 * @param $request array
+	 * @param array $request
 	 * @return bool
 	 */
 	private static function check_params( $request ) {
@@ -55,7 +55,7 @@ class LM_API_Request {
 
 	/**
 	 * Check API version.
-	 * @param $request array
+	 * @param array $request
 	 * @return bool
 	 */
 	private static function check_version( $request ) {
@@ -74,7 +74,7 @@ class LM_API_Request {
 
 	/**
 	 * Check controller.
-	 * @param $request array
+	 * @param array $request
 	 * @return bool
 	 */
 	private static function check_controller( $request ) {
@@ -91,7 +91,7 @@ class LM_API_Request {
 
 	/**
 	 * Check controller's action.
-	 * @param $request array
+	 * @param array $request
 	 * @return bool
 	 */
 	private static function check_action( $request ) {

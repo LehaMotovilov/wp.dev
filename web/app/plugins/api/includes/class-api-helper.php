@@ -7,7 +7,7 @@ class LM_API_Helper {
 
 	/**
 	 * Simple wrapper for file_exist()
-	 * @param $controller string Controller's filename
+	 * @param string $controller Controller's filename
 	 * @return bool
 	 */
 	public static function controller_exist( $controller ) {
@@ -16,7 +16,7 @@ class LM_API_Helper {
 
 	/**
 	 * Simple wrapper for include_once()
-	 * @param @controller string Controller's filename
+	 * @param string $controller Controller's filename
 	 */
 	public static function load_controller( $controller ) {
 		include_once( dirname( __FILE__ ) . '/controllers/' . $controller . '.php' );

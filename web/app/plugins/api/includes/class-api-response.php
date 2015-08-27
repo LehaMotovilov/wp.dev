@@ -5,6 +5,10 @@
  */
 class LM_API_Response {
 
+	/**
+	 * Send response.
+	 * @param @response array Response data
+	 */
 	public static function response( $response ) {
 		// Mitigate possible JSONP Flash attacks
 		// http://miki.it/blog/2014/7/8/abusing-jsonp-with-rosetta-flash/

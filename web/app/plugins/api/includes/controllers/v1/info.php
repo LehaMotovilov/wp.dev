@@ -5,7 +5,7 @@
  */
 class Info {
 
-	public function index() {
+	public function get_index() {
 		return [
 			'version' => LM_API_VERSION
 		];

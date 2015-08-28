@@ -98,8 +98,8 @@ class LM_API_Main {
 		include_once( dirname( __FILE__ ) . '/class-api-request.php' );
 		include_once( dirname( __FILE__ ) . '/class-api-response.php' );
 
-		$request = LM_API_Request::validate_request( $request );
-
+		// Create new request object with validation on object creation.
+		$request = new LM_API_Request( $request );
 		if ( ! is_wp_error( $request ) ) {
 			$response['status'] = '';
 			$response['data'] = $this->run_action( $request );
@@ -115,11 +115,11 @@ class LM_API_Main {
 
 	/**
 	 * Run dynamically action from controller.
-	 * @param array $request
+	 * @param object $request
 	 * @return array|object Array of results or WP_Error object
 	 */
 	private function run_action( $request ) {
-		return call_user_func( [ucfirst( $request['controller'] ), $request['action']] );
+		return call_user_func( [ ucfirst( $request->controller ), $request->resolved_action ] );
 	}
 
 }

@@ -1,7 +1,7 @@
-<?php	
+<?php
 
 /**
- * 
+ *
  */
 class Taxonomies {
 

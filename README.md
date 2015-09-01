@@ -1,5 +1,5 @@
 ## wp.dev
-Another modern WordPress stack.
+Another modern WordPress stack. Enjoy :)
 
 ## Some features:
 
@@ -21,4 +21,7 @@ Another modern WordPress stack.
 * ```npm install```
 * ```bower install```
 
-Enjoy :)
+## How to use?
+
+* Migration example ```vendor/bin/phinx migrate -e development```
+* Deploy example ```dep deploy production```

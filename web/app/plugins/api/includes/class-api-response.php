@@ -20,6 +20,7 @@ class LM_API_Response {
 	}
 
 	public function set_error_message( $message ) {
+		$this->status = 'error';
 		$this->error_message = $message;
 	}
 

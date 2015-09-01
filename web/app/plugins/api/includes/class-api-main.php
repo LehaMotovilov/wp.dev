@@ -102,14 +102,21 @@ class LM_API_Main {
 
 		$response = new LM_API_Response();
 
-		if ( ! is_wp_error( $validate = $request->validate() ) ) {
-			$response->set_status( 'success' );
-			$response->set_response_data( $this->run_action( $request ) );
-		} else {
-			$response->set_status( 'error' );
+		// If request validation error
+		if ( is_wp_error( $validate = $request->validate() ) ) {
 			$response->set_error_message( $validate->get_error_message() );
+			$response->send();
 		}
 
+		// If running action error
+		if ( is_wp_error( $data = $this->run_action( $request ) ) ) {
+			$response->set_error_message( $data->get_error_message() );
+			$response->send();
+		}
+
+		// All done without errors
+		$response->set_status( 'success' );
+		$response->set_response_data( $data );
 		$response->send();
 	}
 
@@ -119,7 +126,10 @@ class LM_API_Main {
 	 * @return array|object Array of results or WP_Error object
 	 */
 	private function run_action( $request ) {
-		return call_user_func( [ ucfirst( $request->controller ), $request->resolved_action ] );
+		$class_name = ucfirst( $request->controller );
+		$class = new $class_name;
+
+		return call_user_func( [ $class, $request->resolved_action ] );
 	}
 
 }

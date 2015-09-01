@@ -30,6 +30,11 @@ class LM_API_Request {
 	 * @return object|array WP_Error if validation failed or array if all ok.
 	 */
 	public function validate() {
+		// If incorrect request_type?
+		if ( ! $this->check_request_method() ) {
+			return new WP_Error( 'error', 'Check request\'s type.' );
+		}
+
 		// If incorrect API version?
 		if ( ! $this->check_version() ) {
 			return new WP_Error( 'error', 'Check API version.' );
@@ -43,11 +48,6 @@ class LM_API_Request {
 		// If incorrect action?
 		if ( ! $this->check_action() ) {
 			return new WP_Error( 'error', 'Check request\'s action.' );
-		}
-
-		// If incorrect request_type?
-		if ( ! $this->check_request_method() ) {
-			return new WP_Error( 'error', 'Check request\'s type.' );
 		}
 
 		// Errors not found.
@@ -117,7 +117,7 @@ class LM_API_Request {
 	}
 
 	/**
-	 * Check controller's action.
+	 * Check controller's action exist and public.
 	 * @param array $request
 	 * @return bool
 	 */
@@ -126,8 +126,15 @@ class LM_API_Request {
 			return false;
 		}
 
+		// Check is method exist.
 		LM_API_Helper::load_controller( $this->controller, $this->api_ver );
 		if ( ! method_exists( ucfirst( $this->controller ), $this->resolved_action ) ) {
+			return false;
+		}
+
+		// Check is method is public.
+		$reflection = new ReflectionMethod( ucfirst( $this->controller ), $this->resolved_action );
+		if ( ! $reflection->isPublic() ) {
 			return false;
 		}
 

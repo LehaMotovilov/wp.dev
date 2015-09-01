@@ -15,14 +15,10 @@ class LM_API_Request {
 
 	/**
 	 * Class constructor.
+	 * @param array $request
+	 * @return object
 	 */
 	public function __construct( $request ) {
-		// Do some validation
-		$validate = $this->validate_request( $request );
-		if ( is_wp_error( $validate ) ) {
-			return $validate;
-		}
-
 		// After validation we can setup class object
 		$this->setup_object( $request );
 
@@ -31,27 +27,21 @@ class LM_API_Request {
 
 	/**
 	 * Validate request.
-	 * @param array $request Data from $_REQUEST
 	 * @return object|array WP_Error if validation failed or array if all ok.
 	 */
-	public function validate_request( $request ) {
-		// If incorrect request?
-		if ( ! $this->check_params( $request ) ) {
-			return new WP_Error( 'error', 'Check API request.' );
-		}
-
+	public function validate() {
 		// If incorrect API version?
-		if ( ! $this->check_version( $request ) ) {
+		if ( ! $this->check_version() ) {
 			return new WP_Error( 'error', 'Check API version.' );
 		}
 
 		// If incorrect controller?
-		if ( ! $this->check_controller( $request ) ) {
+		if ( ! $this->check_controller() ) {
 			return new WP_Error( 'error', 'Check request\'s controller.' );
 		}
 
 		// If incorrect action?
-		if ( ! $this->check_action( $request ) ) {
+		if ( ! $this->check_action() ) {
 			return new WP_Error( 'error', 'Check request\'s action.' );
 		}
 
@@ -80,21 +70,14 @@ class LM_API_Request {
 		$this->resolved_action = $this->resolve_action( $this->action );
 	}
 
+	/**
+	 * Format action based on request method.
+	 * So action with GET will be get_someaction
+	 * @param string $action
+	 * @return string
+	 */
 	private function resolve_action( $action ) {
 		return strtolower( $_SERVER['REQUEST_METHOD'] ) . '_' . $action;
-	}
-
-	/**
-	 * First check for request.
-	 * @param array $request
-	 * @return bool
-	 */
-	private function check_params( $request ) {
-		if ( ! is_array( $request ) ) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
@@ -102,12 +85,12 @@ class LM_API_Request {
 	 * @param array $request
 	 * @return bool
 	 */
-	private function check_version( $request ) {
-		if ( ! isset( $request['api'] ) || empty( $request['api'] ) ) {
+	private function check_version() {
+		if ( ! isset( $this->api_ver ) || empty( $this->api_ver ) ) {
 			return false;
 		}
 
-		$ver = LM_API_Helper::get_api_version( $request['api'] );
+		$ver = LM_API_Helper::get_api_version( $this->api_ver );
 		$api_ver = absint( LM_API_VERSION );
 		if ( $ver !== $api_ver ) {
 			return false;
@@ -121,12 +104,12 @@ class LM_API_Request {
 	 * @param array $request
 	 * @return bool
 	 */
-	private function check_controller( $request ) {
-		if ( ! isset( $request['controller'] ) || empty( $request['controller'] ) ) {
+	private function check_controller() {
+		if ( ! isset( $this->controller ) || empty( $this->controller ) ) {
 			return false;
 		}
 
-		if ( ! LM_API_Helper::controller_exist( $request ) ) {
+		if ( ! LM_API_Helper::controller_exist( $this->controller, $this->api_ver ) ) {
 			return false;
 		}
 
@@ -138,13 +121,13 @@ class LM_API_Request {
 	 * @param array $request
 	 * @return bool
 	 */
-	private function check_action( $request ) {
-		if ( ! isset( $request['action'] ) || empty( $request['action'] ) ) {
+	private function check_action() {
+		if ( ! isset( $this->resolved_action ) || empty( $this->resolved_action ) ) {
 			return false;
 		}
 
-		LM_API_Helper::load_controller( $request );
-		if ( ! method_exists( ucfirst( $request['controller'] ), $this->resolve_action( $request['action'] ) ) ) {
+		LM_API_Helper::load_controller( $this->controller, $this->api_ver );
+		if ( ! method_exists( ucfirst( $this->controller ), $this->resolved_action ) ) {
 			return false;
 		}
 

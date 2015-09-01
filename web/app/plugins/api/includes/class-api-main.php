@@ -98,19 +98,19 @@ class LM_API_Main {
 		include_once( dirname( __FILE__ ) . '/class-api-request.php' );
 		include_once( dirname( __FILE__ ) . '/class-api-response.php' );
 
-		// Create new request object with validation on object creation.
 		$request = new LM_API_Request( $request );
-		if ( ! is_wp_error( $request ) ) {
-			$response['status'] = '';
-			$response['data'] = $this->run_action( $request );
+
+		$response = new LM_API_Response();
+
+		if ( ! is_wp_error( $validate = $request->validate() ) ) {
+			$response->set_status( 'success' );
+			$response->set_response_data( $this->run_action( $request ) );
 		} else {
-			$response = [
-				'status' => 'error',
-				'error_message' => $request->get_error_message()
-			];
+			$response->set_status( 'error' );
+			$response->set_error_message( $validate->get_error_message() );
 		}
 
-		LM_API_Response::response( $response );
+		$response->send();
 	}
 
 	/**

@@ -13,6 +13,12 @@ class Posts {
 		];
 	}
 
+	public function get_test() {
+		return [
+			'item' => 'yo!'
+		];
+	}
+
 	public function post_index() {
 		return [
 			'item' => 'yo!',
@@ -22,12 +28,6 @@ class Posts {
 	}
 
 	public function post_test() {
-		return [
-			'item' => 'yo!'
-		];
-	}
-
-	public function get_test() {
 		return [
 			'item' => 'yo!'
 		];

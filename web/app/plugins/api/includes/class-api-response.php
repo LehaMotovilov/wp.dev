@@ -5,34 +5,35 @@
  */
 class LM_API_Response {
 
-	/**
-	 * Send response.
-	 * @param array $response Response data
-	 */
-	public static function response( $response ) {
-		// Mitigate possible JSONP Flash attacks
-		// http://miki.it/blog/2014/7/8/abusing-jsonp-with-rosetta-flash/
-		self::send_header( 'X-Content-Type-Options', 'nosniff' );
+	public $response_type = 'json';
 
-		if ( $response['status'] == 'error' ) {
-			wp_send_json_error( $response['error_message'] );
-		} else {
-			wp_send_json_success( $response['data'] );
-		}
+	private $status;
+	private $response_data;
+	private $error_message;
+
+	public function set_status( $status ) {
+		$this->status = $status;
+	}
+
+	public function set_response_data( $data ) {
+		$this->response_data = $data;
+	}
+
+	public function set_error_message( $message ) {
+		$this->error_message = $message;
 	}
 
 	/**
-	 * Send a HTTP header.
-	 * @param string $key Header key
-	 * @param string $value Header value
+	 * @todo json/xml
 	 */
-	protected function send_header( $key, $value ) {
-		// Sanitize as per RFC2616 (Section 4.2):
-		//   Any LWS that occurs between field-content MAY be replaced with a
-		//   single SP before interpreting the field value or forwarding the
-		//   message downstream.
-		$value = preg_replace( '/\s+/', ' ', $value );
-		header( sprintf( '%s: %s', $key, $value ) );
+	public function send() {
+		if ( $this->response_type == 'json' ) {
+			if ( $this->status == 'error' ) {
+				wp_send_json_error( $this->error_message );
+			} else {
+				wp_send_json_success( $this->response_data );
+			}
+		}
 	}
 
 }

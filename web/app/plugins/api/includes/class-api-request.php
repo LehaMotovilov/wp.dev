@@ -21,8 +21,6 @@ class LM_API_Request {
 	public function __construct( $request ) {
 		// After validation we can setup class object
 		$this->setup_object( $request );
-
-		return self;
 	}
 
 	/**
@@ -50,8 +48,13 @@ class LM_API_Request {
 			return new WP_Error( 'error', 'Check request\'s action.' );
 		}
 
+		// If method POST and it's empty? Etc.
+		if ( ! $this->check_request_params() ) {
+			return new WP_Error( 'error', 'Check request\'s params.' );
+		}
+
 		// Errors not found.
-		return $request;
+		return true;
 	}
 
 	/**
@@ -148,6 +151,20 @@ class LM_API_Request {
 	private function check_request_method() {
 		if ( empty( $_SERVER['REQUEST_METHOD'] ) || ! in_array( $_SERVER['REQUEST_METHOD'], $this->_allowed_request_types ) ) {
 			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check request params.
+	 * @return bool
+	 */
+	private function check_request_params() {
+		if ( $this->request_method == 'post' ) {
+			if ( empty( $_POST ) ) {
+				return false;
+			}
 		}
 
 		return true;

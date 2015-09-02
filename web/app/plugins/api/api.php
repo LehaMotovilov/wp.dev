@@ -10,6 +10,12 @@
  * Yeap! I know about WP REST API (WP API). :-)
  * But I need my own API...
  *
+ * Rest Methods
+ *  - POST		Create
+ *  - GET		Read
+ *  - PUT	 	Update
+ *  - DELETE	Delete
+ *
  * Examples:
  * 1. GET http://wp.dev/api/v1/posts/
  * 		will be used /controllers/v1/posts/ action get_index

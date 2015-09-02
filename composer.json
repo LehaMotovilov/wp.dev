@@ -1,6 +1,7 @@
 {
 	"name": "alekseymotovilov/wp",
 	"description": "Another modern WordPress stack.",
+	"license": "MIT",
 	"authors": [
 		{
 			"name": "Aleksey Motovilov",
@@ -26,20 +27,21 @@
 	],
 	"require": {
 		"php": ">=5.5.0",
-		"wordpress": "4.3.*",
+		"wordpress": "4.*",
 		"composer/installers": "~1.0",
+		"symfony/console": "2.*",
 		"robmorgan/phinx": "^0.4.4",
 		"vlucas/phpdotenv": "^2.0",
 		"deployer/deployer": "~3.0"
 	},
-	"installer-paths": {
-		"web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
-		"web/app/plugins/{$name}/": ["type:wordpress-plugin"],
-		"web/app/themes/{$name}/": ["type:wordpress-theme"]
-	},
 	"extra": {
 		"webroot-dir": "web/wp",
-		"webroot-package": "wordpress"
+		"webroot-package": "wordpress",
+		"installer-paths": {
+			"web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+			"web/app/plugins/{$name}/": ["type:wordpress-plugin"],
+			"web/app/themes/{$name}/": ["type:wordpress-theme"]
+		}
 	},
 	"autoload": {
 		"psr-4": {

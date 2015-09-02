@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  */
@@ -7,7 +6,7 @@ class Posts {
 
 	private $allowed_post_types = [ 'post' ];
 	private $page = 1;
-	private $posts_per_page = 10;
+	private $posts_per_page = 5;
 	private $post_type = 'post';
 
 	/**
@@ -21,7 +20,7 @@ class Posts {
 		$post_type = $this->post_type;
 
 		// Get page for pagination
-		if ( isset( $_GET['page'] )&& !empty( $_GET['page'] ) && is_numeric( $_GET['page'] ) ) {
+		if ( isset( $_GET['page'] ) && !empty( $_GET['page'] ) && is_numeric( $_GET['page'] ) ) {
 			$page = absint( $_GET['page'] );
 		}
 
@@ -45,6 +44,7 @@ class Posts {
 			'post_status' => 'publish',
 			'posts_per_page' => $posts_per_page,
 			'paged' => absint( $page ),
+			'ignore_sticky_posts' => true,
 			'no_found_rows' => false,
 			'cache_results' => true,
 			'update_post_term_cache' => false,
@@ -53,13 +53,116 @@ class Posts {
 
 		return [
 			'pagination' => [
-				'total' => $query->found_posts,
+				'posts_total' => $query->found_posts,
 				'posts_per_page' => $query->query_vars['posts_per_page'],
 				'max_num_pages' => $query->max_num_pages,
 				'page' => $query->query_vars['paged']
 			],
 			'posts' => $query->posts,
 		];
+	}
+
+	/**
+	 * Insert new posts to DB.
+	 * @return array
+	 */
+	public function post_index() {
+		// If empty posts?
+		if ( ! isset( $_POST['posts'] ) || empty( $_POST['posts'] ) ) {
+			return new WP_Error( 'error', 'You forget about posts array' );
+		}
+
+		$inserted_posts = [];
+		foreach ( $_POST['posts'] as $post ) {
+			if ( ! is_wp_error( $post_id = $this->insert_post( $post ) ) ) {
+				$inserted_posts[] = [
+					'post_id' => $post_id,
+					'post_url' => get_permalink( absint( $post_id ) )
+				];
+			}
+		}
+
+		return [
+			'total_from_post' => count( $_POST['posts'] ),
+			'total_inserted' => count( $inserted_posts ),
+			'inserted_posts' => $inserted_posts
+		];
+	}
+
+	/**
+	 * Return single post based on post_id from GET.
+	 * @return array
+	 */
+	public function get_single() {
+		// Get post_id param.
+		if ( isset( $_GET['post_id'] ) && !empty( $_GET['post_id'] ) && is_numeric( $_GET['post_id'] ) ) {
+			$post_id = absint( $_GET['post_id'] );
+		} else {
+			return new WP_Error( 'error', 'You forget about post_id param.' );
+		}
+
+		// Get post can return WP_Post|array|null
+		$post = get_post( $post_id, $output = OBJECT );
+
+		// If not found
+		if ( empty( $post ) ) {
+			return new WP_Error( 'error', 'Post not found. Try another post_id.' );
+		}
+
+		return [
+			'post' => $post
+		];
+	}
+
+	/**
+	 * Insert new post to DB.
+	 * @return array
+	 */
+	public function post_single() {
+		// If empty title?
+		if ( ! isset( $_POST['title'] ) || empty( $_POST['title'] ) ) {
+			return new WP_Error( 'error', 'You forget about title param' );
+		} else {
+			$post['title'] = $_POST['title'];
+		}
+
+		// If empty content?
+		if ( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
+			return new WP_Error( 'error', 'You forget about content param' );
+		} else {
+			$post['content'] = $_POST['content'];
+		}
+
+		$inserted_posts = [];
+		if ( ! is_wp_error( $post_id = $this->insert_post( $post ) ) ) {
+			$inserted_posts[] = [
+				'post_id' => $post_id,
+				'post_url' => get_permalink( absint( $post_id ) )
+			];
+		}
+
+		return [
+			'total_from_post' => count( $_POST['title'] ),
+			'total_inserted' => count( $inserted_posts ),
+			'inserted_posts' => $inserted_posts
+		];
+	}
+
+	/**
+	 * Wrapper for wp_insert_post()
+	 * @param array $post
+	 * @return int|object Returns post_id on success or WP_Error on fail.
+	 */
+	private function insert_post( $post ) {
+		$new_post = [
+			'post_title' => $post['title'],
+			'post_content' => $post['content'],
+			'post_type' => 'post',
+			'post_status' => 'publish',
+			'ping_status' => 'closed',
+			'comment_status' => 'closed'
+		];
+		return wp_insert_post( $new_post, $wp_error = true );
 	}
 
 }

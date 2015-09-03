@@ -161,11 +161,11 @@ class LM_API_Request {
 	 * @return bool
 	 */
 	private function check_request_params() {
-		if ( $this->request_method == 'post' ) {
-			if ( empty( $_POST ) ) {
-				return false;
-			}
-		}
+		// if ( $this->request_method == 'post' ) {
+		// 	if ( empty( $_POST ) ) {
+		// 		return false;
+		// 	}
+		// }
 
 		return true;
 	}

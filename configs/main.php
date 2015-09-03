@@ -29,6 +29,7 @@
 	 * Custom Content Directory.
 	 */
 	define( 'CONTENT_DIR', 		'/app' );
+	define( 'WEB_ROOT_PATH',	dirname( __DIR__ ) . '/web' );
 	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
 	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
 

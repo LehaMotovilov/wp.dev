@@ -14,7 +14,7 @@ class LM_API_Helper {
 	public static function controller_exist( $controller, $api_ver ) {
 		$api_ver = self::get_api_version( $api_ver );
 
-		return file_exists( dirname( __FILE__ ) . '/controllers/v' . $api_ver . '/' . $controller . '.php' );
+		return file_exists( LM_API_DIR . '/includes/controllers/v' . $api_ver . '/' . $controller . '.php' );
 	}
 
 	/**
@@ -24,7 +24,7 @@ class LM_API_Helper {
 	public static function load_controller( $controller, $api_ver ) {
 		$api_ver = self::get_api_version( $api_ver );
 
-		include_once( dirname( __FILE__ ) . '/controllers/v' . $api_ver . '/' . $controller . '.php' );
+		include_once( LM_API_DIR . '/includes/controllers/v' . $api_ver . '/' . $controller . '.php' );
 	}
 
 	/**
@@ -36,6 +36,28 @@ class LM_API_Helper {
 	 */
 	public static function get_api_version( $api ) {
 		return absint( filter_var( $api, FILTER_SANITIZE_NUMBER_INT ) );
+	}
+
+	/**
+	 * Return robots.txt file path.
+	 * @return string
+	 */
+	public static function get_real_robotstxt() {
+		if ( defined( 'WEB_ROOT_PATH' ) ) {
+			$robots_path = WEB_ROOT_PATH . '/robots.txt';
+		} else {
+			// Custom core folder
+			// /var/www/wp.dev/web/wp/
+			if ( strstr( ABSPATH, '/wp/' ) ) {
+				$path = str_replace( '/wp/', '/', ABSPATH );
+			} else {
+				$path = ABSPATH;
+			}
+
+			$robots_path = $path . 'robots.txt';
+		}
+
+		return $robots_path;
 	}
 
 }

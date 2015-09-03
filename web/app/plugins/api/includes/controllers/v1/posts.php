@@ -69,7 +69,7 @@ class Posts {
 	public function post_index() {
 		// If empty posts?
 		if ( ! isset( $_POST['posts'] ) || empty( $_POST['posts'] ) ) {
-			return new WP_Error( 'error', 'You forget about posts array' );
+			return new WP_Error( 'error', 'You forget about posts array.' );
 		}
 
 		$inserted_posts = [];
@@ -105,7 +105,7 @@ class Posts {
 		$post = get_post( $post_id, $output = OBJECT );
 
 		// If not found
-		if ( empty( $post ) ) {
+		if ( empty( $post ) || is_wp_error( $post ) ) {
 			return new WP_Error( 'error', 'Post not found. Try another post_id.' );
 		}
 

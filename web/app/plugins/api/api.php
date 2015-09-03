@@ -30,6 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version number for our API.
 define( 'LM_API_VERSION', '1.0.0' );
+define( 'LM_API_DIR', dirname( __FILE__ ) );
 
 // Include our main Class.
 require_once( dirname( __FILE__ ) . '/includes/class-api-main.php' );

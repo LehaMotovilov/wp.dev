@@ -94,12 +94,11 @@ class LM_API_Main {
 	 * @param array $request Array with request allowed vars.
 	 */
 	public function process_request( $request ) {
-		include_once( dirname( __FILE__ ) . '/class-api-helper.php' );
+		include_once( dirname( __FILE__ ) . '/helpers/class-api-helper.php' );
 		include_once( dirname( __FILE__ ) . '/class-api-request.php' );
 		include_once( dirname( __FILE__ ) . '/class-api-response.php' );
 
 		$request = new LM_API_Request( $request );
-
 		$response = new LM_API_Response();
 
 		// If request validation error

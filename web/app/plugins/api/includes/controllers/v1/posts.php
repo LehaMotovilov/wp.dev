@@ -34,7 +34,7 @@ class Posts {
 			if ( in_array( $_GET['post_type'], $this->allowed_post_types ) ) {
 				$post_type = sanitize_text_field( $_GET['post_type'] );
 			} else {
-				return new WP_Error( 'error', 'post_type value not allowed' );
+				return new WP_Error( '400', 'post_type value not allowed' );
 			}
 		}
 
@@ -69,7 +69,7 @@ class Posts {
 	public function post_index() {
 		// If empty posts?
 		if ( ! isset( $_POST['posts'] ) || empty( $_POST['posts'] ) ) {
-			return new WP_Error( 'error', 'You forget about posts array.' );
+			return new WP_Error( '400', 'You forget about posts array.' );
 		}
 
 		$inserted_posts = [];
@@ -96,9 +96,11 @@ class Posts {
 	public function get_single() {
 		// Get post_id param.
 		if ( isset( $_GET['post_id'] ) && !empty( $_GET['post_id'] ) && is_numeric( $_GET['post_id'] ) ) {
+			// We don't trust params from somewhere..
+			// So use absint() :)
 			$post_id = absint( $_GET['post_id'] );
 		} else {
-			return new WP_Error( 'error', 'You forget about post_id param.' );
+			return new WP_Error( '400', 'You forget about post_id param.' );
 		}
 
 		// Get post can return WP_Post|array|null
@@ -106,7 +108,7 @@ class Posts {
 
 		// If not found
 		if ( empty( $post ) || is_wp_error( $post ) ) {
-			return new WP_Error( 'error', 'Post not found. Try another post_id.' );
+			return new WP_Error( '404', 'Post not found. Try another post_id.' );
 		}
 
 		return [
@@ -121,14 +123,14 @@ class Posts {
 	public function post_single() {
 		// If empty title?
 		if ( ! isset( $_POST['title'] ) || empty( $_POST['title'] ) ) {
-			return new WP_Error( 'error', 'You forget about title param' );
+			return new WP_Error( '400', 'You forget about title param.' );
 		} else {
 			$post['title'] = $_POST['title'];
 		}
 
 		// If empty content?
 		if ( ! isset( $_POST['content'] ) || empty( $_POST['content'] ) ) {
-			return new WP_Error( 'error', 'You forget about content param' );
+			return new WP_Error( '400', 'You forget about content param.' );
 		} else {
 			$post['content'] = $_POST['content'];
 		}
@@ -145,6 +147,47 @@ class Posts {
 			'total_from_post' => count( $_POST['title'] ),
 			'total_inserted' => count( $inserted_posts ),
 			'inserted_posts' => $inserted_posts
+		];
+	}
+
+	/**
+	 * Update single post.
+	 * @return array
+	 */
+	public function put_single() {
+
+	}
+
+	/**
+	 * Delete one post form DB.
+	 * @return array
+	 */
+	public function delete_single() {
+		$_request = LM_API_Helper::get_put_content();
+		if ( isset( $_request['post_id'] ) && !empty( $_request['post_id'] ) && is_numeric( $_request['post_id'] ) ) {
+			// We don't trust params from somewhere..
+			// So use absint() :)
+			$post_id = absint( $_request['post_id'] );
+		} else {
+			return new WP_Error( '400', 'You forget about post_id param.' );
+		}
+
+
+		// Get post can return WP_Post|array|null
+		$post = get_post( $post_id, $output = OBJECT );
+
+		// If not found
+		if ( empty( $post ) || is_wp_error( $post ) ) {
+			return new WP_Error( '404', 'Post not found. Try another post_id.' );
+		}
+
+		// Try to delete post.
+		if ( ! wp_delete_post( $post_id, $force_delete = true ) ) {
+			return new WP_Error( '500', 'Internal error.' );
+		}
+
+		return [
+			'message' => sprintf( 'Post "%d" deleted.', $post_id )
 		];
 	}
 

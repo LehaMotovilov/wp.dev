@@ -7,7 +7,7 @@ class LM_Update_Helper {
 	 * @todo Realize this method.
 	 */
 	public function update_core() {
-		return true;
+		return false;
 	}
 
 	/**
@@ -23,7 +23,6 @@ class LM_Update_Helper {
 	 * @todo Realize this method.
 	 */
 	public function update_theme() {
-		$this->get_active_theme();
 		return false;
 	}
 

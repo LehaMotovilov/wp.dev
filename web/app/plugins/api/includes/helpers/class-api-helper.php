@@ -42,7 +42,7 @@ class LM_API_Helper {
 	 * Return robots.txt file path.
 	 * @return string
 	 */
-	public static function get_real_robotstxt() {
+	public static function get_robotstxt_path() {
 		if ( defined( 'WEB_ROOT_PATH' ) ) {
 			$robots_path = WEB_ROOT_PATH . '/robots.txt';
 		} else {
@@ -58,6 +58,40 @@ class LM_API_Helper {
 		}
 
 		return $robots_path;
+	}
+
+	/**
+	 * Return .htaccess file path.
+	 * @return string
+	 */
+	public static function get_htaccess_path() {
+		if ( defined( 'WEB_ROOT_PATH' ) ) {
+			$robots_path = WEB_ROOT_PATH . '/.htaccess';
+		} else {
+			// Custom core folder
+			// /var/www/wp.dev/web/wp/
+			if ( strstr( ABSPATH, '/wp/' ) ) {
+				$path = str_replace( '/wp/', '/', ABSPATH );
+			} else {
+				$path = ABSPATH;
+			}
+
+			$robots_path = $path . '.htaccess';
+		}
+
+		return $robots_path;
+	}
+
+	/**
+	 * Return content for PUT request.
+	 * @return array
+	 */
+	public static function get_put_content() {
+		// PUT request
+		$dummy_content = file_get_contents( 'php://input' );
+		parse_str( $dummy_content, $_request );
+
+		return $_request;
 	}
 
 }

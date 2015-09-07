@@ -12,6 +12,7 @@ class LM_API_Request {
 	public $request_method;
 
 	protected $_allowed_request_types = [ 'GET', 'POST', 'DELETE', 'PUT' ];
+	protected $_api_key = 'g2Q8YArWI4wMx9kZ';
 
 	/**
 	 * Class constructor.
@@ -28,32 +29,49 @@ class LM_API_Request {
 	 * @return object|array WP_Error if validation failed or array if all ok.
 	 */
 	public function validate() {
+		// Simple authorization via api_key
+		if ( ! $this->check_authorization() ) {
+			return new WP_Error( '401', 'Unauthorized.' );
+		}
+
 		// If incorrect request_type?
 		if ( ! $this->check_request_method() ) {
-			return new WP_Error( 'error', 'Check request\'s type.' );
+			return new WP_Error( '405', 'Check request\'s method.' );
 		}
 
 		// If incorrect API version?
 		if ( ! $this->check_version() ) {
-			return new WP_Error( 'error', 'Check API version.' );
+			return new WP_Error( '400', 'Check API version.' );
 		}
 
 		// If incorrect controller?
 		if ( ! $this->check_controller() ) {
-			return new WP_Error( 'error', 'Check request\'s controller.' );
+			return new WP_Error( '400', 'Check request\'s controller.' );
 		}
 
 		// If incorrect action?
 		if ( ! $this->check_action() ) {
-			return new WP_Error( 'error', 'Check request\'s action.' );
+			return new WP_Error( '400', 'Check request\'s action.' );
 		}
 
 		// If method POST and it's empty? Etc.
 		if ( ! $this->check_request_params() ) {
-			return new WP_Error( 'error', 'Check request\'s params.' );
+			return new WP_Error( '400', 'Check request\'s params.' );
 		}
 
 		// Errors not found.
+		return true;
+	}
+
+	/**
+	 * Very simple check authorization via API_KEY from request.
+	 * @return bool
+	 */
+	private function check_authorization() {
+		if ( !isset( $_REQUEST['api_key'] ) || empty( $_REQUEST['api_key'] ) || $_REQUEST['api_key'] !== $this->_api_key ) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -85,7 +103,6 @@ class LM_API_Request {
 
 	/**
 	 * Check API version.
-	 * @param array $request
 	 * @return bool
 	 */
 	private function check_version() {
@@ -104,7 +121,6 @@ class LM_API_Request {
 
 	/**
 	 * Check controller.
-	 * @param array $request
 	 * @return bool
 	 */
 	private function check_controller() {
@@ -121,7 +137,6 @@ class LM_API_Request {
 
 	/**
 	 * Check controller's action exist and public.
-	 * @param array $request
 	 * @return bool
 	 */
 	private function check_action() {

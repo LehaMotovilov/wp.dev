@@ -104,12 +104,14 @@ class LM_API_Main {
 		// If request validation error
 		if ( is_wp_error( $validate = $request->validate() ) ) {
 			$response->set_error_message( $validate->get_error_message() );
+			$response->set_code( $validate->get_error_code() );
 			$response->send();
 		}
 
 		// If running action error
 		if ( is_wp_error( $data = $this->run_action( $request ) ) ) {
 			$response->set_error_message( $data->get_error_message() );
+			$response->set_code( $data->get_error_code() );
 			$response->send();
 		}
 

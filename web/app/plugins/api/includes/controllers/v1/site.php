@@ -46,23 +46,26 @@ class Site {
 	 * @return array
 	 */
 	public function put_options() {
+		// PUT method not allow get data from $_REQUEST
+		$_request = LM_API_Helper::get_put_content();
+
 		// If empty key
-		if ( ! isset( $_REQUEST['option'] ) || empty( $_REQUEST['option'] ) ) {
-			return new WP_Error( 'error', 'You forget about option param.' );
+		if ( ! isset( $_request['option'] ) || empty( $_request['option'] ) ) {
+			return new WP_Error( '400', 'You forget about option param.' );
 		}
 
 		// If empty value
-		if ( ! isset( $_REQUEST['value'] ) || empty( $_REQUEST['value'] ) ) {
-			return new WP_Error( 'error', 'You forget about value param.' );
+		if ( ! isset( $_request['value'] ) || empty( $_request['value'] ) ) {
+			return new WP_Error( '400', 'You forget about value param.' );
 		}
 
-		$key = sanitize_text_field( $_REQUEST['option'] );
-		$value = trim( $_REQUEST['value'] );
+		$key = sanitize_text_field( $_request['option'] );
+		$value = trim( $_request['value'] );
 
 		if ( update_option( $key, $value ) ) {
 			return [ $key => $value ];
 		} else {
-			return new WP_Error( 'error', 'Update failed, maybe "' . $key . '" is already "' . $value . '"?' );
+			return new WP_Error( '500', 'Update failed, maybe "' . $key . '" is already "' . $value . '"?' );
 		}
 	}
 
@@ -79,31 +82,70 @@ class Site {
 	 * @return array
 	 */
 	public function put_robots() {
+		// PUT method not allow get data from $_REQUEST
+		$_request = LM_API_Helper::get_put_content();
 		// If empty content
-		if ( ! isset( $_REQUEST['content'] ) || empty( $_REQUEST['content'] ) ) {
-			return new WP_Error( 'error', 'You forget about content param.' );
+		if ( ! isset( $_request['content'] ) || empty( $_request['content'] ) ) {
+			return new WP_Error( '400', 'You forget about content param.' );
 		}
 
-		$content = stripcslashes( $_REQUEST['content'] );
+		$content = stripcslashes( $_request['content'] );
 		$content = str_replace( ["\\n", "\n", "\r", "\r\n", "\n\r"], PHP_EOL, $content );
 
-		// Try write new content
-		$robots_file = LM_API_Helper::get_real_robotstxt();
-		if ( file_put_contents( $robots_file, $content ) ) {
+		$robots_file = LM_API_Helper::get_robotstxt_path();
+
+		// Get wp_filesystem class
+		$wp_filesystem = $this->get_wp_filesystem();
+
+		if ( $wp_filesystem->put_contents( $robots_file, $content, 644 ) ) {
 			return $this->get_robots_txt_content();
 		}
 
-		// If cannot write to robots.txt
-		// try fallback action...
-		// mu-plugin with filter 'robots_txt'
-		if ( file_exists( WPMU_PLUGIN_DIR . '/robots_txt.php' ) ) {
-			// this option used in robots_txt.php plugin
-			update_option( 'robots_txt_content_rewrited', $content, $autoload = 'no' );
+		return new WP_Error( '500', 'Cannot update robots.txt, check file permissions.' );
+	}
 
-			return $this->get_robots_txt_content();
+	/**
+	 * Return .htaccess content.
+	 * @return array
+	 */
+	public function get_htaccess() {
+		return $this->get_htaccess_content();
+	}
+
+	/**
+	 * Update .htaccess content.
+	 * @return array
+	 */
+	public function put_htaccess() {
+		// PUT method not allow get data from $_REQUEST
+		$_request = LM_API_Helper::get_put_content();
+
+		// If empty content
+		if ( ! isset( $_request['content'] ) || empty( $_request['content'] ) ) {
+			return new WP_Error( '400', 'You forget about content param.' );
 		}
 
-		return new WP_Error( 'error', 'Cannot update robots.txt.' );
+		if ( ! function_exists( 'insert_with_markers' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/misc.php' );
+		}
+
+		$content = $_request['content'];
+
+		// Use marker for cool formating.
+		// See https://developer.wordpress.org/reference/functions/insert_with_markers/
+		if ( isset( $_request['marker'] ) && !empty( $_request['marker'] ) ) {
+			$marker = $_request['marker'];
+		} else {
+			$marker = 'FROM_API';
+		}
+
+		$htaccess_file = LM_API_Helper::get_htaccess_path();
+
+		if ( insert_with_markers( $htaccess_file, $marker, [ $content ] ) ) {
+			return $this->get_htaccess_content();
+		} else {
+			return new WP_Error( '500', 'Cannot update .htaccess, check file permissions.' );
+		}
 	}
 
 	/**
@@ -111,23 +153,16 @@ class Site {
 	 * @return array
 	 */
 	private function get_robots_txt_content() {
-		// Check real file
-		$robots_file = LM_API_Helper::get_real_robotstxt();
+		$robots_file = LM_API_Helper::get_robotstxt_path();
 
-		// If file exist get content from real file
-		// else get content from WordPress API.
-		if ( file_exists( $robots_file ) ) {
-			$out = file_get_contents( $robots_file );
+		// Get wp_filesystem class
+		$wp_filesystem = $this->get_wp_filesystem();
+
+		if ( $wp_filesystem->exists( $robots_file ) ) {
+			$out = $wp_filesystem->get_contents( $robots_file );
 		} else {
-			ob_start();
-			do_robots(); // echo robots.txt content
-			$out = ob_get_contents();
-			ob_end_clean();
-		}
-
-		// It's very strange situation.
-		if ( empty( $out ) ) {
-			return new WP_Error( 'error', 'robots.txt not found.' );
+			// It's very strange situation.
+			return new WP_Error( '500', 'robots.txt not found.' );
 		}
 
 		// Make array from string.
@@ -137,6 +172,47 @@ class Site {
 			'robots_content' => $out,
 			'robots_content_array' => $robots_content
 		];
+	}
+
+	/**
+	 * Return htaccess content.
+	 * @return array
+	 */
+	private function get_htaccess_content() {
+		$htaccess_file = LM_API_Helper::get_htaccess_path();
+
+		// Get wp_filesystem class
+		$wp_filesystem = $this->get_wp_filesystem();
+
+		if ( ! $wp_filesystem->exists( $htaccess_file ) ) {
+			return new WP_Error( '500', '.htaccess not found.' );
+		}
+
+		$out = $wp_filesystem->get_contents( $htaccess_file );
+
+		// Make array from string.
+		$htaccess_content = array_filter( explode( PHP_EOL, $out) );
+
+		return [
+			'htaccess_content' => $out,
+			'htaccess_content_array' => $htaccess_content
+		];
+	}
+
+	/**
+	 * Return WP_Filesystem object.
+	 * @return object
+	 */
+	private function get_wp_filesystem() {
+		// Get wp_filesystem class
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			WP_Filesystem(); // Yeap its function :-)
+		}
+
+		global $wp_filesystem;
+
+		return $wp_filesystem;
 	}
 
 }

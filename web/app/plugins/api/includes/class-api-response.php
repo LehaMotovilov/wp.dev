@@ -65,6 +65,7 @@ class LM_API_Response {
 		415 => 'Unsupported Media Type',
 		416 => 'Requested Range Not Satisfiable',
 		417 => 'Expectation Failed',
+		418 => 'I am a teapot', // :-)
 
 		// Server Error 5xx
 		500 => 'Internal Server Error',
@@ -143,10 +144,10 @@ class LM_API_Response {
 	 */
 	private function setup_status_code( $code ) {
 		$code = absint( $code );
-		if ( isset( self::$messages[$code] ) && !empty( self::$messages[$code] ) ) {
+		if ( isset( self::$messages[$code] ) && ! empty( self::$messages[$code] ) ) {
 			$status = sprintf( 'Status: %d %s', $code, self::$messages[$code] );
 		} else {
-			$status = sprintf( 'Status: %d', $code );
+			$status = sprintf( 'Status: %d', 500 );
 		}
 
 		return $status;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * API Class for all responses.
+ * API Class for all requests.
  */
 class LM_API_Request {
 
@@ -10,9 +10,10 @@ class LM_API_Request {
 	public $action;
 	public $resolved_action;
 	public $request_method;
+	public $body;
 
 	protected $_allowed_request_types = [ 'GET', 'POST', 'DELETE', 'PUT' ];
-	protected $_api_key = 'g2Q8YArWI4wMx9kZ';
+	protected $_api_key = 'leha_was_here';
 
 	/**
 	 * Class constructor.
@@ -54,11 +55,6 @@ class LM_API_Request {
 			return new WP_Error( '400', 'Check request\'s action.' );
 		}
 
-		// If method POST and it's empty? Etc.
-		if ( ! $this->check_request_params() ) {
-			return new WP_Error( '400', 'Check request\'s params.' );
-		}
-
 		// Errors not found.
 		return true;
 	}
@@ -68,11 +64,103 @@ class LM_API_Request {
 	 * @return bool
 	 */
 	private function check_authorization() {
-		if ( !isset( $_REQUEST['api_key'] ) || empty( $_REQUEST['api_key'] ) || $_REQUEST['api_key'] !== $this->_api_key ) {
+		return ( ! empty( $_REQUEST['api_key'] ) && $_REQUEST['api_key'] == $this->_api_key );
+	}
+
+
+	/**
+	 * Check API version.
+	 * @return bool
+	 */
+	private function check_version() {
+		return (
+			! empty( $this->api_ver ) &&
+			LM_API_Helper::get_api_version( $this->api_ver ) == LM_API_Helper::get_api_version( LM_API_VERSION )
+		);
+	}
+
+	/**
+	 * Check if controller isset and really exist.
+	 * @return bool
+	 */
+	private function check_controller() {
+		return ( ! empty( $this->controller ) && LM_API_Helper::controller_exist( $this->controller, $this->api_ver ) );
+	}
+
+	/**
+	 * Check controller's action exist and it's public.
+	 * @return bool
+	 */
+	private function check_action() {
+		if ( empty( $this->resolved_action ) ) {
+			return false;
+		}
+
+		// Load controller's file.
+		LM_API_Helper::load_controller( $this->controller, $this->api_ver );
+
+		// Check is method exist.
+		if ( ! method_exists( ucfirst( $this->controller ), $this->resolved_action ) ) {
+			return false;
+		}
+
+		// Check is method is public.
+		if ( ! is_callable( [ ucfirst( $this->controller ), $this->resolved_action ] ) ) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Check request_method.
+	 * @return bool
+	 */
+	private function check_request_method() {
+		return (
+			! empty(  $_SERVER['REQUEST_METHOD'] ) &&
+			in_array( $_SERVER['REQUEST_METHOD'], $this->_allowed_request_types )
+		);
+	}
+
+	/**
+	 * Return request params based on HTTP request method.
+	 * @return array
+	 */
+	private function setup_body() {
+		$body = [];
+		switch ( $this->request_method ) {
+			case 'get':
+			case 'post':
+				$body = $_REQUEST;
+				break;
+
+			case 'put':
+			case 'delete':
+				$body = array_merge( $_GET, LM_API_Helper::get_body_content() );
+				break;
+
+			default:
+				$body = $_REQUEST;
+				break;
+		}
+
+		// Remove WP q param. We dont need it.
+		if ( isset( $body['q'] ) ) {
+			unset( $body['q'] );
+		}
+
+		return $body;
+	}
+
+	/**
+	 * Format action based on request method.
+	 * So action with GET will be get_someaction
+	 * @param string $action
+	 * @return string
+	 */
+	private function resolve_action( $action ) {
+		return sprintf( '%s_%s', strtolower( $_SERVER['REQUEST_METHOD'] ), $action );
 	}
 
 	/**
@@ -89,100 +177,7 @@ class LM_API_Request {
 		$this->api_ver = $request['api'];
 		$this->request_method = strtolower( $_SERVER['REQUEST_METHOD'] );
 		$this->resolved_action = $this->resolve_action( $this->action );
-	}
-
-	/**
-	 * Format action based on request method.
-	 * So action with GET will be get_someaction
-	 * @param string $action
-	 * @return string
-	 */
-	private function resolve_action( $action ) {
-		return strtolower( $_SERVER['REQUEST_METHOD'] ) . '_' . $action;
-	}
-
-	/**
-	 * Check API version.
-	 * @return bool
-	 */
-	private function check_version() {
-		if ( ! isset( $this->api_ver ) || empty( $this->api_ver ) ) {
-			return false;
-		}
-
-		$ver = LM_API_Helper::get_api_version( $this->api_ver );
-		$api_ver = absint( LM_API_VERSION );
-		if ( $ver !== $api_ver ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Check controller.
-	 * @return bool
-	 */
-	private function check_controller() {
-		if ( ! isset( $this->controller ) || empty( $this->controller ) ) {
-			return false;
-		}
-
-		if ( ! LM_API_Helper::controller_exist( $this->controller, $this->api_ver ) ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Check controller's action exist and public.
-	 * @return bool
-	 */
-	private function check_action() {
-		if ( ! isset( $this->resolved_action ) || empty( $this->resolved_action ) ) {
-			return false;
-		}
-
-		// Check is method exist.
-		LM_API_Helper::load_controller( $this->controller, $this->api_ver );
-		if ( ! method_exists( ucfirst( $this->controller ), $this->resolved_action ) ) {
-			return false;
-		}
-
-		// Check is method is public.
-		$reflection = new ReflectionMethod( ucfirst( $this->controller ), $this->resolved_action );
-		if ( ! $reflection->isPublic() ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Check request_method.
-	 * @return bool
-	 */
-	private function check_request_method() {
-		if ( empty( $_SERVER['REQUEST_METHOD'] ) || ! in_array( $_SERVER['REQUEST_METHOD'], $this->_allowed_request_types ) ) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Check request params.
-	 * @return bool
-	 */
-	private function check_request_params() {
-		// if ( $this->request_method == 'post' ) {
-		// 	if ( empty( $_POST ) ) {
-		// 		return false;
-		// 	}
-		// }
-
-		return true;
+		$this->body = $this->setup_body();
 	}
 
 }

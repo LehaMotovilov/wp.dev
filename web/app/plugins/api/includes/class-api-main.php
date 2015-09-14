@@ -11,7 +11,7 @@ class LM_API_Main {
 	 */
 	public function start() {
 		add_action( 'init', [ $this, 'rewrite_rules' ] );
-		add_action( 'template_redirect', [ $this, 'api_request_handler' ] );
+		add_action( 'parse_request', [ $this, 'api_request_handler' ] );
 	}
 
 	/**
@@ -124,13 +124,13 @@ class LM_API_Main {
 	/**
 	 * Run dynamically action from controller.
 	 * @param object $request
-	 * @return array|object Array of results or WP_Error object
+	 * @return array|object Array of results or WP_Error object.
 	 */
 	private function run_action( $request ) {
 		$class_name = ucfirst( $request->controller );
 		$class = new $class_name;
 
-		return call_user_func( [ $class, $request->resolved_action ] );
+		return call_user_func( [ $class, $request->resolved_action ], $request->body );
 	}
 
 }

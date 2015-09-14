@@ -56,10 +56,12 @@ class LM_Update_Helper {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
+
 		$all_plugins = get_plugins();
 		$dummy_active_plugins = get_option('active_plugins');
 		$active_plugins = [];
 		$i = 0;
+
 		foreach ( $all_plugins as $key => $value ) {
 			if ( in_array( $key , $dummy_active_plugins ) ) {
 				$active_plugins[$i]['name'] = $value['Name'];
@@ -68,19 +70,7 @@ class LM_Update_Helper {
 				$i++;
 			}
 		}
-		return $active_plugins;
-	}
 
-	/**
-	 * Return info about currect active theme.
-	 * @return array
-	 */
-	public function get_active_theme() {
-		$theme = wp_get_theme();
-		echo "<pre>";
-		print_r($theme);
-		echo "</pre>";
-		exit();
 		return $active_plugins;
 	}
 

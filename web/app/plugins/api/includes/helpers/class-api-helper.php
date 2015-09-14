@@ -12,9 +12,14 @@ class LM_API_Helper {
 	 * @return bool
 	 */
 	public static function controller_exist( $controller, $api_ver ) {
-		$api_ver = self::get_api_version( $api_ver );
-
-		return file_exists( LM_API_DIR . '/includes/controllers/v' . $api_ver . '/' . $controller . '.php' );
+		return file_exists(
+			sprintf(
+				'%s/includes/controllers/v%d/%s.php',
+				LM_API_DIR,
+				self::get_api_version( $api_ver ),
+				$controller
+			)
+		);
 	}
 
 	/**
@@ -22,20 +27,26 @@ class LM_API_Helper {
 	 * @param string $controller Controller's filename
 	 */
 	public static function load_controller( $controller, $api_ver ) {
-		$api_ver = self::get_api_version( $api_ver );
-
-		include_once( LM_API_DIR . '/includes/controllers/v' . $api_ver . '/' . $controller . '.php' );
+		include_once(
+			sprintf(
+				'%s/includes/controllers/v%d/%s.php',
+				LM_API_DIR,
+				self::get_api_version( $api_ver ),
+				$controller
+			)
+		);
 	}
 
 	/**
 	 * Return API version from string.
-	 * $api = v1.1
-	 * returns int 1
+	 * $api = v1.1.2
+	 * returns float 1.1
 	 * @param string $api
-	 * @return int
+	 * @return float
 	 */
 	public static function get_api_version( $api ) {
-		return absint( filter_var( $api, FILTER_SANITIZE_NUMBER_INT ) );
+		// return absint( filter_var( $api, FILTER_SANITIZE_NUMBER_INT ) );
+		return floatval( filter_var( $api, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
 	}
 
 	/**
@@ -43,21 +54,7 @@ class LM_API_Helper {
 	 * @return string
 	 */
 	public static function get_robotstxt_path() {
-		if ( defined( 'WEB_ROOT_PATH' ) ) {
-			$robots_path = WEB_ROOT_PATH . '/robots.txt';
-		} else {
-			// Custom core folder
-			// /var/www/wp.dev/web/wp/
-			if ( strstr( ABSPATH, '/wp/' ) ) {
-				$path = str_replace( '/wp/', '/', ABSPATH );
-			} else {
-				$path = ABSPATH;
-			}
-
-			$robots_path = $path . 'robots.txt';
-		}
-
-		return $robots_path;
+		return self::get_root_path_to_file( 'robots.txt' );
 	}
 
 	/**
@@ -65,8 +62,17 @@ class LM_API_Helper {
 	 * @return string
 	 */
 	public static function get_htaccess_path() {
+		return self::get_root_path_to_file( '.htaccess' );
+	}
+
+	/**
+	 * Return root file path.
+	 * @param string $file Filename
+	 * @return string
+	 */
+	public static function get_root_path_to_file( $file ) {
 		if ( defined( 'WEB_ROOT_PATH' ) ) {
-			$robots_path = WEB_ROOT_PATH . '/.htaccess';
+			$file_path = WEB_ROOT_PATH . '/' . $file;
 		} else {
 			// Custom core folder
 			// /var/www/wp.dev/web/wp/
@@ -76,22 +82,35 @@ class LM_API_Helper {
 				$path = ABSPATH;
 			}
 
-			$robots_path = $path . '.htaccess';
+			$file_path = $path . $file;
 		}
 
-		return $robots_path;
+		return $file_path;
 	}
 
 	/**
-	 * Return content for PUT request.
+	 * Return content for PUT/DELETE request.
 	 * @return array
 	 */
-	public static function get_put_content() {
+	public static function get_body_content() {
 		// PUT request
 		$dummy_content = file_get_contents( 'php://input' );
 		parse_str( $dummy_content, $_request );
 
 		return $_request;
+	}
+
+	/**
+	 * Return admin's user.ID
+	 * @return int
+	 */
+	public static function get_admin_id() {
+		$user = get_user_by( 'email', get_option( 'admin_email' ) );
+		if ( $user ) {
+			return $user->ID;
+		} else {
+			return 1; // If somthing wrong...
+		}
 	}
 
 }

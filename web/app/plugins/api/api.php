@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: API
+ * Plugin Name: Simple API
  * Plugin URI:
  * Description: Simple API
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: LehaMotovilov
  * Author URI: http://lehamotovilov.com/
  *
@@ -29,8 +29,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Version number for our API.
-define( 'LM_API_VERSION', '1.0.0' );
+define( 'LM_API_VERSION', '1.0.1' );
 define( 'LM_API_DIR', dirname( __FILE__ ) );
+
+// Hardcoded api_key.
+if ( ! defined( 'LM_API_KEY' ) ) {
+	define( 'LM_API_KEY', 'LehaWasHere!' );
+}
 
 // Include our main Class.
 require_once( dirname( __FILE__ ) . '/includes/class-api-main.php' );

@@ -12,8 +12,12 @@ class LM_API_Request {
 	public $request_method;
 	public $body;
 
+	// Allowed HTTP methods.
 	protected $_allowed_request_types = [ 'GET', 'POST', 'DELETE', 'PUT' ];
-	protected $_api_key = 'leha_was_here';
+
+	// For now we must use hardcoded api_key.
+	// Defied in configs or main api.php file.
+	protected $_api_key = LM_API_KEY;
 
 	/**
 	 * Class constructor.
@@ -54,6 +58,9 @@ class LM_API_Request {
 		if ( ! $this->check_action() ) {
 			return new WP_Error( '400', 'Check request\'s action.' );
 		}
+
+		// Load validator based on controller.
+		$this->load_validator();
 
 		// Errors not found.
 		return true;
@@ -121,6 +128,14 @@ class LM_API_Request {
 			! empty(  $_SERVER['REQUEST_METHOD'] ) &&
 			in_array( $_SERVER['REQUEST_METHOD'], $this->_allowed_request_types )
 		);
+	}
+
+	/**
+	 * Load Validator class for current controller.
+	 */
+	private function load_validator() {
+		// Load validator for controller.
+		LM_API_Helper::load_controller_validator( $this->controller, $this->api_ver );
 	}
 
 	/**

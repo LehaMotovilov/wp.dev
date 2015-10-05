@@ -2,6 +2,7 @@
 
 /**
  * API Class for all responses.
+ * Setup response object.
  */
 class LM_API_Response {
 
@@ -128,9 +129,8 @@ class LM_API_Response {
 				$resp['data'] = $this->response_data;
 			}
 
-			// Set http response code based on $resp['code']
-			$status = $this->setup_status_code( $this->code );
-			@header( $status );
+			// Set http response code and status
+			$this->send_headers();
 
 			// Send json body and die().
 			wp_send_json( $resp );
@@ -151,6 +151,15 @@ class LM_API_Response {
 		}
 
 		return $status;
+	}
+
+	/**
+	 * Setup and send response header status and code.
+	 */
+	private function send_headers() {
+		$status = $this->setup_status_code( $this->code );
+		header( $status );
+		http_response_code( $this->code );
 	}
 
 }

@@ -38,6 +38,24 @@ class LM_API_Helper {
 	}
 
 	/**
+	 * Load Validator for current controller.
+	 * @param string $controller
+	 * @param string $api_ver
+	 */
+	public static function load_controller_validator( $controller, $api_ver ) {
+		$validator = sprintf(
+			'%s/includes/validators/v%d/%s.php',
+			LM_API_DIR,
+			self::get_api_version( $api_ver ),
+			$controller
+		);
+
+		if ( file_exists( $validator ) ) {
+			include_once( $validator );
+		}
+	}
+
+	/**
 	 * Return API version from string.
 	 * $api = v1.1.2
 	 * returns float 1.1
@@ -45,8 +63,13 @@ class LM_API_Helper {
 	 * @return float
 	 */
 	public static function get_api_version( $api ) {
-		// return absint( filter_var( $api, FILTER_SANITIZE_NUMBER_INT ) );
-		return floatval( filter_var( $api, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) );
+		return floatval(
+			filter_var(
+				$api,
+				FILTER_SANITIZE_NUMBER_FLOAT,
+				FILTER_FLAG_ALLOW_FRACTION
+			)
+		);
 	}
 
 	/**
@@ -106,6 +129,7 @@ class LM_API_Helper {
 	 */
 	public static function get_admin_id() {
 		$user = get_user_by( 'email', get_option( 'admin_email' ) );
+		// In theory user can't be empty.
 		if ( $user ) {
 			return $user->ID;
 		} else {

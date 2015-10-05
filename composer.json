@@ -14,7 +14,7 @@
 			"package": {
 				"name": "wordpress",
 				"type": "webroot",
-				"version": "4.3",
+				"version": "4.3.1",
 				"dist": {
 					"type": "zip",
 					"url": "https://github.com/WordPress/WordPress/archive/4.3-branch.zip"
@@ -23,11 +23,24 @@
 					"fancyguy/webroot-installer": "1.0.0"
 				}
 			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "wpkit",
+				"type": "wpkit",
+				"version": "1.5",
+				"dist": {
+					"type": "zip",
+					"url": "https://github.com/REDINKno/wpkit/archive/master.zip"
+				}
+			}
 		}
 	],
 	"require": {
 		"php": ">=5.5.0",
-		"wordpress": "4.3",
+		"wordpress": "4.3.1",
+		"wpkit": "1.5",
 		"composer/installers": "~1.0",
 		"symfony/console": "2.*",
 		"robmorgan/phinx": "^0.4.4",
@@ -48,7 +61,8 @@
 			"LM\\Site\\": "web/app/plugins/main-plugin/lm-site/core/",
 			"LM\\Core\\": "web/app/plugins/main-plugin/lm-framework/core/",
 			"LM\\Modules\\": "web/app/plugins/main-plugin/lm-framework/modules/",
-			"LM\\Theme\\": "web/app/themes/leham/includes/classes/"
+			"LM\\Theme\\": "web/app/themes/leham/includes/classes/",
+			"WPKit\\": "vendor/wpkit/"
 		}
 	}
 }

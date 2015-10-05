@@ -2,14 +2,12 @@
 /*
 	*********************************************************************
 
-	Plugin Name: Main Plugin
-	Description: Main site plugin. Contains all current sites functionality.
+	Plugin Name: WPKit testing
+	Description:
 	Version:     1.0.0
 	Plugin URI:
 	Author:      LehaMotovilov
 	Author URI:  http://lehamotovilov.com/
-	Text Domain: main-plugin
-	Domain Path: /languages/
 	Network: 	 True
 	License:     GPL v3
 
@@ -30,16 +28,9 @@
 	*********************************************************************
 */
 
-// Security check.
-defined( 'ABSPATH' ) or die();
+// Test User Meta
+$userMeta = new WPKit\User\UserMetaBox();
+$userMeta->add_field( 'user_avatar', 'Avatar', 'image' );
 
-// Load all configs.
-$config = require_once __DIR__ . '/config/main.php';
-
-// Let's start!
-$framework = new LM\Core\Framework();
-$framework->run( $config );
-
-// Load Site Functionality
-$site = new LM\Site\Init();
-$site->run();
+// Test Post Types
+$postType = new WPKit\PostType\PostType( 'some-cpt', 'CPT Test' );

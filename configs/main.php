@@ -13,7 +13,7 @@
 	 * Set up our global environment constant and load its config first
 	 * Default: development
 	 */
-	define( 'WP_ENV', getenv('WP_ENV') ?: 'development' );
+	define( 'WP_ENV', getenv( 'WP_ENV' ) ?: 'development' );
 	$env_config = __DIR__ . '/environments/' . WP_ENV . '.php';
 	if ( file_exists( $env_config ) ) {
 		require_once( $env_config );

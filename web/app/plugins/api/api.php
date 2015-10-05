@@ -34,7 +34,8 @@ define( 'LM_API_DIR', dirname( __FILE__ ) );
 
 // Hardcoded api_key.
 if ( ! defined( 'LM_API_KEY' ) ) {
-	define( 'LM_API_KEY', 'LehaWasHere!' );
+	// Use constant from environment or hardcoded.
+	define( 'LM_API_KEY', getenv( 'LM_API_KEY' ) ?: 'LehaWasHere!' );
 }
 
 // Include our main Class.

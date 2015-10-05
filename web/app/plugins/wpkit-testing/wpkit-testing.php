@@ -34,3 +34,4 @@ $userMeta->add_field( 'user_avatar', 'Avatar', 'image' );
 
 // Test Post Types
 $postType = new WPKit\PostType\PostType( 'some-cpt', 'CPT Test' );
+$postType->add_column_thumbnail();

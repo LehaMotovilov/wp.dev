@@ -45,7 +45,8 @@
 		"symfony/console": "2.*",
 		"robmorgan/phinx": "^0.4.4",
 		"vlucas/phpdotenv": "^2.0",
-		"deployer/deployer": "~3.0"
+		"deployer/deployer": "~3.0",
+		"codeception/codeception": "*"
 	},
 	"extra": {
 		"webroot-dir": "web/wp",

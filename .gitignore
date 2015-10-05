@@ -31,3 +31,4 @@ web/app/uploads/*
 # Assets
 web/app/themes/leham/assets/vendor/
 !web/app/themes/leham/assets/vendor/.gitkeep
+tests/_output/*

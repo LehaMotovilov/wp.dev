@@ -1,6 +1,7 @@
 <?php
 
 /**
- * Load themplate functionality.
+ * Load main theme class.
  */
-require_once( get_template_directory() . '/includes/theme-init.php');
+$theme = new LM\Theme\Theme();
+$theme->init();

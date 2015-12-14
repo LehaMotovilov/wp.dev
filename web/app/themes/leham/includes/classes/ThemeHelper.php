@@ -10,8 +10,10 @@ class ThemeHelper {
 	public static $_css_hash_regex = '/(^([a-z]+)\.\w+\.css)$/';
 
 	/**
-	 * Simple wrap for scandir()
+	 * Simple wrap for scandir().
+	 *
 	 * @param string $directory
+	 *
 	 * @return array
 	 */
 	public static function read_dir( $directory ) {
@@ -20,8 +22,11 @@ class ThemeHelper {
 
 	/**
 	 * Return array with dist files by regex.
+	 *
 	 * @param string $directory Path for folder with files.
+	 *
 	 * @param string $regex Regex for files.
+	 *
 	 * @return array
 	 */
 	public static function get_dist_files( $directory, $regex ) {
@@ -40,7 +45,9 @@ class ThemeHelper {
 
 	/**
 	 * Wrapper for easy access to get_dist_files.
+	 *
 	 * @param string $directory Path for folder with files.
+	 *
 	 * @return array Array of JS files.
 	 */
 	public static function get_dist_js( $directory ) {
@@ -49,7 +56,9 @@ class ThemeHelper {
 
 	/**
 	 * Wrapper for easy access to get_dist_files.
+	 *
 	 * @param string $directory Path for folder with files.
+	 *
 	 * @return array Array of JS files.
 	 */
 	public static function get_dist_css( $directory ) {

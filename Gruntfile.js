@@ -1,9 +1,3 @@
-// var compilePaths = {
-// 	app: '..',
-// 	can: 'canjs/amd/can',
-// 	jquery: '//code.jquery.com/jquery-1.11.3.min'
-// };
-
 // Set timer
 var timer = require("grunt-timer");
 

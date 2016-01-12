@@ -23,6 +23,18 @@
 					"fancyguy/webroot-installer": "1.0.0"
 				}
 			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"name": "wpcs",
+				"version": "1.0",
+				"source": {
+					"url": "https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git",
+					"type": "git",
+					"reference": "master"
+				}
+			}
 		}
 	],
 	"require": {
@@ -33,7 +45,9 @@
 		"robmorgan/phinx": "^0.4.4",
 		"vlucas/phpdotenv": "^2.0",
 		"deployer/deployer": "~3.0",
-		"codeception/codeception": "*"
+		"codeception/codeception": "*",
+		"squizlabs/php_codesniffer": "2.*",
+		"wpcs": "*"
 	},
 	"extra": {
 		"webroot-dir": "web/wp",
@@ -46,11 +60,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"LM\\Site\\": "web/app/plugins/main-plugin/lm-site/core/",
-			"LM\\Core\\": "web/app/plugins/main-plugin/lm-framework/core/",
-			"LM\\Modules\\": "web/app/plugins/main-plugin/lm-framework/modules/",
-			"LM\\Theme\\": "web/app/themes/leham/includes/classes/",
-			"WPKit\\": "vendor/wpkit/"
+			"LM\\Theme\\": "web/app/themes/leham/includes/classes/"
 		}
 	}
 }

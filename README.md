@@ -11,6 +11,7 @@ Another modern WordPress stack. Enjoy :)
 * For environment variables - [phpdotenv](https://github.com/vlucas/phpdotenv)
 * WP CLI support - [WP CLI](http://wp-cli.org/)
 * Codeception for testing - [Codeception](http://codeception.com/)
+* PHP Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/)
 
 ## How to install?
 
@@ -27,7 +28,8 @@ Another modern WordPress stack. Enjoy :)
 
 * Migration example ```vendor/bin/phinx migrate -e development```
 * Deploy example ```dep deploy production```
-* Run tests ```php ./vendor/bin/codecept run ```
+* Run tests ```php ./vendor/bin/codecept run```
+* Run Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```
 
 ## Apache config
 ```

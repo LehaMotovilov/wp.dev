@@ -19,15 +19,15 @@ Another modern WordPress stack. Enjoy :)
 * ```git clone git@github.com:LehaMotovilov/wp.dev.git .```
 * ```composer install```
 * ```mv configs/.env.example configs/.env && nano configs/.env```
-* ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
-* ```npm install```
-* ```bower install```
+* Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
+* Optional ```npm install```
+* Optional ```bower install```
 
 ## How to use?
 
-* Migration example ```vendor/bin/phinx migrate -e development```
 * Deploy example ```dep deploy production```
-* Run tests ```php ./vendor/bin/codecept run```
+* Run Migrations ```vendor/bin/phinx migrate -e development```
+* Run Tests ```vendor/bin/codecept run```
 * Run Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```
 * Run WP-Cli example ```vendor/wp-cli/wp-cli/bin/wp core version```
 

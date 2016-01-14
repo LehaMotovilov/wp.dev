@@ -23,13 +23,13 @@ Another modern WordPress stack. Enjoy :)
 * ```npm install```
 * ```bower install```
 
-
 ## How to use?
 
 * Migration example ```vendor/bin/phinx migrate -e development```
 * Deploy example ```dep deploy production```
 * Run tests ```php ./vendor/bin/codecept run```
 * Run Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```
+* Run WP-Cli example ```vendor/wp-cli/wp-cli/bin/wp core version```
 
 ## Apache config
 ```

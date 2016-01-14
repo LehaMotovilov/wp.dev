@@ -47,6 +47,7 @@
 		"deployer/deployer": "~3.0",
 		"codeception/codeception": "*",
 		"squizlabs/php_codesniffer": "2.*",
+		"wp-cli/wp-cli" : "*",
 		"wpcs": "*"
 	},
 	"extra": {

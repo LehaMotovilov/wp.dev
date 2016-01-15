@@ -1,3 +1,4 @@
 {
-	"preset": "wordpress"
+	"preset": "wordpress",
+	"maxErrors": 5
 }

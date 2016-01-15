@@ -11,9 +11,11 @@ node_modules
 # WordPress Core
 /web/wp
 
-# Uploads
+# Uploads / Upgrade
 web/app/uploads/*
 !web/app/uploads/.gitkeep
+web/app/upgrade/*
+!web/app/upgrade/.gitkeep
 
 # Environment Variables
 /configs/.env
@@ -25,7 +27,6 @@ web/app/uploads/*
 .DS_Store
 
 # WordPress Plugns
-/web/app/plugins/query-monitor
 /web/app/db.php
 
 # Assets

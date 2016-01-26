@@ -43,7 +43,7 @@ class WP_REST_Post_Types_Controller extends WP_REST_Controller {
 			$post_type = $this->prepare_item_for_response( $obj, $request );
 			$data[ $obj->name ] = $this->prepare_response_for_collection( $post_type );
 		}
-		return $data;
+		return rest_ensure_response( $data );
 	}
 
 	/**
@@ -63,7 +63,8 @@ class WP_REST_Post_Types_Controller extends WP_REST_Controller {
 		if ( 'edit' === $request['context'] && ! current_user_can( $obj->cap->edit_posts ) ) {
 			return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you are not allowed to manage this type.' ), array( 'status' => rest_authorization_required_code() ) );
 		}
-		return $this->prepare_item_for_response( $obj, $request );
+		$data = $this->prepare_item_for_response( $obj, $request );
+		return rest_ensure_response( $data );
 	}
 
 	/**
@@ -71,7 +72,7 @@ class WP_REST_Post_Types_Controller extends WP_REST_Controller {
 	 *
 	 * @param stdClass $post_type Post type data
 	 * @param WP_REST_Request $request
-	 * @return array Post type data
+	 * @return WP_REST_Response $response
 	 */
 	public function prepare_item_for_response( $post_type, $request ) {
 		$data = array(
@@ -82,8 +83,8 @@ class WP_REST_Post_Types_Controller extends WP_REST_Controller {
 			'slug'         => $post_type->name,
 		);
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data = $this->filter_response_by_context( $data, $context );
 		$data = $this->add_additional_fields_to_object( $data, $request );
+		$data = $this->filter_response_by_context( $data, $context );
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );

@@ -50,28 +50,14 @@ class WP_REST_Taxonomies_Controller extends WP_REST_Controller {
 			$tax = $this->prepare_response_for_collection( $tax );
 			$data[ $tax_type ] = $tax;
 		}
-		return $data;
-	}
-
-	/**
-	 * Get a specific taxonomy
-	 *
-	 * @param WP_REST_Request $request
-	 * @return array|WP_Error
-	 */
-	public function get_item( $request ) {
-		$tax_obj = get_taxonomy( $request['taxonomy'] );
-		if ( empty( $tax_obj ) ) {
-			return new WP_Error( 'rest_taxonomy_invalid', __( 'Invalid taxonomy.' ), array( 'status' => 404 ) );
-		}
-		return $this->prepare_item_for_response( $tax_obj, $request );
+		return rest_ensure_response( $data );
 	}
 
 	/**
 	 * Check if a given request has access a taxonomy
 	 *
 	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return bool
+	 * @return WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
 
@@ -90,11 +76,26 @@ class WP_REST_Taxonomies_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Get a specific taxonomy
+	 *
+	 * @param WP_REST_Request $request
+	 * @return array|WP_Error
+	 */
+	public function get_item( $request ) {
+		$tax_obj = get_taxonomy( $request['taxonomy'] );
+		if ( empty( $tax_obj ) ) {
+			return new WP_Error( 'rest_taxonomy_invalid', __( 'Invalid taxonomy.' ), array( 'status' => 404 ) );
+		}
+		$data = $this->prepare_item_for_response( $tax_obj, $request );
+		return rest_ensure_response( $data );
+	}
+
+	/**
 	 * Prepare a taxonomy object for serialization
 	 *
 	 * @param stdClass $taxonomy Taxonomy data
 	 * @param WP_REST_Request $request
-	 * @return array Taxonomy data
+	 * @return WP_REST_Response $response
 	 */
 	public function prepare_item_for_response( $taxonomy, $request ) {
 
@@ -109,8 +110,8 @@ class WP_REST_Taxonomies_Controller extends WP_REST_Controller {
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data = $this->filter_response_by_context( $data, $context );
 		$data = $this->add_additional_fields_to_object( $data, $request );
+		$data = $this->filter_response_by_context( $data, $context );
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $data );

@@ -71,8 +71,9 @@ abstract class WP_REST_Meta_Controller extends WP_REST_Controller {
 				'callback'            => array( $this, 'delete_item' ),
 				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				'args'                => array(
-					'force' => array(
-						'default' => false,
+					'force'    => array(
+						'default'     => false,
+						'description' => __( 'Required to be true, as resource does not support trashing.' ),
 					),
 				),
 			),
@@ -340,7 +341,7 @@ abstract class WP_REST_Meta_Controller extends WP_REST_Controller {
 		 *
 		 * @param array           $value    The inserted meta data.
 		 * @param WP_REST_Request $request  The request sent to the API.
-		 * @param bool            $creating True when adding meta, false when updating.
+		 * @param boolean         $creating True when adding meta, false when updating.
 		 */
 		do_action( 'rest_insert_meta', $value, $request, false );
 

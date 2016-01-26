@@ -11,12 +11,32 @@ abstract class WP_REST_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to get items.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function get_items_permissions_check( $request ) {
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
+	}
+
+	/**
 	 * Get a collection of items.
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
+	}
+
+	/**
+	 * Check if a given request has access to get a specific item.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function get_item_permissions_check( $request ) {
 		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
 	}
 
@@ -31,12 +51,32 @@ abstract class WP_REST_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to create items.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function create_item_permissions_check( $request ) {
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
+	}
+
+	/**
 	 * Create one item from the collection.
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item( $request ) {
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
+	}
+
+	/**
+	 * Check if a given request has access to update a specific item.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function update_item_permissions_check( $request ) {
 		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
 	}
 
@@ -51,62 +91,22 @@ abstract class WP_REST_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to delete a specific item.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function delete_item_permissions_check( $request ) {
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
+	}
+
+	/**
 	 * Delete one item from the collection.
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function delete_item( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
-	}
-
-	/**
-	 * Check if a given request has access to get items.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
-	 */
-	public function get_items_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
-	}
-
-	/**
-	 * Check if a given request has access to get a specific item.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
-	 */
-	public function get_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
-	}
-
-	/**
-	 * Check if a given request has access to create items.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
-	 */
-	public function create_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
-	}
-
-	/**
-	 * Check if a given request has access to update a specific item.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
-	 */
-	public function update_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
-	}
-
-	/**
-	 * Check if a given request has access to delete a specific item.
-	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
-	 */
-	public function delete_item_permissions_check( $request ) {
 		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
 	}
 
@@ -125,7 +125,7 @@ abstract class WP_REST_Controller {
 	 *
 	 * @param mixed $item WordPress representation of the item.
 	 * @param WP_REST_Request $request Request object.
-	 * @return mixed
+	 * @return WP_REST_Response $response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be over-ridden in subclass." ), __METHOD__ ), array( 'status' => 405 ) );
@@ -254,7 +254,6 @@ abstract class WP_REST_Controller {
 			'type'               => 'string',
 		);
 		$schema = $this->get_item_schema();
-		$contexts = array();
 		if ( empty( $schema['properties'] ) ) {
 			return array_merge( $param_details, $args );
 		}
@@ -315,7 +314,7 @@ abstract class WP_REST_Controller {
 				continue;
 			}
 
-			$result = call_user_func( $field_options['update_callback'], $request[ $field_name ], $object, $field_name, $request, $this->get_object_type() );
+			call_user_func( $field_options['update_callback'], $request[ $field_name ], $object, $field_name, $request, $this->get_object_type() );
 		}
 	}
 
@@ -327,7 +326,7 @@ abstract class WP_REST_Controller {
 	 * @param array $schema Schema array.
 	 */
 	protected function add_additional_fields_schema( $schema ) {
-		if ( ! $schema || ! isset( $schema['title'] ) ) {
+		if ( empty( $schema['title'] ) ) {
 			return $schema;
 		}
 
@@ -446,7 +445,7 @@ abstract class WP_REST_Controller {
 	 * @param  mixed $value
 	 * @param  WP_REST_Request $request
 	 * @param  string $parameter
-	 * @return WP_Error|bool
+	 * @return WP_Error|boolean
 	 */
 	public function validate_schema_property( $value, $request, $parameter ) {
 
@@ -506,7 +505,7 @@ abstract class WP_REST_Controller {
 	 * @param  mixed $value
 	 * @param  WP_REST_Request $request
 	 * @param  string $parameter
-	 * @return WP_Error|bool
+	 * @return mixed
 	 */
 	public function sanitize_schema_property( $value, $request, $parameter ) {
 

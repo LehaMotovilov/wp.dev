@@ -49,6 +49,26 @@ class WP_REST_Revisions_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to get revisions
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|boolean
+	 */
+	public function get_items_permissions_check( $request ) {
+
+		$parent = get_post( $request['parent_id'] );
+		if ( ! $parent ) {
+			return true;
+		}
+		$parent_post_type_obj = get_post_type_object( $parent->post_type );
+		if ( ! current_user_can( $parent_post_type_obj->cap->edit_post, $parent->ID ) ) {
+			return new WP_Error( 'rest_cannot_read', __( 'Sorry, you cannot view revisions of this post.' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get a collection of revisions
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
@@ -68,27 +88,17 @@ class WP_REST_Revisions_Controller extends WP_REST_Controller {
 			$data = $this->prepare_item_for_response( $revision, $request );
 			$response[] = $this->prepare_response_for_collection( $data );
 		}
-		return $response;
+		return rest_ensure_response( $response );
 	}
 
 	/**
-	 * Check if a given request has access to get revisions
+	 * Check if a given request has access to get a specific revision
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
+	 * @return WP_Error|boolean
 	 */
-	public function get_items_permissions_check( $request ) {
-
-		$parent = get_post( $request['parent_id'] );
-		if ( ! $parent ) {
-			return true;
-		}
-		$parent_post_type_obj = get_post_type_object( $parent->post_type );
-		if ( ! current_user_can( $parent_post_type_obj->cap->edit_post, $parent->ID ) ) {
-			return new WP_Error( 'rest_cannot_read', __( 'Sorry, you cannot view revisions of this post.' ), array( 'status' => rest_authorization_required_code() ) );
-		}
-
-		return true;
+	public function get_item_permissions_check( $request ) {
+		return $this->get_items_permissions_check( $request );
 	}
 
 	/**
@@ -110,24 +120,32 @@ class WP_REST_Revisions_Controller extends WP_REST_Controller {
 		}
 
 		$response = $this->prepare_item_for_response( $revision, $request );
-		return $response;
+		return rest_ensure_response( $response );
 	}
 
 	/**
-	 * Check if a given request has access to get a specific revision
+	 * Check if a given request has access to delete a revision
 	 *
-	 * @param WP_REST_Request $request Full data about the request.
-	 * @return WP_Error|bool
+	 * @param  WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|boolean
 	 */
-	public function get_item_permissions_check( $request ) {
-		return $this->get_items_permissions_check( $request );
+	public function delete_item_permissions_check( $request ) {
+
+		$response = $this->get_items_permissions_check( $request );
+		if ( ! $response || is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$post = get_post( $request['id'] );
+		$post_type = get_post_type_object( 'revision' );
+		return current_user_can( $post_type->cap->delete_post, $post->ID );
 	}
 
 	/**
 	 * Delete a single revision
 	 *
 	 * @param WP_REST_Request $request Full details about the request
-	 * @return bool|WP_Error
+	 * @return WP_Error|boolean
 	 */
 	public function delete_item( $request ) {
 		$result = wp_delete_post( $request['id'], true );
@@ -150,29 +168,11 @@ class WP_REST_Revisions_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to delete a revision
-	 *
-	 * @param  WP_REST_Request $request Full details about the request.
-	 * @return bool|WP_Error
-	 */
-	public function delete_item_permissions_check( $request ) {
-
-		$response = $this->get_items_permissions_check( $request );
-		if ( ! $response || is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		$post = get_post( $request['id'] );
-		$post_type = get_post_type_object( 'revision' );
-		return current_user_can( $post_type->cap->delete_post, $post->ID );
-	}
-
-	/**
 	 * Prepare the revision for the REST response
 	 *
 	 * @param WP_Post $post Post revision object.
 	 * @param WP_REST_Request $request Request object.
-	 * @return array
+	 * @return WP_REST_Response $response
 	 */
 	public function prepare_item_for_response( $post, $request ) {
 
@@ -204,12 +204,9 @@ class WP_REST_Revisions_Controller extends WP_REST_Controller {
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$data = $this->filter_response_by_context( $data, $context );
 		$data = $this->add_additional_fields_to_object( $data, $request );
+		$data = $this->filter_response_by_context( $data, $context );
 		$response = rest_ensure_response( $data );
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
 
 		if ( ! empty( $data['parent'] ) ) {
 			$response->add_link( 'parent', rest_url( sprintf( 'wp/%s/%d', $this->parent_base, $data['parent'] ) ) );
@@ -255,7 +252,7 @@ class WP_REST_Revisions_Controller extends WP_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => "{$this->parent_base}-revision",
+			'title'      => "{$this->parent_post_type}-revision",
 			'type'       => 'object',
 			/*
 			 * Base properties for every Revision

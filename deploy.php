@@ -1,21 +1,24 @@
 <?php
+/**
+ * This is an example of a deploy.php.
+ */
 
-// Load default tasks
+// Load default tasks.
 require( __DIR__ . '/vendor/deployer/deployer/recipe/common.php' );
 
-// Load server's configs
+// Load server's configs.
 serverList( __DIR__ . '/configs/deploy.yml' );
 
-// Repo with project
+// Repo with project.
 set( 'repository', 'https://github.com/LehaMotovilov/wp.dev' );
 
-// Lets share uploads and vendor folders
+// Lets share uploads and vendor folders.
 set( 'shared_dirs', ['web/app/uploads', 'vendor'] );
 
-// Main config with environment variables
+// Main config with environment variables.
 set( 'shared_files', ['configs/.env'] );
 
-// Writable dirs
+// Writable dirs.
 set( 'writable_dirs', ['web/app/uploads', 'web/app/ewww'] );
 
 // Flush cache.
@@ -27,7 +30,7 @@ task( 'deploy:cache', function () {
 	);
 } )->desc('Transient deleted and Cache flushed');
 
-// Restart services
+// Restart services.
 task( 'deploy:reload', function () {
 	run(
 		'sudo service nginx restart &&
@@ -37,7 +40,7 @@ task( 'deploy:reload', function () {
 	);
 } )->desc('Services nginx, php5-fpm, memcached, mysql are restarted');
 
-// Run DB migrations
+// Run DB migrations.
 task( 'deploy:migrations', function () {
 	run(
 		'cd {{release_path}} &&
@@ -45,7 +48,7 @@ task( 'deploy:migrations', function () {
 	);
 } )->desc('DB migrations');
 
-// Run deploy
+// Run deploy.
 task('deploy', [
 	'deploy:prepare',
 	'deploy:release',

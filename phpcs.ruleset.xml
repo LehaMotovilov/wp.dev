@@ -19,6 +19,11 @@
     <!-- Temp ignore all plugins -->
     <exclude-pattern>/web/app/plugins/*</exclude-pattern>
 
+	<!-- Ignore all default themes -->
+	<exclude-pattern>/web/app/themes/twentyfifteen/*</exclude-pattern>
+	<exclude-pattern>/web/app/themes/twentyfourteen/*</exclude-pattern>
+    <exclude-pattern>/web/app/themes/twentysixteen/*</exclude-pattern>
+
     <!-- Ignore all assets -->
     <exclude-pattern>*.css</exclude-pattern>
     <exclude-pattern>*.js</exclude-pattern>

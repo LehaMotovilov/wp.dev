@@ -58,10 +58,5 @@
 			"web/app/plugins/{$name}/": ["type:wordpress-plugin"],
 			"web/app/themes/{$name}/": ["type:wordpress-theme"]
 		}
-	},
-	"autoload": {
-		"psr-4": {
-			"LM\\Theme\\": "web/app/themes/leham/includes/classes/"
-		}
 	}
 }

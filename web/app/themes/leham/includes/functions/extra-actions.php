@@ -1,3 +1,0 @@
-<?php
-
-// Extra Actions here...

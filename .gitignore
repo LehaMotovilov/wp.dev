@@ -21,15 +21,13 @@ web/app/upgrade/*
 /configs/.env
 /configs/deploy.yml
 
-# htaccess and other stuff
+# .htaccess and other stuff
 .idea/
 .htaccess
 .DS_Store
 
-# WordPress Plugns
+# WordPress Plugins
 /web/app/db.php
 
 # Assets
-web/app/themes/leham/assets/vendor/
-!web/app/themes/leham/assets/vendor/.gitkeep
 tests/_output/*

@@ -36,10 +36,6 @@
     <rule ref="vendor/wpcs/WordPress-Core"/>
     <rule ref="vendor/wpcs/WordPress-Extra">
         <exclude name="WordPress.PHP.YodaConditions" />
-        <exclude name="WordPress.Arrays.ArrayDeclaration.NoComma" />
-        <exclude name="WordPress.Arrays.ArrayDeclaration.NoCommaAfterLast" />
-        <exclude name="WordPress.CSRF.NonceVerification.NoNonceVerification" />
-        <exclude name="Generic.Files.LowercasedFilename.NotFound" />
     </rule>
 
     <!-- Rules for comments -->

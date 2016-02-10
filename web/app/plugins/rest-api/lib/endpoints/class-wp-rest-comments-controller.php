@@ -5,12 +5,17 @@
  */
 class WP_REST_Comments_Controller extends WP_REST_Controller {
 
+	public function __construct() {
+		$this->namespace = 'wp/v2';
+		$this->rest_base = 'comments';
+	}
+
 	/**
 	 * Register the routes for the objects of the controller.
 	 */
 	public function register_routes() {
 
-		register_rest_route( 'wp/v2', '/comments', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
 			array(
 				'methods'   => WP_REST_Server::READABLE,
 				'callback'  => array( $this, 'get_items' ),
@@ -23,11 +28,10 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 				'permission_callback' => array( $this, 'create_item_permissions_check' ),
 				'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 			),
-
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
 
-		register_rest_route( 'wp/v2', '/comments/(?P<id>[\d]+)', array(
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)', array(
 			array(
 				'methods'  => WP_REST_Server::READABLE,
 				'callback' => array( $this, 'get_item' ),
@@ -53,7 +57,6 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 					),
 				),
 			),
-
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
 	}
@@ -66,17 +69,40 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 
-		// If the post id is specified, check that we can read the post
-		if ( isset( $request['post'] ) ) {
-			$post = get_post( (int) $request['post'] );
-
-			if ( $post && ! $this->check_read_post_permission( $post ) ) {
-				return new WP_Error( 'rest_cannot_read_post', __( 'Sorry, you cannot read the post for this comment.' ), array( 'status' => rest_authorization_required_code() ) );
+		if ( ! empty( $request['post'] ) ) {
+			foreach ( $request['post'] as $post_id ) {
+				$post = get_post( $post_id );
+				if ( ! empty( $post_id ) && $post && ! $this->check_read_post_permission( $post ) ) {
+					return new WP_Error( 'rest_cannot_read_post', __( 'Sorry, you cannot read the post for this comment.' ), array( 'status' => rest_authorization_required_code() ) );
+				} else if ( 0 === $post_id && ! current_user_can( 'moderate_comments' ) ) {
+					return new WP_Error( 'rest_cannot_read', __( 'Sorry, you cannot read comments without a post.' ), array( 'status' => rest_authorization_required_code() ) );
+				}
 			}
 		}
 
 		if ( ! empty( $request['context'] ) && 'edit' === $request['context'] && ! current_user_can( 'moderate_comments' ) ) {
 			return new WP_Error( 'rest_forbidden_context', __( 'Sorry, you cannot view comments with edit context.' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			$protected_params = array( 'author', 'author_exclude', 'karma', 'author_email', 'type', 'status' );
+			$forbidden_params = array();
+			foreach ( $protected_params as $param ) {
+				if ( 'status' === $param ) {
+					if ( 'approve' !== $request[ $param ] ) {
+						$forbidden_params[] = $param;
+					}
+				} else if ( 'type' === $param ) {
+					if ( 'comment' !== $request[ $param ] ) {
+						$forbidden_params[] = $param;
+					}
+				} else if ( ! empty( $request[ $param ] ) ) {
+					$forbidden_params[] = $param;
+				}
+			}
+			if ( ! empty( $forbidden_params ) ) {
+				return new WP_Error( 'rest_forbidden_param', sprintf( __( 'Query parameter not permitted: %s' ), implode( ', ', $forbidden_params ) ), array( 'status' => rest_authorization_required_code() ) );
+			}
 		}
 
 		return true;
@@ -90,39 +116,27 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 	 */
 	public function get_items( $request ) {
 		$prepared_args = array(
+			'author_email'    => isset( $request['author_email'] ) ? $request['author_email'] : '',
 			'comment__in'     => $request['include'],
 			'comment__not_in' => $request['exclude'],
+			'karma'           => isset( $request['karma'] ) ? $request['karma'] : '',
 			'number'          => $request['per_page'],
-			'post_id'         => $request['post'] ? $request['post'] : '',
-			'parent'          => isset( $request['parent'] ) ? $request['parent'] : '',
+			'post__in'        => $request['post'],
+			'parent__in'      => $request['parent'],
+			'parent__not_in'  => $request['parent_exclude'],
 			'search'          => $request['search'],
 			'offset'          => $request['offset'],
 			'orderby'         => $this->normalize_query_param( $request['orderby'] ),
 			'order'           => $request['order'],
-			'status'          => 'approve',
-			'type'            => 'comment',
+			'status'          => $request['status'],
+			'type'            => $request['type'],
 			'no_found_rows'   => false,
+			'author__in'      => $request['author'],
+			'author__not_in'  => $request['author_exclude'],
 		);
 
 		if ( empty( $request['offset'] ) ) {
 			$prepared_args['offset'] = $prepared_args['number'] * ( absint( $request['page'] ) - 1 );
-		}
-
-		if ( current_user_can( 'edit_posts' ) ) {
-			$protected_args = array(
-				'user_id'      => $request['author'] ? $request['author'] : '',
-				'status'       => $request['status'],
-				'type'         => isset( $request['type'] ) ? $request['type'] : '',
-				'author_email' => isset( $request['author_email'] ) ? $request['author_email'] : '',
-				'karma'        => isset( $request['karma'] ) ? $request['karma'] : '',
-				'post_author'  => isset( $request['post_author'] ) ? $request['post_author'] : '',
-				'post_name'    => isset( $request['post_slug'] ) ? $request['post_slug'] : '',
-				'post_parent'  => isset( $request['post_parent'] ) ? $request['post_parent'] : '',
-				'post_status'  => isset( $request['post_status'] ) ? $request['post_status'] : '',
-				'post_type'    => isset( $request['post_type'] ) ? $request['post_type'] : '',
-			);
-
-			$prepared_args = array_merge( $prepared_args, $protected_args );
 		}
 
 		/**
@@ -140,8 +154,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 
 		$comments = array();
 		foreach ( $query_result as $comment ) {
-			$post = get_post( $comment->comment_post_ID );
-			if ( ! $this->check_read_post_permission( $post ) || ! $this->check_read_permission( $comment ) ) {
+			if ( ! $this->check_read_permission( $comment ) ) {
 				continue;
 			}
 
@@ -166,7 +179,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 		$response->header( 'X-WP-Total', $total_comments );
 		$response->header( 'X-WP-TotalPages', $max_pages );
 
-		$base = add_query_arg( $request->get_query_params(), rest_url( '/wp/v2/comments' ) );
+		$base = add_query_arg( $request->get_query_params(), rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ) );
 		if ( $request['page'] > 1 ) {
 			$prev_page = $request['page'] - 1;
 			if ( $prev_page > $max_pages ) {
@@ -343,19 +356,15 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 			$this->handle_status_param( $request['status'], $comment );
 		}
 
-		$this->update_additional_fields_for_object( get_comment( $comment_id ), $request );
+		$comment = get_comment( $comment_id );
+		$this->update_additional_fields_for_object( $comment, $request );
 
 		$context = current_user_can( 'moderate_comments' ) ? 'edit' : 'view';
-		$get_request = new WP_REST_Request;
-		$get_request->set_param( 'id', $comment_id );
-		$get_request->set_param( 'context', $context );
-		$response = $this->get_item( $get_request );
+		$request->set_param( 'context', $context );
+		$response = $this->prepare_item_for_response( $comment, $request );
 		$response = rest_ensure_response( $response );
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( '/wp/v2/comments/' . $comment_id ) );
+		$response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $comment_id ) ) );
 
 		/**
 		 * Fires after a comment is created or updated via the REST API.
@@ -482,14 +491,11 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 		 */
 		$supports_trash = apply_filters( 'rest_comment_trashable', ( EMPTY_TRASH_DAYS > 0 ), $comment );
 
-		$get_request = new WP_REST_Request;
-		$get_request->set_param( 'id', $id );
-		$get_request->set_param( 'context', 'edit' );
-		$response = $this->prepare_item_for_response( $comment, $get_request );
+		$request->set_param( 'context', 'edit' );
+		$response = $this->prepare_item_for_response( $comment, $request );
 
 		if ( $force ) {
 			$result = wp_delete_comment( $comment->comment_ID, true );
-			$status = 'deleted';
 		} else {
 			// If we don't support trashing for this type, error out
 			if ( ! $supports_trash ) {
@@ -501,15 +507,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 			}
 
 			$result = wp_trash_comment( $comment->comment_ID );
-			$status = 'trashed';
 		}
-
-		$data = $response->get_data();
-		$data = array(
-			'data'  => $data,
-			$status => true,
-		);
-		$response->set_data( $data );
 
 		if ( ! $result ) {
 			return new WP_Error( 'rest_cannot_delete', __( 'The comment cannot be deleted.' ), array( 'status' => 500 ) );
@@ -518,11 +516,11 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 		/**
 		 * Fires after a comment is deleted via the REST API.
 		 *
-		 * @param object          $comment The deleted comment data.
-		 * @param array           $data    Delete status data.
-		 * @param WP_REST_Request $request The request sent to the API.
+		 * @param object           $comment  The deleted comment data.
+		 * @param WP_REST_Response $response The response returned from the API.
+		 * @param WP_REST_Request  $request  The request sent to the API.
 		 */
-		do_action( 'rest_delete_comment', $comment, $data, $request );
+		do_action( 'rest_delete_comment', $comment, $response, $request );
 
 		return $response;
 	}
@@ -588,10 +586,10 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 	protected function prepare_links( $comment ) {
 		$links = array(
 			'self' => array(
-				'href' => rest_url( '/wp/v2/comments/' . $comment->comment_ID ),
+				'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $comment->comment_ID ) ),
 			),
 			'collection' => array(
-				'href' => rest_url( '/wp/v2/comments' ),
+				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
 			),
 		);
 
@@ -605,8 +603,8 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 		if ( 0 !== (int) $comment->comment_post_ID ) {
 			$post = get_post( $comment->comment_post_ID );
 			if ( ! empty( $post->ID ) ) {
-				$posts_controller = new WP_REST_Posts_Controller( $post->post_type );
-				$base = $posts_controller->get_post_type_base( $post->post_type );
+				$obj = get_post_type_object( $post->post_type );
+				$base = ! empty( $obj->rest_base ) ? $obj->rest_base : $obj->name;
 
 				$links['up'] = array(
 					'href'       => rest_url( '/wp/v2/' . $base . '/' . $comment->comment_post_ID ),
@@ -618,7 +616,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 
 		if ( 0 !== (int) $comment->comment_parent ) {
 			$links['in-reply-to'] = array(
-				'href'       => rest_url( sprintf( '/wp/v2/comments/%d', (int) $comment->comment_parent ) ),
+				'href'       => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $comment->comment_parent ) ),
 				'embeddable' => true,
 			);
 		}
@@ -832,7 +830,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 							'context'         => array( 'edit' ),
 						),
 						'rendered'    => array(
-							'description'     => __( 'Content for the object, transformed for display.' ),
+							'description'     => __( 'HTML content for the object, transformed for display.' ),
 							'type'            => 'string',
 							'context'         => array( 'view', 'edit', 'embed' ),
 						),
@@ -914,11 +912,24 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 
 		$query_params['context']['default'] = 'view';
 
+		$query_params['author'] = array(
+			'description'       => __( 'Limit result set to comments assigned to specific user ids. Requires authorization.' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'type'              => 'array',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+		$query_params['author_exclude'] = array(
+			'description'       => __( 'Ensure result set excludes comments assigned to specific user ids. Requires authorization.' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'type'              => 'array',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
 		$query_params['author_email'] = array(
 			'default'           => null,
-			'description'       => __( 'Limit result set to that from a specific author email.' ),
+			'description'       => __( 'Limit result set to that from a specific author email. Requires authorization.' ),
 			'format'            => 'email',
 			'sanitize_callback' => 'sanitize_email',
+			'validate_callback' => 'rest_validate_request_arg',
 			'type'              => 'string',
 		);
 		$query_params['exclude'] = array(
@@ -926,28 +937,33 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 			'type'               => 'array',
 			'default'            => array(),
 			'sanitize_callback'  => 'wp_parse_id_list',
+			'validate_callback'  => 'rest_validate_request_arg',
 		);
 		$query_params['include'] = array(
 			'description'        => __( 'Limit result set to specific ids.' ),
 			'type'               => 'array',
 			'default'            => array(),
 			'sanitize_callback'  => 'wp_parse_id_list',
+			'validate_callback'  => 'rest_validate_request_arg',
 		);
 		$query_params['karma'] = array(
 			'default'           => null,
-			'description'       => __( 'Limit result set to that of a particular comment karma.' ),
+			'description'       => __( 'Limit result set to that of a particular comment karma. Requires authorization.' ),
 			'sanitize_callback' => 'absint',
 			'type'              => 'integer',
+			'validate_callback'  => 'rest_validate_request_arg',
 		);
 		$query_params['offset'] = array(
 			'description'        => __( 'Offset the result set by a specific number of comments.' ),
 			'type'               => 'integer',
 			'sanitize_callback'  => 'absint',
+			'validate_callback'  => 'rest_validate_request_arg',
 		);
 		$query_params['order']      = array(
 			'description'           => __( 'Order sort attribute ascending or descending.' ),
 			'type'                  => 'string',
 			'sanitize_callback'     => 'sanitize_key',
+			'validate_callback'     => 'rest_validate_request_arg',
 			'default'               => 'asc',
 			'enum'                  => array(
 				'asc',
@@ -958,6 +974,7 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 			'description'           => __( 'Sort collection by object attribute.' ),
 			'type'                  => 'string',
 			'sanitize_callback'     => 'sanitize_key',
+			'validate_callback'     => 'rest_validate_request_arg',
 			'default'               => 'date_gmt',
 			'enum'                  => array(
 				'date',
@@ -970,63 +987,39 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 			),
 		);
 		$query_params['parent'] = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to that of a specific comment parent id.' ),
-			'sanitize_callback' => 'absint',
-			'type'              => 'integer',
+			'default'           => array(),
+			'description'       => __( 'Limit result set to resources of specific parent ids.' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'type'              => 'array',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+		$query_params['parent_exclude'] = array(
+			'default'           => array(),
+			'description'       => __( 'Ensure result set excludes specific parent ids.' ),
+			'sanitize_callback' => 'wp_parse_id_list',
+			'type'              => 'array',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 		$query_params['post']   = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to comments assigned to a specific post id.' ),
-			'sanitize_callback' => 'absint',
-			'type'              => 'integer',
-		);
-		$query_params['post_author'] = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to comments associated with posts of a specific post author id.' ),
-			'sanitize_callback' => 'absint',
-			'type'              => 'integer',
-		);
-		$query_params['post_slug'] = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to comments associated with posts of a specific post slug.' ),
-			'sanitize_callback' => 'sanitize_title',
-			'type'              => 'string',
-		);
-		$query_params['post_parent'] = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to comments associated with posts of a specific post parent id.' ),
-			'sanitize_callback' => 'absint',
-			'type'              => 'integer',
-		);
-		$query_params['post_status'] = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to comments associated with posts of a specific post status.' ),
-			'sanitize_callback' => 'sanitize_key',
-			'type'              => 'string',
-		);
-		$query_params['post_type'] = array(
-			'default'           => null,
-			'description'       => __( 'Limit result set to comments associated with posts of a specific post type.' ),
-			'sanitize_callback' => 'sanitize_key',
-			'type'              => 'string',
+			'default'           => array(),
+			'description'       => __( 'Limit result set to resources assigned to specific post ids.' ),
+			'type'              => 'array',
+			'sanitize_callback' => 'wp_parse_id_list',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 		$query_params['status'] = array(
 			'default'           => 'approve',
-			'description'       => __( 'Limit result set to comments assigned a specific status.' ),
+			'description'       => __( 'Limit result set to comments assigned a specific status. Requires authorization.' ),
 			'sanitize_callback' => 'sanitize_key',
 			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 		$query_params['type'] = array(
 			'default'           => 'comment',
-			'description'       => __( 'Limit result set to comments assigned a specific type.' ),
+			'description'       => __( 'Limit result set to comments assigned a specific type. Requires authorization.' ),
 			'sanitize_callback' => 'sanitize_key',
 			'type'              => 'string',
-		);
-		$query_params['author'] = array(
-			'description'       => __( 'Limit result set to comments assigned to a specific user id.' ),
-			'sanitize_callback' => 'absint',
-			'type'              => 'integer',
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 		return $query_params;
 	}
@@ -1103,6 +1096,17 @@ class WP_REST_Comments_Controller extends WP_REST_Controller {
 
 		if ( 0 === get_current_user_id() ) {
 			return false;
+		}
+
+		if ( empty( $comment->comment_post_ID ) && ! current_user_can( 'moderate_comments' ) ) {
+			return false;
+		}
+
+		$post = get_post( $comment->comment_post_ID );
+		if ( $comment->comment_post_ID && $post ) {
+			if ( ! $this->check_read_post_permission( $post ) ) {
+				return false;
+			}
 		}
 
 		if ( ! empty( $comment->user_id ) && get_current_user_id() === (int) $comment->user_id ) {

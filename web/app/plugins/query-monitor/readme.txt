@@ -3,7 +3,7 @@ Contributors: johnbillion
 Tags: ajax, debug, debug-bar, debugging, development, developer, performance, profiler, profiling, queries, query monitor, rest-api
 Requires at least: 3.7
 Tested up to: 4.4
-Stable tag: 2.8.1
+Stable tag: 2.9.0
 License: GPLv2 or later
 
 View debugging and performance information on database queries, hooks, conditionals, HTTP requests, redirects and more.
@@ -52,6 +52,10 @@ Filtering queries by component or calling function makes it easy to see which pl
  * Shows **query vars** for the current request, and highlights **custom query vars**
  * Shows the **queried object** details
  * Shows details of the **current blog** (multisite only) and **current site** (multi-network only)
+
+= Rewrite Rules =
+
+ * Shows **all matching rewrite rules** for a given request
 
 = Scripts & Styles =
 
@@ -153,6 +157,12 @@ In addition, Query Monitor transparently supports add-ons for the Debug Bar plug
 
 Please use [the issue tracker on Query Monitor's GitHub repo](https://github.com/johnbillion/query-monitor/issues) as it's easier to keep track of issues there, rather than on the wordpress.org support forums.
 
+= Is Query Monitor available on WordPress.com VIP Go? =
+
+Yep! You just need to add `define( 'WPCOM_VIP_QM_ENABLE', true );` to your `vip-config/vip-config.php` file.
+
+(It's not available on standard WordPress.com VIP though.)
+
 = I'm using multiple instances of `wpdb`. How do I get my additional instances to show up in Query Monitor? =
 
 You'll need to hook into the `qm/collect/db_objects` filter and add an item to the array with your connection name as the key and the `wpdb` instance as the value. Your `wpdb` instance will then show up as a separate panel, and the query time and query count will show up separately in the admin toolbar menu. Aggregate information (queries by caller and component) will not be separated.
@@ -162,6 +172,15 @@ You'll need to hook into the `qm/collect/db_objects` filter and add an item to t
 No, I do not accept donations. If you like the plugin, I'd love for you to [leave a review](https://wordpress.org/support/view/plugin-reviews/query-monitor). Tell all your friends about the plugin too!
 
 == Changelog ==
+
+= 2.9.0 =
+
+* Introduce a new panel which displays all matching rewrite rules for the current request.
+* Remove the deprecated `is_comments_popup()` from the list of conditionals.
+* Improve the display of scripts and styles which are blocked by Airplane Mode (0.1.4 and later).
+* Gracefully handle enqueued assets which are deregistered late without being unenqueued.
+* Add a filter to hide the extended query information prompt.
+* Various minor bugfixes and code quality tweaks.
 
 = 2.8.1 =
 * Correctly detect the file name and line number responsible for loading translation files in plugins which use `load_textdomain()`.

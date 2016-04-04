@@ -91,18 +91,37 @@ jQuery( function($) {
 		$('#wp-admin-bar-query-monitor ul').append(container);
 
 		$('#wp-admin-bar-query-monitor').find('a').on('click',function(e){
+			var paused = true;
+
 			if ( is_admin ) {
 				$('#wpfooter').css('position','relative');
 			}
 			if ( window.infinite_scroll && infinite_scroll.contentSelector ) {
+				// Infinite Scroll plugin
 
 				$( infinite_scroll.contentSelector ).infinitescroll('pause');
 
-				if ( window.console ) {
-					console.log( qm_l10n.infinitescroll_paused );
-				}
+			} else if ( window.infiniteScroll && infiniteScroll.scroller ) {
+				// Jetpack Infinite Scroll module
 
+				infiniteScroll.scroller.check = function(){
+					return false;
+				};
+
+			} else if ( window.wp && wp.themes && wp.themes.RunInstaller ) {
+				// Infinite scrolling on Appearance -> Add New screens
+
+				var view = wp.themes.RunInstaller.view.view;
+				view.stopListening( view.parent, 'theme:scroll' );
+
+			} else {
+				paused = false;
 			}
+
+			if ( paused && window.console ) {
+				console.debug( qm_l10n.infinitescroll_paused );
+			}
+
 			$('#qm').show();
 		});
 
@@ -110,12 +129,12 @@ jQuery( function($) {
 
 	}
 
-	$('#qm').find('select.qm-filter').on('change',function(e){
+	$('#qm').find('.qm-filter').on('change',function(e){
 
 		var filter = $(this).attr('data-filter'),
 			table  = $(this).closest('table'),
 			tr     = table.find('tbody tr[data-qm-' + filter + ']'),
-			val    = $(this).val().replace(/[[\]()'"]/g, "\\$&"),
+			val    = $(this).val().replace(/[[\]()'"\\]/g, "\\$&"),
 			total  = tr.removeClass('qm-hide-' + filter).length,
 			hilite = $(this).attr('data-highlight'),
 			time   = 0;
@@ -146,6 +165,19 @@ jQuery( function($) {
 
 		$(this).blur();
 
+	});
+
+	$('#qm').find('.qm-filter-trigger').on('click',function(e){
+		var filter = $(this).data('qm-filter'),
+		    value  = $(this).data('qm-value'),
+		    target = $(this).data('qm-target');
+		$('#qm-' + target).find('.qm-filter').not('[data-filter="' + filter + '"]').val('').change();
+		$('#qm-' + target).find('[data-filter="' + filter + '"]').val(value).change();
+		$('html, body').scrollTop( $(this).closest('.qm').offset().top );
+		$('html, body').animate({
+			scrollTop: $('#qm-' + target).offset().top
+		}, 500);
+		e.preventDefault();
 	});
 
 	$('#qm').find('.qm-toggle').on('click',function(e){

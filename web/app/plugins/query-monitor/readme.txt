@@ -2,8 +2,8 @@
 Contributors: johnbillion
 Tags: ajax, debug, debug-bar, debugging, development, developer, performance, profiler, profiling, queries, query monitor, rest-api
 Requires at least: 3.7
-Tested up to: 4.4
-Stable tag: 2.9.0
+Tested up to: 4.5
+Stable tag: 2.10.0
 License: GPLv2 or later
 
 View debugging and performance information on database queries, hooks, conditionals, HTTP requests, redirects and more.
@@ -20,7 +20,7 @@ Here's an overview of what's shown:
 
  * Shows all database queries performed on the current page
  * Shows **affected rows** and time for all queries
- * Show notifications for **slow queries** and **queries with errors**
+ * Shows notifications for **slow queries**, **duplicate queries**, and **queries with errors**
  * Filter queries by **query type** (`SELECT`, `UPDATE`, `DELETE`, etc)
  * Filter queries by **component** (WordPress core, Plugin X, Plugin Y, theme)
  * Filter queries by **calling function**
@@ -173,6 +173,24 @@ No, I do not accept donations. If you like the plugin, I'd love for you to [leav
 
 == Changelog ==
 
+= 2.10.0 =
+
+* Add a new panel which lists duplicated database queries.
+* Add support for displaying QM's output when viewing an embed.
+* Differentiate regular plugins from mu-plugins when displaying components.
+* Ensure early errors are always reported regardless of system level error reporting.
+* Ensure that script and style dependency highlighting is restricted to the scripts and styles tables, respectively.
+* Rearrange the Environment section output a little.
+* Various minor tweaks.
+
+= 2.9.1 =
+
+* Query callers and query components can now be clicked to filter the main query list by that caller or component.
+* Add support for pausing Jetpack's Infinite Scroll module when viewing QM output in the footer.
+* Add support for WordPress.com VIP Go shared plugins as an explicit component.
+* Send nocache headers when QM is active.
+* Various minor tweaks.
+
 = 2.9.0 =
 
 * Introduce a new panel which displays all matching rewrite rules for the current request.
@@ -247,11 +265,10 @@ No, I do not accept donations. If you like the plugin, I'd love for you to [leav
 * CSS tweaks to better match wp-admin styles.
 
 = 2.6.10 =
-* Add compatibility with PHP <5.3.6. `DirectoryIterator::getExtension()` isn't available on this version (and also as it's part of SPL it can be disabled).
+* Add compatibility with PHP 5.3.6 and lower. `DirectoryIterator::getExtension()` isn't available on this version (and also as it's part of SPL it can be disabled).
 * Simplify the admin CSS to avoid QM's output being covered by the admin menu.
 * Add support for footer styles in the scripts and styles component.
 * Update the authentication JavaScript so it works cross-protocol.
-* Add support for footer styles in the scripts and styles component.
 
 = 2.6.9 =
 * New Scripts & Styles component

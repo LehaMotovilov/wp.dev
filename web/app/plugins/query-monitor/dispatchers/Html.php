@@ -31,6 +31,7 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 		add_action( 'wp_footer',                  array( $this, 'action_footer' ) );
 		add_action( 'admin_footer',               array( $this, 'action_footer' ) );
 		add_action( 'login_footer',               array( $this, 'action_footer' ) );
+		add_action( 'embed_footer',               array( $this, 'action_footer' ) );
 
 		parent::__construct( $qm );
 
@@ -122,6 +123,8 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 		add_action( 'wp_enqueue_scripts',    array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'enqueue_embed_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'send_headers',          'nocache_headers' );
 
 	}
 
@@ -201,11 +204,14 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 			'qm-no-js',
 		);
 
-		if ( !is_admin() ) {
+		if ( did_action( 'wp_head' ) ) {
 			$absolute = function_exists( 'twentyfifteen_setup' );
 			if ( apply_filters( 'qm/output/absolute_position', $absolute ) ) {
 				$class[] = 'qm-absolute';
 			}
+
+			$class[] = sprintf( 'qm-theme-%s', get_template() );
+			$class[] = sprintf( 'qm-theme-%s', get_stylesheet() );
 		}
 
 		if ( !is_admin_bar_showing() ) {
@@ -220,7 +226,9 @@ class QM_Dispatcher_Html extends QM_Dispatcher {
 
 	protected function after_output() {
 
-		echo '<div class="qm qm-half" id="qm-authentication">';
+		$collectors = QM_Collectors::init();
+
+		echo '<div class="qm qm-half qm-clear" id="qm-authentication">';
 		echo '<table cellspacing="0">';
 		echo '<thead>';
 		echo '<tr>';

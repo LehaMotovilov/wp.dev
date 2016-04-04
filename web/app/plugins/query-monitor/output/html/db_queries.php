@@ -122,7 +122,7 @@ class QM_Output_Html_DB_Queries extends QM_Output_Html {
 		}
 
 		if ( isset( $expensive[0]['result'] ) ) {
-			echo '<th scope="col" class="qm-num">' . esc_html__( 'Affected Rows', 'query-monitor' ) . '</th>';
+			echo '<th scope="col" class="qm-num">' . esc_html__( 'Rows', 'query-monitor' ) . '</th>';
 		}
 
 		echo '<th class="qm-num">' . esc_html__( 'Time', 'query-monitor' ) . '</th>';
@@ -352,9 +352,10 @@ class QM_Output_Html_DB_Queries extends QM_Output_Html {
 		}
 
 		if ( isset( $cols['sql'] ) ) {
-			printf( '<td class="qm-row-sql qm-ltr qm-wrap">%s</td>',
+			printf( // WPCS: XSS ok.
+				'<td class="qm-row-sql qm-ltr qm-wrap">%s</td>',
 				$sql
-			); // WPCS: XSS ok.
+			);
 		}
 
 		if ( isset( $cols['caller'] ) ) {
@@ -402,9 +403,10 @@ class QM_Output_Html_DB_Queries extends QM_Output_Html {
 		$data = $this->collector->get_data();
 
 		if ( isset( $data['dbs'] ) ) {
-			foreach ( $data['dbs'] as $db ) {
+			foreach ( $data['dbs'] as $key => $db ) {
 				$title[] = sprintf(
-					_x( '%s<small>S</small>', 'database query time', 'query-monitor' ),
+					_x( '%s%s<small>S</small>', 'database query time', 'query-monitor' ),
+					( count( $data['dbs'] ) > 1 ? '&bull;&nbsp;&nbsp;&nbsp;' : '' ),
 					number_format_i18n( $db->total_time, 4 )
 				);
 				$title[] = sprintf(

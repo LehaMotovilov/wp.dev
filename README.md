@@ -26,7 +26,7 @@ Another modern WordPress stack. Enjoy :)
 
 ## How to use?
 
-* Deploy example ```dep deploy production```
+* Deploy example ```vendor/bin/dep deploy production```
 * Run Migrations ```vendor/bin/phinx migrate -e development```
 * Run Tests ```vendor/bin/codecept run```
 * Run PHP Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```

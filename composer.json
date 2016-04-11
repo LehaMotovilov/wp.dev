@@ -44,7 +44,7 @@
 		"symfony/console": "2.*",
 		"robmorgan/phinx": "^0.4.4",
 		"vlucas/phpdotenv": "^2.0",
-		"deployer/deployer": "~3.0",
+		"deployer/deployer": "^3.2",
 		"codeception/codeception": "*",
 		"squizlabs/php_codesniffer": "2.*",
 		"wp-cli/wp-cli" : "*",

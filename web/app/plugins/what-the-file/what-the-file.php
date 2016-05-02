@@ -3,13 +3,13 @@
 	Plugin Name: What The File
 	Plugin URI: http://www.barrykooij.com/what-the-file/
 	Description: What The File adds an option to your toolbar showing what file and template parts are used to display the page you’re currently viewing. You can click the file name to directly edit it through the theme editor. Supports BuddyPress and Roots Theme. More information can be found at the <a href='http://wordpress.org/extend/plugins/what-the-file/'>WordPress plugin page</a>.
-	Version: 1.5.2
+	Version: 1.5.3
 	Author: Never5
 	Author URI: http://www.never5.com/
 	License: GPL v3
 
 	What The File Plugin
-	Copyright (C) 2012-2015, Never5 - www.never5.com
+	Copyright (C) 2012-2016, Never5 - www.never5.com
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -209,6 +209,8 @@ class WhatTheFile {
 		// Do Roots Theme check
 		if ( function_exists( 'roots_template_path' ) ) {
 			$this->template_name = basename( roots_template_path() );
+		} else if( function_exists( 'Roots\Sage\Wrapper\template_path' ) ) {
+			$this->template_name = basename( Roots\Sage\Wrapper\template_path() );
 		}
 
 		return $template_name;

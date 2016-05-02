@@ -31,7 +31,7 @@ Another modern WordPress stack. Enjoy :)
 * Run Tests ```vendor/bin/codecept run```
 * Run PHP Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```
 * Run JS Code Style check ```jscs web/app/themes/twentyfifteen```
-* Run WP-CLI example ```vendor/wp-cli/wp-cli/bin/wp core version```
+* Run WP-CLI example ```vendor/bin/wp core version```
 
 ## Apache config
 ```

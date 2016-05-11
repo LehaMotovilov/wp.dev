@@ -23,7 +23,7 @@ web/app/upgrade/*
 
 # .htaccess and other stuff
 .idea/
-.htaccess
+web/.htaccess
 .DS_Store
 
 # WordPress Plugins

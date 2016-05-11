@@ -20,6 +20,8 @@ Another modern WordPress stack. Enjoy :)
 * ```git clone git@github.com:LehaMotovilov/wp.dev.git .```
 * ```composer install```
 * ```mv configs/.env.example configs/.env && nano configs/.env```
+* Import example DB ```vendor/bin/wp db import configs/db/dump.sql```
+* Login admin/admin - http://wp.dev/wp/wp-admin/
 * Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
 * Optional ```npm install```
 * Optional ```bower install```

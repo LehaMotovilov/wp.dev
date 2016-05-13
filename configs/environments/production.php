@@ -3,7 +3,7 @@
 	/**
 	 * FTP config
 	 */
-	// define( 'FS_METHOD', 'direct' );
+	 define( 'FS_METHOD', 'direct' );
 	// define( 'FTP_USER', 	'username' );
 	// define( 'FTP_PASS', 	'password' );
 	// define( 'FTP_HOST', 	'host' );

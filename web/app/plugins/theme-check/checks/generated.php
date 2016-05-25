@@ -1,6 +1,6 @@
 <?php
 
-class ArtisteerCheck implements themecheck {
+class GeneratedCheck implements themecheck {
 	protected $error = array();
 
 	function check( $php_files, $css_files, $other_files) {
@@ -12,6 +12,7 @@ class ArtisteerCheck implements themecheck {
 
 		$ret = true;
 		if (
+			//Artisteer
 			strpos( $php, 'art_normalize_widget_style_tokens' ) !== false
 			|| strpos( $php, 'art_include_lib' ) !== false
 			|| strpos( $php, '_remove_last_slash($url) {' ) !== false
@@ -20,6 +21,14 @@ class ArtisteerCheck implements themecheck {
 			|| strpos ( $php, "bw = '<!--- BEGIN Widget --->';" ) !== false
 			|| strpos ( $php, "ew = '<!-- end_widget -->';" ) !== false
 			|| strpos ( $php, "end_widget' => '<!-- end_widget -->'") !== false
+			//Lubith
+			|| strpos ( $php, "Lubith") !== false
+			//Templatetoaster
+			|| strpos ( $php, "templatetoaster_") !== false
+			|| strpos ( $php, "Templatetoaster_") !== false
+			|| strpos ( $php, "@package templatetoaster") !== false
+			//wpthemegenerator
+			|| strpos ( $php, "wptg_") !== false
 		) {
 			$this->error[] = "<span class='tc-lead tc-warning'>" . __('WARNING', 'theme-check' ). "</span>: " . __( 'This theme appears to have been auto-generated. Generated themes are not allowed in the themes directory.', 'theme-check' );
 			$ret = false;
@@ -30,4 +39,4 @@ class ArtisteerCheck implements themecheck {
 
 	function getError() { return $this->error; }
 }
-$themechecks[] = new ArtisteerCheck;
+$themechecks[] = new GeneratedCheck;

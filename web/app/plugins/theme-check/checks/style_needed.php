@@ -14,6 +14,7 @@ class Style_Needed implements themecheck {
 			'[ \t\/*#]*Version' => __( '<strong>Version:</strong> is missing from your style.css header.', 'theme-check' ),
 			'[ \t\/*#]*License:' => __( '<strong>License:</strong> is missing from your style.css header.', 'theme-check' ),
 			'[ \t\/*#]*License URI:' => __( '<strong>License URI:</strong> is missing from your style.css header.', 'theme-check' ),
+			'[ \t\/*#]*Text Domain:' => __( '<strong>Text Domain:</strong> is missing from your style.css header.', 'theme-check' ),
 			'\.sticky' => __( '<strong>.sticky</strong> css class is needed in your theme css.', 'theme-check' ),
 			'\.bypostauthor' => __( '<strong>.bypostauthor</strong> css class is needed in your theme css.', 'theme-check' ),
 			'\.alignleft' => __( '<strong>.alignleft</strong> css class is needed in your theme css.', 'theme-check' ),
@@ -28,7 +29,7 @@ class Style_Needed implements themecheck {
 		foreach ($checks as $key => $check) {
 			checkcount();
 			if ( !preg_match( '/' . $key . '/i', $css, $matches ) ) {
-				$this->error[] = "<span class='tc-lead tc-required'>" . __('REQUIRED', 'theme-check' ) . "</span>:" . $check;
+				$this->error[] = "<span class='tc-lead tc-required'>" . __('REQUIRED', 'theme-check' ) . "</span>: " . $check;
 				$ret = false;
 			}
 		}

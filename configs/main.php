@@ -43,7 +43,7 @@
 	define( 'DB_HOST', 			getenv( 'DB_HOST' ) ?: 'localhost' );
 	define( 'DB_CHARSET', 		'utf8' );
 	define( 'DB_COLLATE', 		'' );
-	$table_prefix = 			getenv( 'DB_PREFIX' ) ?: 'wp_';
+	$table_prefix = 			getenv( 'DB_PREFIX' );
 
 	/**
 	 * Authentication Unique Keys and Salts.
@@ -61,22 +61,22 @@
 	/**
 	 * AutoSave Interval.
 	 */
-	define( 'AUTOSAVE_INTERVAL', 3600 ); // autosave 1x per hour
+	define( 'AUTOSAVE_INTERVAL', 3600 ); // Auto-save 1x per hour.
 
 	/**
 	 * Disable Post Revisions.
 	 */
-	define( 'WP_POST_REVISIONS', false ); // no revisions
+	define( 'WP_POST_REVISIONS', false ); // No revisions.
 
 	/**
 	 * Media Trash.
 	 */
-	define( 'MEDIA_TRASH', 		true ); // Don't use trash for media files
+	define( 'MEDIA_TRASH', 		true ); // Don't use trash for media files.
 
 	/**
 	 * Trash Days.
 	 */
-	define( 'EMPTY_TRASH_DAYS',	0 ); // zero days
+	define( 'EMPTY_TRASH_DAYS',	0 ); // Don't use trash.
 
 	/**
 	 * Bootstrap WordPress.

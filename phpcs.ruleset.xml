@@ -29,25 +29,21 @@
     <exclude-pattern>*.js</exclude-pattern>
     <exclude-pattern>*.less</exclude-pattern>
 
-    <!-- Strange but without this, nothing works -->
-    <rule ref="vendor/wpcs/WordPress/Sniffs/Arrays/ArrayDeclarationSniff.php"/>
+    <!-- Strange but without this, nothing works. -->
+    <rule ref="vendor/wp-coding-standards/wpcs/WordPress/Sniffs/Arrays/ArrayDeclarationSniff.php"/>
 
-    <!-- WordPress-Extra is WordPress-Core + Generic -->
-    <rule ref="vendor/wpcs/WordPress-Core"/>
-    <rule ref="vendor/wpcs/WordPress-Extra">
-        <exclude name="WordPress.PHP.YodaConditions" />
-    </rule>
+	<!-- WordPress Core + Docs + Extra Code Style -->
+	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-Core" />
+	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-Docs" />
+	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-Extra" />
 
-    <!-- Rules for comments -->
-    <rule ref="vendor/wpcs/WordPress-Docs">
-        <exclude name="Squiz.Commenting.FileComment.MissingPackageTag" />
-        <exclude name="Squiz.Commenting.FileComment.SpacingAfterComment" />
-    </rule>
-
-    <!-- Rules from WordPress.VIP -->
-    <rule ref="WordPress.XSS.EscapeOutput"/>
-    <rule ref="WordPress.CSRF.NonceVerification" />
-    <rule ref="WordPress.PHP.StrictComparisons" />
-    <rule ref="WordPress.WP.PreparedSQL" />
+	<!-- WordPress-VIP -->
+	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-VIP">
+		<!-- Ignore -->
+		<exclude name="WordPress.VIP.RestrictedFunctions" />
+		<exclude name="WordPress.VIP.DirectDatabaseQuery" />
+		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
+		<!-- END Ignore -->
+	</rule>
 
 </ruleset>

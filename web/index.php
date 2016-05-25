@@ -1,6 +1,8 @@
 <?php
 /**
  * Start WP.
+ *
+ * @package WordPress
  */
 
 define( 'WP_USE_THEMES', true );

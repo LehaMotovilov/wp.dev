@@ -30,6 +30,11 @@
 	define( 'WP_ALLOW_MULTISITE', 	false );
 
 	/**
+	 * Memory limit.
+	 */
+	define( 'WP_MEMORY_LIMIT', '64M' );
+
+	/**
 	 * Dissalow file/themes/plugins edits.
 	 */
 	define( 'AUTOMATIC_UPDATER_DISABLED', true ); // no core updates

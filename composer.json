@@ -23,18 +23,6 @@
 					"fancyguy/webroot-installer": "1.0.0"
 				}
 			}
-		},
-		{
-			"type": "package",
-			"package": {
-				"name": "wpcs",
-				"version": "1.0",
-				"source": {
-					"url": "https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git",
-					"type": "git",
-					"reference": "master"
-				}
-			}
 		}
 	],
 	"require": {
@@ -48,7 +36,7 @@
 		"codeception/codeception": "*",
 		"squizlabs/php_codesniffer": "2.*",
 		"wp-cli/wp-cli" : "^0.23",
-		"wpcs": "*"
+		"wp-coding-standards/wpcs": "dev-master"
 	},
 	"extra": {
 		"webroot-dir": "web/wp",

@@ -1,6 +1,8 @@
 <?php
 /**
  * Wp-config.php loaded by WP core.
+ *
+ * @package WordPress
  */
 
 // Composer's autoloader.

@@ -35,6 +35,12 @@
 	define( 'WP_MEMORY_LIMIT', '96M' );
 
 	/**
+	 * SSL support.
+	 */
+	define( 'FORCE_SSL_LOGIN', false );
+	define( 'FORCE_SSL_ADMIN', false );
+
+	/**
 	 * Dissalow file/themes/plugins edits.
 	 */
 	define( 'AUTOMATIC_UPDATER_DISABLED', true ); // no core updates

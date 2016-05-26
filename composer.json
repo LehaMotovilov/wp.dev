@@ -36,7 +36,9 @@
 		"codeception/codeception": "*",
 		"squizlabs/php_codesniffer": "2.*",
 		"wp-cli/wp-cli" : "^0.23",
-		"wp-coding-standards/wpcs": "dev-master"
+		"wp-coding-standards/wpcs": "dev-master",
+		"johnbillion/query-monitor": "2.10.0",
+		"yoast/wordpress-seo": "3.2.5"
 	},
 	"extra": {
 		"webroot-dir": "web/wp",

@@ -6,8 +6,6 @@ Another modern WordPress stack. Enjoy :)
 * For deploy - [Deployer](http://deployer.org/)
 * For custom DB migrations - [Phinx](https://phinx.org/)
 * Dependency Manager for PHP - [Composer](https://getcomposer.org/)
-* JS Manager - [Bower](http://bower.io/)
-* JS Task Manager - [Grunt](http://gruntjs.com/)
 * For environment variables - [phpdotenv](https://github.com/vlucas/phpdotenv)
 * WP CLI support - [WP CLI](http://wp-cli.org/)
 * Codeception for testing - [Codeception](http://codeception.com/)
@@ -23,8 +21,6 @@ Another modern WordPress stack. Enjoy :)
 * Import example DB ```vendor/bin/wp db import configs/db/dump.sql```
 * Login admin/admin - http://wp.dev/wp/wp-admin/
 * Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
-* Optional ```npm install```
-* Optional ```bower install```
 
 ## How to use?
 

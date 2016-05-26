@@ -1,5 +1,5 @@
 {
-	"name": "alekseymotovilov/wp",
+	"name": "lehamotovilov/wp",
 	"description": "Another modern WordPress stack.",
 	"license": "MIT",
 	"authors": [
@@ -26,13 +26,13 @@
 		}
 	],
 	"require": {
-		"php": ">=5.5.0",
+		"php": ">=5.6.0",
 		"wordpress": "4.5.2",
 		"composer/installers": "~1.0",
 		"symfony/console": "2.*",
-		"robmorgan/phinx": "^0.4.4",
-		"vlucas/phpdotenv": "^2.0",
-		"deployer/deployer": "^3.2",
+		"robmorgan/phinx": "0.5.*",
+		"vlucas/phpdotenv": "2.2.*",
+		"deployer/deployer": "3.3.*",
 		"codeception/codeception": "*",
 		"squizlabs/php_codesniffer": "2.*",
 		"wp-cli/wp-cli" : "^0.23",

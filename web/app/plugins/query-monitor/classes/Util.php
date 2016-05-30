@@ -20,6 +20,7 @@ class QM_Util {
 	protected static $file_components = array();
 	protected static $file_dirs       = array();
 	protected static $abspath         = null;
+	protected static $contentpath     = null;
 
 	private function __construct() {}
 
@@ -44,15 +45,19 @@ class QM_Util {
 
 	}
 
-	public static function standard_dir( $dir, $abspath_replace = null ) {
+	public static function standard_dir( $dir, $path_replace = null ) {
 
 		$dir = wp_normalize_path( $dir );
 
-		if ( is_string( $abspath_replace ) ) {
-			if ( !self::$abspath ) {
-				self::$abspath = wp_normalize_path( ABSPATH );
+		if ( is_string( $path_replace ) ) {
+			if ( ! self::$abspath ) {
+				self::$abspath     = wp_normalize_path( ABSPATH );
+				self::$contentpath = wp_normalize_path( dirname( WP_CONTENT_DIR ) . '/' );
 			}
-			$dir = str_replace( self::$abspath, $abspath_replace, $dir );
+			$dir = str_replace( array(
+				self::$abspath,
+				self::$contentpath,
+			), $path_replace, $dir );
 		}
 
 		return $dir;
@@ -280,6 +285,20 @@ class QM_Util {
 
 		return compact( 'major', 'minor', 'patch' );
 
+	}
+
+	public static function get_query_type( $sql ) {
+		$sql = $type = trim( $sql );
+
+		if ( 0 === strpos( $sql, '/*' ) ) {
+			// Strip out leading comments such as `/*NO_SELECT_FOUND_ROWS*/` before calculating the query type
+			$type = preg_replace( '|^/\*[^\*/]+\*/|', '', $sql );
+		}
+
+		$type = preg_split( '/\b/', trim( $type ), 2, PREG_SPLIT_NO_EMPTY );
+		$type = strtoupper( $type[0] );
+
+		return $type;
 	}
 
 }

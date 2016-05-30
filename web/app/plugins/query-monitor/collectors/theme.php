@@ -28,7 +28,7 @@ class QM_Collector_Theme extends QM_Collector {
 		add_filter( 'template_include', array( $this, 'filter_template_include' ), 999 );
 	}
 
-	public function filter_body_class( $class ) {
+	public function filter_body_class( array $class ) {
 		$this->data['body_class'] = $class;
 		return $class;
 	}
@@ -47,7 +47,7 @@ class QM_Collector_Theme extends QM_Collector {
 			$template_directory   = QM_Util::standard_dir( get_template_directory() );
 			$theme_directory      = QM_Util::standard_dir( get_theme_root() );
 
-			$template_file       = str_replace( array( $stylesheet_directory, $template_directory ), '', $template_path );
+			$template_file       = str_replace( array( $stylesheet_directory, $template_directory, ABSPATH ), '', $template_path );
 			$template_file       = ltrim( $template_file, '/' );
 			$theme_template_file = str_replace( array( $theme_directory, ABSPATH ), '', $template_path );
 			$theme_template_file = ltrim( $theme_template_file, '/' );
@@ -56,10 +56,33 @@ class QM_Collector_Theme extends QM_Collector {
 			$this->data['template_file']       = $template_file;
 			$this->data['theme_template_file'] = $theme_template_file;
 
+			foreach ( get_included_files() as $file ) {
+				$filename = str_replace( array(
+					$stylesheet_directory,
+					$template_directory,
+				), '', $file );
+				if ( $filename !== $file ) {
+					$slug          = trim( str_replace( '.php', '', $filename ), '/' );
+					$display       = trim( $filename, '/' );
+					$theme_display = trim( str_replace( $theme_directory, '', $file ), '/' );
+					if ( did_action( "get_template_part_{$slug}" ) ) {
+						$this->data['template_parts'][ $file ]       = $display;
+						$this->data['theme_template_parts'][ $file ] = $theme_display;
+					} else {
+						$slug = trim( preg_replace( '|\-[^\-]+$|', '', $slug ), '/' );
+						if ( did_action( "get_template_part_{$slug}" ) ) {
+							$this->data['template_parts'][ $file ]       = $display;
+							$this->data['theme_template_parts'][ $file ] = $theme_display;
+						}
+					}
+				}
+			}
+
 		}
 
-		$this->data['stylesheet'] = get_stylesheet();
-		$this->data['template']   = get_template();
+		$this->data['stylesheet']     = get_stylesheet();
+		$this->data['template']       = get_template();
+		$this->data['is_child_theme'] = ( $this->data['stylesheet'] != $this->data['template'] );
 
 		if ( isset( $this->data['body_class'] ) ) {
 			asort( $this->data['body_class'] );

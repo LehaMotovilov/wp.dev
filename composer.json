@@ -37,7 +37,7 @@
 		"squizlabs/php_codesniffer": "2.*",
 		"wp-cli/wp-cli" : "^0.23",
 		"wp-coding-standards/wpcs": "dev-master",
-		"johnbillion/query-monitor": "2.11.0",
+		"johnbillion/query-monitor": "2.11.1",
 		"yoast/wordpress-seo": "3.2.5"
 	},
 	"extra": {

@@ -2,7 +2,7 @@
 /*
 Plugin Name: Query Monitor
 Description: Monitoring of database queries, hooks, conditionals and more.
-Version:     2.11.0
+Version:     2.11.1
 Plugin URI:  https://github.com/johnbillion/querymonitor
 Author:      John Blackbourn
 Author URI:  https://johnblackbourn.com/
@@ -33,6 +33,11 @@ if ( defined( 'QM_DISABLED' ) and QM_DISABLED ) {
 if ( 'cli' === php_sapi_name() && ! defined( 'QM_TESTS' ) ) {
 	# For the time being, let's not load QM when using the CLI because we've no persistent storage and no means of
 	# outputting collected data on the CLI. This will hopefully change in a future version of QM.
+	return;
+}
+
+if ( defined( 'DOING_CRON' ) && DOING_CRON ) {
+	# Let's not load QM during cron events for the same reason as above.
 	return;
 }
 

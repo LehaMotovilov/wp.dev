@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <input type="hidden" name="webhook_id" value="<?php echo esc_attr( $webhook->id ); ?>" />
 
 <div id="webhook-options" class="settings-panel">
-	<h3><?php _e( 'Webhook Data', 'woocommerce' ); ?></h3>
+	<h2><?php _e( 'Webhook Data', 'woocommerce' ); ?></h2>
 	<table class="form-table">
 		<tbody>
 			<tr valign="top">
@@ -100,7 +100,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<tr valign="top">
 				<th scope="row" class="titledesc">
 					<label for="webhook_secret"><?php _e( 'Secret', 'woocommerce' ); ?></label>
-					<?php echo wc_help_tip( __( 'The Secret Key is used to generate a hash of the delivered webhook and provided in the request headers. This will default to the current API user\'s consumer secret if not provided.', 'woocommerce' ) ); ?>
+					<?php echo wc_help_tip( __( 'The Secret Key is used to generate a hash of the delivered webhook and provided in the request headers.', 'woocommerce' ) ); ?>
 				</th>
 				<td class="forminp">
 					<input name="webhook_secret" id="webhook_secret" type="text" class="input-text regular-input" value="<?php echo esc_attr( $webhook->get_secret() ); ?>" />
@@ -113,7 +113,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div>
 
 <div id="webhook-actions" class="settings-panel">
-	<h3><?php _e( 'Webhook Actions', 'woocommerce' ); ?></h3>
+	<h2><?php _e( 'Webhook Actions', 'woocommerce' ); ?></h2>
 	<table class="form-table">
 		<tbody>
 			<?php if ( '0000-00-00 00:00:00' != $webhook->post_data->post_modified_gmt ) : ?>
@@ -160,7 +160,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 </div>
 
 <div id="webhook-logs" class="settings-panel">
-	<h3><?php _e( 'Webhook Logs', 'woocommerce' ); ?></h3>
+	<h2><?php _e( 'Webhook Logs', 'woocommerce' ); ?></h2>
 
 	<?php WC_Admin_Webhooks::logs_output( $webhook ); ?>
 </div>

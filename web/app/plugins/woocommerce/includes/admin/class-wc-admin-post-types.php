@@ -81,7 +81,6 @@ class WC_Admin_Post_Types {
 		// Edit post screens
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 1, 2 );
 		add_action( 'edit_form_after_title', array( $this, 'edit_form_after_title' ) );
-		add_filter( 'media_view_strings', array( $this, 'change_insert_into_post' ) );
 		add_filter( 'default_hidden_meta_boxes', array( $this, 'hidden_meta_boxes' ), 10, 2 );
 		add_action( 'post_submitbox_misc_actions', array( $this, 'product_data_visibility' ) );
 
@@ -102,11 +101,17 @@ class WC_Admin_Post_Types {
 		// Disable DFW feature pointer
 		add_action( 'admin_footer', array( $this, 'disable_dfw_feature_pointer' ) );
 
+		// Disable post type view mode options
+		add_filter( 'view_mode_post_types', array( $this, 'disable_view_mode_options' ) );
+
 		// If first time editing, disable columns by default.
 		if ( false === get_user_option( 'manageedit-shop_ordercolumnshidden' ) ) {
 			$user = wp_get_current_user();
 			update_user_option( $user->ID, 'manageedit-shop_ordercolumnshidden', array( 0 => 'billing_address' ), true );
 		}
+
+		// Show blank state
+		add_action( 'manage_posts_extra_tablenav', array( $this, 'maybe_render_blank_state' ) );
 	}
 
 	/**
@@ -222,7 +227,7 @@ class WC_Admin_Post_Types {
 			$columns['sku'] = __( 'SKU', 'woocommerce' );
 		}
 
-		if ( 'yes' == get_option( 'woocommerce_manage_stock' ) ) {
+		if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
 			$columns['is_in_stock'] = __( 'Stock', 'woocommerce' );
 		}
 
@@ -397,17 +402,19 @@ class WC_Admin_Post_Types {
 			case 'is_in_stock' :
 
 				if ( $the_product->is_in_stock() ) {
-					echo '<mark class="instock">' . __( 'In stock', 'woocommerce' ) . '</mark>';
+					$stock_html = '<mark class="instock">' . __( 'In stock', 'woocommerce' ) . '</mark>';
 				} else {
-					echo '<mark class="outofstock">' . __( 'Out of stock', 'woocommerce' ) . '</mark>';
+					$stock_html = '<mark class="outofstock">' . __( 'Out of stock', 'woocommerce' ) . '</mark>';
 				}
 
-				if ( $the_product->managing_stock() ) {
-					echo ' &times; ' . $the_product->get_total_stock();
+				// If the product has children, a single stock level would be misleading as some could be -ve and some +ve, some managed/some unmanaged etc so hide stock level in this case.
+				if ( $the_product->managing_stock() && ! sizeof( $the_product->get_children() ) ) {
+					$stock_html .= ' (' . $the_product->get_total_stock() . ')';
 				}
+
+				echo apply_filters( 'woocommerce_admin_stock_html', $stock_html, $the_product );
 
 				break;
-
 			default :
 				break;
 		}
@@ -418,7 +425,7 @@ class WC_Admin_Post_Types {
 	 * Since WordPress 4.3 we don't have to build the row actions.
 	 *
 	 * @param WP_Post $post
-	 * @param string $title
+	 * @param string  $title
 	 */
 	private function _render_product_row_actions( $post, $title ) {
 		global $wp_version;
@@ -525,11 +532,7 @@ class WC_Admin_Post_Types {
 				$usage_limit = esc_html( get_post_meta( $post->ID, 'usage_limit', true ) );
 				$usage_url   = sprintf( '<a href="%s">%s</a>', admin_url( sprintf( 'edit.php?s=%s&post_status=all&post_type=shop_order', esc_html( $post->post_title ) ) ), $usage_count );
 
-				if ( $usage_limit ) {
-					printf( __( '%s / %s', 'woocommerce' ), $usage_url, $usage_limit );
-				} else {
-					printf( __( '%s / &infin;', 'woocommerce' ), $usage_url );
-				}
+				printf( _x( '%1$s / %2$s', 'Count / Limit', 'woocommerce' ), $usage_url, $usage_limit ? $usage_limit : '&infin;' );
 			break;
 			case 'expiry_date' :
 				$expiry_date = get_post_meta( $post->ID, 'expiry_date', true );
@@ -551,7 +554,7 @@ class WC_Admin_Post_Types {
 	 * Since WordPress 4.3 we don't have to build the row actions.
 	 *
 	 * @param WP_Post $post
-	 * @param string $title
+	 * @param string  $title
 	 */
 	private function _render_shop_coupon_row_actions( $post, $title ) {
 		global $wp_version;
@@ -599,7 +602,7 @@ class WC_Admin_Post_Types {
 
 	/**
 	 * Output custom columns for coupons.
-	 * @param  string $column
+	 * @param string $column
 	 */
 	public function render_shop_order_columns( $column ) {
 		global $post, $woocommerce, $the_order;
@@ -749,6 +752,8 @@ class WC_Admin_Post_Types {
 				} else {
 					if ( $the_order->billing_first_name || $the_order->billing_last_name ) {
 						$username = trim( sprintf( _x( '%1$s %2$s', 'full name', 'woocommerce' ), $the_order->billing_first_name, $the_order->billing_last_name ) );
+					} else if ( $the_order->billing_company ) {
+						$username = trim( $the_order->billing_company );
 					} else {
 						$username = __( 'Guest', 'woocommerce' );
 					}
@@ -810,13 +815,13 @@ class WC_Admin_Post_Types {
 	/**
 	 * Make columns sortable - https://gist.github.com/906872.
 	 *
-	 * @param array $columns
+	 * @param  array $columns
 	 * @return array
 	 */
 	public function product_sortable_columns( $columns ) {
 		$custom = array(
 			'price'    => 'price',
-			'featured' => 'featured',
+			'featured' => array( 'featured', 1 ),
 			'sku'      => 'sku',
 			'name'     => 'title'
 		);
@@ -826,7 +831,7 @@ class WC_Admin_Post_Types {
 	/**
 	 * Make columns sortable - https://gist.github.com/906872.
 	 *
-	 * @param array $columns
+	 * @param  array $columns
 	 * @return array
 	 */
 	public function shop_coupon_sortable_columns( $columns ) {
@@ -836,7 +841,7 @@ class WC_Admin_Post_Types {
 	/**
 	 * Make columns sortable - https://gist.github.com/906872.
 	 *
-	 * @param array $columns
+	 * @param  array $columns
 	 * @return array
 	 */
 	public function shop_order_sortable_columns( $columns ) {
@@ -904,11 +909,7 @@ class WC_Admin_Post_Types {
 			return array_merge( array( 'id' => 'ID: ' . $post->ID ), $actions );
 		}
 
-		if ( 'shop_order' === $post->post_type ) {
-			return array();
-		}
-
-		if ( 'shop_coupon' === $post->post_type ) {
+		if ( in_array( $post->post_type, array( 'shop_order', 'shop_coupon' ) ) ) {
 			if ( isset( $actions['inline hide-if-no-js'] ) ) {
 				unset( $actions['inline hide-if-no-js'] );
 			}
@@ -920,15 +921,15 @@ class WC_Admin_Post_Types {
 	/**
 	 * Product sorting link.
 	 *
-	 * Based on Simple Page Ordering by 10up (http://wordpress.org/extend/plugins/simple-page-ordering/).
+	 * Based on Simple Page Ordering by 10up (https://wordpress.org/extend/plugins/simple-page-ordering/).
 	 *
-	 * @param array $views
+	 * @param  array $views
 	 * @return array
 	 */
 	public function product_sorting_link( $views ) {
 		global $post_type, $wp_query;
 
-		if ( ! current_user_can('edit_others_pages') ) {
+		if ( ! current_user_can( 'edit_others_pages' ) ) {
 			return $views;
 		}
 
@@ -1049,7 +1050,7 @@ class WC_Admin_Post_Types {
 		// Save fields
 		if ( isset( $_REQUEST['_sku'] ) ) {
 			$sku     = get_post_meta( $post_id, '_sku', true );
-			$new_sku = wc_clean( $_REQUEST['_sku'] );
+			$new_sku = (string) wc_clean( $_REQUEST['_sku'] );
 
 			if ( $new_sku !== $sku ) {
 				if ( ! empty( $new_sku ) ) {
@@ -1408,7 +1409,7 @@ class WC_Admin_Post_Types {
 	/**
 	 * Add extra bulk action options to mark orders as complete or processing.
 	 *
-	 * Using Javascript until WordPress core fixes: http://core.trac.wordpress.org/ticket/16031.
+	 * Using Javascript until WordPress core fixes: https://core.trac.wordpress.org/ticket/16031.
 	 */
 	public function bulk_admin_footer() {
 		global $post_type;
@@ -1507,78 +1508,24 @@ class WC_Admin_Post_Types {
 	 * @param WP_Query $wp
 	 */
 	public function shop_order_search_custom_fields( $wp ) {
-		global $pagenow, $wpdb;
+		global $pagenow;
 
 		if ( 'edit.php' != $pagenow || empty( $wp->query_vars['s'] ) || $wp->query_vars['post_type'] != 'shop_order' ) {
 			return;
 		}
 
-		$search_fields = array_map( 'wc_clean', apply_filters( 'woocommerce_shop_order_search_fields', array(
-			'_order_key',
-			'_billing_company',
-			'_billing_address_1',
-			'_billing_address_2',
-			'_billing_city',
-			'_billing_postcode',
-			'_billing_country',
-			'_billing_state',
-			'_billing_email',
-			'_billing_phone',
-			'_shipping_address_1',
-			'_shipping_address_2',
-			'_shipping_city',
-			'_shipping_postcode',
-			'_shipping_country',
-			'_shipping_state'
-		) ) );
+		$post_ids = wc_order_search( $_GET['s'] );
 
-		$search_order_id = str_replace( 'Order #', '', $_GET['s'] );
+		if ( ! empty( $post_ids ) ) {
+			// Remove "s" - we don't want to search order name.
+			unset( $wp->query_vars['s'] );
 
-		// Search orders
-		if ( is_numeric( $search_order_id ) ) {
-			$post_ids = array_unique( array_merge(
-				$wpdb->get_col(
-					$wpdb->prepare( "SELECT DISTINCT p1.post_id FROM {$wpdb->postmeta} p1 WHERE p1.meta_key IN ('" . implode( "','", array_map( 'esc_sql', $search_fields ) ) . "') AND p1.meta_value LIKE '%%%d%%';", absint( $search_order_id ) )
-				),
-				array( absint( $search_order_id ) )
-			) );
-		} else {
-			$post_ids = array_unique( array_merge(
-				$wpdb->get_col(
-					$wpdb->prepare( "
-						SELECT DISTINCT p1.post_id
-						FROM {$wpdb->postmeta} p1
-						INNER JOIN {$wpdb->postmeta} p2 ON p1.post_id = p2.post_id
-						WHERE
-							( p1.meta_key = '_billing_first_name' AND p2.meta_key = '_billing_last_name' AND CONCAT(p1.meta_value, ' ', p2.meta_value) LIKE '%%%s%%' )
-						OR
-							( p1.meta_key = '_shipping_first_name' AND p2.meta_key = '_shipping_last_name' AND CONCAT(p1.meta_value, ' ', p2.meta_value) LIKE '%%%s%%' )
-						OR
-							( p1.meta_key IN ('" . implode( "','", array_map( 'esc_sql', $search_fields ) ) . "') AND p1.meta_value LIKE '%%%s%%' )
-						",
-						wc_clean( $_GET['s'] ), wc_clean( $_GET['s'] ), wc_clean( $_GET['s'] )
-					)
-				),
-				$wpdb->get_col(
-					$wpdb->prepare( "
-						SELECT order_id
-						FROM {$wpdb->prefix}woocommerce_order_items as order_items
-						WHERE order_item_name LIKE '%%%s%%'
-						",
-						wc_clean( $_GET['s'] )
-					)
-				)
-			) );
+			// so we know we're doing this.
+			$wp->query_vars['shop_order_search'] = true;
+
+			// Search by found posts.
+			$wp->query_vars['post__in'] = array_merge( $post_ids, array( 0 ) );
 		}
-
-		// Remove s - we don't want to search order name
-		unset( $wp->query_vars['s'] );
-
-		// so we know we're doing this
-		$wp->query_vars['shop_order_search'] = true;
-
-		// Search by found posts
-		$wp->query_vars['post__in'] = $post_ids;
 	}
 
 	/**
@@ -1846,11 +1793,21 @@ class WC_Admin_Post_Types {
 			}
 
 			// Categories
-			if ( isset( $_GET['product_cat'] ) && '0' == $_GET['product_cat'] ) {
+			if ( isset( $_GET['product_cat'] ) && '0' === $_GET['product_cat'] ) {
 				$query->query_vars['tax_query'][] = array(
 					'taxonomy' => 'product_cat',
 					'field'    => 'id',
 					'terms'    => get_terms( 'product_cat', array( 'fields' => 'ids' ) ),
+					'operator' => 'NOT IN'
+				);
+			}
+
+			// Shipping classes
+			if ( isset( $_GET['product_shipping_class'] ) && '0' === $_GET['product_shipping_class'] ) {
+				$query->query_vars['tax_query'][] = array(
+					'taxonomy' => 'product_shipping_class',
+					'field'    => 'id',
+					'terms'    => get_terms( 'product_shipping_class', array( 'fields' => 'ids' ) ),
 					'operator' => 'NOT IN'
 				);
 			}
@@ -1882,7 +1839,7 @@ class WC_Admin_Post_Types {
 			$sku_to_id = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_parent FROM {$wpdb->posts} LEFT JOIN {$wpdb->postmeta} ON {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id WHERE meta_key='_sku' AND meta_value LIKE %s;", '%' . $wpdb->esc_like( wc_clean( $term ) ) . '%' ) );
 			$sku_to_id = array_merge( wp_list_pluck( $sku_to_id, 'ID' ), wp_list_pluck( $sku_to_id, 'post_parent' ) );
 
-			if ( $sku_to_id && sizeof( $sku_to_id ) > 0 ) {
+			if ( sizeof( $sku_to_id ) > 0 ) {
 				$search_ids = array_merge( $search_ids, $sku_to_id );
 			}
 		}
@@ -1984,8 +1941,8 @@ class WC_Admin_Post_Types {
 				$user_id = get_post_meta( $id, '_customer_user', true );
 
 				if ( $user_id > 0 ) {
-					update_user_meta( $user_id, '_order_count', '' );
-					update_user_meta( $user_id, '_money_spent', '' );
+					delete_user_meta( $user_id, '_money_spent' );
+					delete_user_meta( $user_id, '_order_count' );
 				}
 
 				$refunds = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = 'shop_order_refund' AND post_parent = %d", $id ) );
@@ -2019,8 +1976,8 @@ class WC_Admin_Post_Types {
 				$user_id = get_post_meta( $id, '_customer_user', true );
 
 				if ( $user_id > 0 ) {
-					update_user_meta( $user_id, '_order_count', '' );
-					update_user_meta( $user_id, '_money_spent', '' );
+					delete_user_meta( $user_id, '_money_spent' );
+					delete_user_meta( $user_id, '_order_count' );
 				}
 
 				$refunds = $wpdb->get_results( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = 'shop_order_refund' AND post_parent = %d", $id ) );
@@ -2031,6 +1988,15 @@ class WC_Admin_Post_Types {
 
 				delete_transient( 'woocommerce_processing_order_count' );
 				wc_delete_shop_order_transients( $id );
+			} else if ( 'product' === $post_type ) {
+				// Check if SKU is valid before untrash the product.
+				$sku = get_post_meta( $id, '_sku', true );
+
+				if ( ! empty( $sku ) ) {
+					if ( ! wc_product_has_unique_sku( $id, $sku ) ) {
+						update_post_meta( $id, '_sku', '' );
+					}
+				}
 			}
 		}
 	}
@@ -2102,24 +2068,6 @@ class WC_Admin_Post_Types {
 			<textarea id="woocommerce-coupon-description" name="excerpt" cols="5" rows="2" placeholder="<?php esc_attr_e( 'Description (optional)', 'woocommerce' ); ?>"><?php echo $post->post_excerpt; // This is already escaped in core ?></textarea>
 			<?php
 		}
-	}
-
-	/**
-	 * Change label for insert buttons.
-	 * @param  array $strings
-	 * @return array
-	 */
-	public function change_insert_into_post( $strings ) {
-		global $post_type;
-
-		if ( in_array( $post_type, array( 'product', 'shop_coupon' ) ) || in_array( $post_type, wc_get_order_types() ) ) {
-			$obj = get_post_type_object( $post_type );
-
-			$strings['insertIntoPost']     = sprintf( __( 'Insert into %s', 'woocommerce' ), $obj->labels->singular_name );
-			$strings['uploadedToThisPost'] = sprintf( __( 'Uploaded to this %s', 'woocommerce' ), $obj->labels->singular_name );
-		}
-
-		return $strings;
 	}
 
 	/**
@@ -2282,7 +2230,6 @@ class WC_Admin_Post_Types {
 		}
 	}
 
-
 	/**
 	 * Disable DFW feature pointer.
 	 */
@@ -2291,6 +2238,59 @@ class WC_Admin_Post_Types {
 
 		if ( $screen && 'product' === $screen->id && 'post' === $screen->base ) {
 			remove_action( 'admin_print_footer_scripts', array( 'WP_Internal_Pointers', 'pointer_wp410_dfw' ) );
+		}
+	}
+
+	/**
+	 * Removes products, orders, and coupons from the list of post types that support "View Mode" switching.
+	 * View mode is seen on posts where you can switch between list or excerpt. Our post types don't support
+	 * it, so we want to hide the useless UI from the screen options tab.
+	 *
+	 * @since 2.6
+	 * @param  array $post_types Array of post types supporting view mode
+	 * @return array             Array of post types supporting view mode, without products, orders, and coupons
+	 */
+	public function disable_view_mode_options( $post_types ) {
+		unset( $post_types['product'], $post_types['shop_order'], $post_types['shop_coupon'] );
+		return $post_types;
+	}
+
+	public function maybe_render_blank_state( $which ) {
+		global $post_type;
+
+		if ( in_array( $post_type, array( 'shop_order', 'product', 'shop_coupon' ) ) && 'bottom' === $which ) {
+			$counts = (array) wp_count_posts( $post_type );
+			unset( $counts['auto-draft'] );
+			$count  = array_sum( $counts );
+
+			if ( 0 < $count ) {
+				return;
+			}
+
+			echo '<div class="woocommerce-BlankState">';
+
+			switch ( $post_type ) {
+				case 'shop_order' :
+					?>
+					<h2 class="woocommerce-BlankState-message"><?php _e( 'When you receive a new order, it will appear here.', 'woocommerce' ); ?></h2>
+					<a class="woocommerce-BlankState-cta button-primary button" target="_blank" href="https://docs.woothemes.com/document/managing-orders/?utm_source=blankslate&utm_medium=product&utm_content=ordersdoc&utm_campaign=woocommerceplugin"><?php _e( 'Learn more about orders', 'woocommerce' ); ?></a>
+					<?php
+				break;
+				case 'shop_coupon' :
+					?>
+					<h2 class="woocommerce-BlankState-message"><?php _e( 'Coupons are a great way to offer discounts and rewards to your customers. They will appear here once created.', 'woocommerce' ); ?></h2>
+					<a class="woocommerce-BlankState-cta button-primary button" target="_blank" href="https://docs.woothemes.com/document/coupon-management/?utm_source=blankslate&utm_medium=product&utm_content=couponsdoc&utm_campaign=woocommerceplugin"><?php _e( 'Learn more about coupons', 'woocommerce' ); ?></a>
+					<?php
+				break;
+				case 'product' :
+					?>
+					<h2 class="woocommerce-BlankState-message"><?php _e( 'Ready to start selling something awesome?', 'woocommerce' ); ?></h2>
+					<a class="woocommerce-BlankState-cta button-primary button" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=product&tutorial=true' ) ); ?>"><?php _e( 'Create your first product!', 'woocommerce' ); ?></a>
+					<?php
+				break;
+			}
+
+			echo '<style type="text/css">#posts-filter .wp-list-table, #posts-filter .tablenav.top, .wrap .subsubsub  { display: none; } </style></div>';
 		}
 	}
 }

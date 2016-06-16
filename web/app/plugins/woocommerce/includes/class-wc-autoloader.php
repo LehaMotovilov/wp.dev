@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class 		WC_Autoloader
  * @version		2.3.0
- * @package		WooCommerce/Classes/
+ * @package		WooCommerce/Classes
  * @category	Class
  * @author 		WooThemes
  */
@@ -83,6 +83,8 @@ class WC_Autoloader {
 			$path = $this->include_path . 'admin/';
 		} elseif ( strpos( $class, 'wc_cli_' ) === 0 ) {
 			$path = $this->include_path . 'cli/';
+		} elseif ( strpos( $class, 'wc_payment_token_' ) === 0 ) {
+			$path = $this->include_path . 'payment-tokens/';
 		}
 
 		if ( empty( $path ) || ( ! $this->load_file( $path . $file ) && strpos( $class, 'wc_' ) === 0 ) ) {

@@ -23,6 +23,7 @@ function wc_get_screen_ids() {
 	$screen_ids   = array(
 		'toplevel_page_' . $wc_screen_id,
 		$wc_screen_id . '_page_wc-reports',
+		$wc_screen_id . '_page_wc-shipping',
 		$wc_screen_id . '_page_wc-settings',
 		$wc_screen_id . '_page_wc-status',
 		$wc_screen_id . '_page_wc-addons',
@@ -34,7 +35,6 @@ function wc_get_screen_ids() {
 		'shop_coupon',
 		'edit-product_cat',
 		'edit-product_tag',
-		'edit-product_shipping_class',
 		'profile',
 		'user-edit'
 	);
@@ -179,6 +179,9 @@ function woocommerce_settings_get_option( $option_name, $default = '' ) {
  * @param array $items Order items to save
  */
 function wc_save_order_items( $order_id, $items ) {
+	// Allow other plugins to check change in order items before they are saved
+	do_action( 'woocommerce_before_save_order_items', $order_id, $items );
+
 	global $wpdb;
 
 	// Order items + fees
@@ -374,25 +377,6 @@ function wc_save_order_items( $order_id, $items ) {
 	// Update version after saving
 	update_post_meta( $order_id, '_order_version', WC_VERSION );
 
-	// inform other plugins that the items have been saved
+	// Inform other plugins that the items have been saved
 	do_action( 'woocommerce_saved_order_items', $order_id, $items );
-}
-
-/**
- * Display a WooCommerce help tip.
- *
- * @since  2.5.0
- *
- * @param  string $tip        Help tip text
- * @param  bool   $allow_html Allow sanitized HTML if true or escape
- * @return string
- */
-function wc_help_tip( $tip, $allow_html = false ) {
-	if ( $allow_html ) {
-		$tip = wc_sanitize_tooltip( $tip );
-	} else {
-		$tip = esc_attr( $tip );
-	}
-
-	return '<span class="woocommerce-help-tip" data-tip="' . $tip . '"></span>';
 }

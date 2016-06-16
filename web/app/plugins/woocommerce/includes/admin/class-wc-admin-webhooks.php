@@ -80,7 +80,7 @@ class WC_Admin_Webhooks {
 	 * @param WC_Webhook $webhook
 	 */
 	private function update_secret( $webhook ) {
-		$secret = ! empty( $_POST['webhook_secret'] ) ? $_POST['webhook_secret'] : get_user_meta( get_current_user_id(), 'woocommerce_api_consumer_secret', true );
+		$secret = ! empty( $_POST['webhook_secret'] ) ? $_POST['webhook_secret'] : wc_webhook_generate_secret();
 
 		$webhook->set_secret( $secret );
 	}
@@ -150,6 +150,9 @@ class WC_Admin_Webhooks {
 
 		// Topic
 		$this->update_topic( $webhook );
+
+		// Update date.
+		wp_update_post( array( 'ID' => $webhook->id, 'post_modified' => current_time( 'mysql' ) ) );
 
 		// Run actions
 		do_action( 'woocommerce_webhook_options_save', $webhook->id );
@@ -400,7 +403,7 @@ class WC_Admin_Webhooks {
 	 * Table list output.
 	 */
 	private static function table_list_output() {
-		echo '<h3>' . __( 'Webhooks', 'woocommerce' ) . ' <a href="' . esc_url( wp_nonce_url( admin_url( 'admin.php?page=wc-settings&tab=api&section=webhooks&create-webhook=1' ), 'create-webhook' ) ) . '" class="add-new-h2">' . __( 'Add Webhook', 'woocommerce' ) . '</a></h3>';
+		echo '<h2>' . __( 'Webhooks', 'woocommerce' ) . ' <a href="' . esc_url( wp_nonce_url( admin_url( 'admin.php?page=wc-settings&tab=api&section=webhooks&create-webhook=1' ), 'create-webhook' ) ) . '" class="add-new-h2">' . __( 'Add Webhook', 'woocommerce' ) . '</a></h2>';
 
 		$webhooks_table_list = new WC_Admin_Webhooks_Table_List();
 		$webhooks_table_list->prepare_items();

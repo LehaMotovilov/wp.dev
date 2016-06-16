@@ -98,7 +98,7 @@ jQuery( function( $ ) {
 						}
 					}
 
-					if ( 'postcode' === key || 'city' === key ) {
+					if ( 'postcode' === key || 'city' === key || 'state' === key ) {
 						if ( locale['default'][ key ].label ) {
 							field.find( 'label' ).html( locale['default'][ key ].label );
 						}
@@ -109,7 +109,7 @@ jQuery( function( $ ) {
 					}
 
 					if ( locale['default'][ key ].required === true ) {
-						if ( field.find( 'label abbr' ).size() === 0 ) {
+						if ( field.find( 'label abbr' ).length === 0 ) {
 							field_is_required( field, true );
 						}
 					}

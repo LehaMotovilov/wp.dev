@@ -52,6 +52,9 @@ class WC_Validation {
 		}
 
 		switch ( $country ) {
+			case 'AT' :
+				$valid = (bool) preg_match( '/^([0-9]{4})$/', $postcode );
+				break;
 			case 'BR' :
 				$valid = (bool) preg_match( '/^([0-9]{5})([-])?([0-9]{3})$/', $postcode );
 				break;
@@ -61,14 +64,24 @@ class WC_Validation {
 			case 'DE' :
 				$valid = (bool) preg_match( '/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/', $postcode );
 				break;
+			case 'ES' :
+				$valid = (bool) preg_match( '/^([0-9]{5})$/i', $postcode );
+				break;
 			case 'GB' :
 				$valid = self::is_GB_postcode( $postcode );
+				break;
+			case 'JP' :
+				$valid = (bool) preg_match( '/^([0-9]{3})([-])([0-9]{4})$/', $postcode );
 				break;
 			case 'PT' :
 				$valid = (bool) preg_match( '/^([0-9]{4})([-])([0-9]{3})$/', $postcode );
 				break;
 			case 'US' :
 				$valid = (bool) preg_match( '/^([0-9]{5})(-[0-9]{4})?$/i', $postcode );
+				break;
+            case 'CA' :
+                // CA Postal codes cannot contain D,F,I,O,Q,U and cannot start with W or Z. https://en.wikipedia.org/wiki/Postal_codes_in_Canada#Number_of_possible_postal_codes
+				$valid = (bool) preg_match( '/^([ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ])([\ ])?(\d[ABCEGHJKLMNPRSTVWXYZ]\d)$/i', $postcode );
 				break;
 
 			default :
@@ -89,7 +102,7 @@ class WC_Validation {
 	public static function is_GB_postcode( $to_check ) {
 
 		// Permitted letters depend upon their position in the postcode.
-		// http://en.wikipedia.org/wiki/Postcodes_in_the_United_Kingdom#Validation
+		// https://en.wikipedia.org/wiki/Postcodes_in_the_United_Kingdom#Validation
 		$alpha1 = "[abcdefghijklmnoprstuwyz]"; // Character 1
 		$alpha2 = "[abcdefghklmnopqrstuvwxy]"; // Character 2
 		$alpha3 = "[abcdefghjkpstuw]";         // Character 3 == ABCDEFGHJKPSTUW

@@ -132,9 +132,10 @@ class WC_Coupon {
 		}
 
 		// Otherwise get ID from the code
-		$this->id = $this->get_coupon_id_from_code( $this->code );
+		$this->id    = $this->get_coupon_id_from_code( $this->code );
+		$coupon_post = get_post( $this->id );
 
-		if ( $this->code === apply_filters( 'woocommerce_coupon_code', get_the_title( $this->id ) ) ) {
+		if ( $coupon_post && $this->code === apply_filters( 'woocommerce_coupon_code', $coupon_post->post_title ) ) {
 			$this->populate();
 			return true;
 		}
@@ -154,9 +155,11 @@ class WC_Coupon {
 		$coupon_id = wp_cache_get( WC_Cache_Helper::get_cache_prefix( 'coupons' ) . 'coupon_id_from_code_' . $code, 'coupons' );
 
 		if ( false === $coupon_id ) {
-			$sql       = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' ORDER BY post_date DESC LIMIT 1;", $this->code );
-			$coupon_id = apply_filters( 'woocommerce_get_coupon_id_from_code', $wpdb->get_var( $sql ), $this->code );
-			wp_cache_set( WC_Cache_Helper::get_cache_prefix( 'coupons' ) . 'coupon_id_from_code_' . $code, $coupon_id, 'coupons' );
+			$sql = $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_title = %s AND post_type = 'shop_coupon' AND post_status = 'publish' ORDER BY post_date DESC LIMIT 1;", $this->code );
+
+			if ( $coupon_id = apply_filters( 'woocommerce_get_coupon_id_from_code', $wpdb->get_var( $sql ), $this->code ) ) {
+				wp_cache_set( WC_Cache_Helper::get_cache_prefix( 'coupons' ) . 'coupon_id_from_code_' . $code, $coupon_id, 'coupons' );
+			}
 		}
 
 		return absint( $coupon_id );
@@ -360,8 +363,8 @@ class WC_Coupon {
 	 * @param  int  $user_id
 	 * @throws Exception
 	 */
-	private function validate_user_usage_limit( $user_id = null ) {
-		if ( ! $user_id ) {
+	private function validate_user_usage_limit( $user_id = 0 ) {
+		if ( empty( $user_id ) ) {
 			$user_id = get_current_user_id();
 		}
 		if ( $this->usage_limit_per_user > 0 && is_user_logged_in() && $this->id ) {
@@ -391,7 +394,7 @@ class WC_Coupon {
 	 * @throws Exception
 	 */
 	private function validate_minimum_amount() {
-		if ( $this->minimum_amount > 0 && wc_format_decimal( $this->minimum_amount ) > wc_format_decimal( WC()->cart->subtotal ) ) {
+		if ( $this->minimum_amount > 0 && apply_filters( 'woocommerce_coupon_validate_minimum_amount', wc_format_decimal( $this->minimum_amount ) > WC()->cart->get_displayed_subtotal(), $this ) ) {
 			throw new Exception( self::E_WC_COUPON_MIN_SPEND_LIMIT_NOT_MET );
 		}
 	}
@@ -402,7 +405,7 @@ class WC_Coupon {
 	 * @throws Exception
 	 */
 	private function validate_maximum_amount() {
-		if ( $this->maximum_amount > 0 && wc_format_decimal( $this->maximum_amount ) < wc_format_decimal( WC()->cart->subtotal ) ) {
+		if ( $this->maximum_amount > 0 && apply_filters( 'woocommerce_coupon_validate_maximum_amount', wc_format_decimal( $this->maximum_amount ) <= WC()->cart->get_displayed_subtotal(), $this ) ) {
 			throw new Exception( self::E_WC_COUPON_MAX_SPEND_LIMIT_MET );
 		}
 	}
@@ -745,7 +748,7 @@ class WC_Coupon {
 			}
 		}
 
-		$discount = round( $discount, WC_ROUNDING_PRECISION );
+		$discount = wc_cart_round_discount( $discount, WC_ROUNDING_PRECISION );
 
 		return apply_filters( 'woocommerce_coupon_get_discount_amount', $discount, $discounting_amount, $cart_item, $single, $this );
 	}

@@ -58,28 +58,58 @@ function wc_load_persistent_cart( $user_login, $user ) {
 }
 
 /**
+ * Retrieves unvalidated referer from '_wp_http_referer' or HTTP referer.
+ *
+ * Do not use for redirects, use {@see wp_get_referer()} instead.
+ *
+ * @since 2.6.1
+ * @return string|false Referer URL on success, false on failure.
+ */
+function wc_get_raw_referer() {
+	if ( function_exists( 'wp_get_raw_referer' ) ) {
+		return wp_get_raw_referer();
+	}
+
+    if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+        return wp_unslash( $_REQUEST['_wp_http_referer'] );
+    } else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+        return wp_unslash( $_SERVER['HTTP_REFERER'] );
+    }
+
+    return false;
+}
+
+/**
  * Add to cart messages.
  *
  * @access public
- * @param int|array $product_id
+ * @param int|array $products
+ * @param bool $show_qty Should qty's be shown? Added in 2.6.0
  */
-function wc_add_to_cart_message( $product_id ) {
+function wc_add_to_cart_message( $products, $show_qty = false ) {
 	$titles = array();
+	$count  = 0;
 
-	if ( is_array( $product_id ) ) {
-		foreach ( $product_id as $id ) {
-			$titles[] = get_the_title( $id );
-		}
-	} else {
-		$titles[] = get_the_title( $product_id );
+	if ( ! is_array( $products ) ) {
+		$products = array( $products );
+		$show_qty = false;
+	}
+
+	if ( ! $show_qty && ! is_array( $products ) ) {
+		$products = array_fill_keys( array_values( $products ), 1 );
+	}
+
+	foreach ( $products as $product_id => $qty ) {
+		$titles[] = ( $qty > 1 ? absint( $qty ) . ' &times; ' : '' ) . sprintf( _x( '&ldquo;%s&rdquo;', 'Item name in quotes', 'woocommerce' ), strip_tags( get_the_title( $product_id ) ) );
+		$count += $qty;
 	}
 
 	$titles     = array_filter( $titles );
-	$added_text = sprintf( _n( '%s has been added to your cart.', '%s have been added to your cart.', sizeof( $titles ), 'woocommerce' ), wc_format_list_of_items( $titles ) );
+	$added_text = sprintf( _n( '%s has been added to your cart.', '%s have been added to your cart.', $count, 'woocommerce' ), wc_format_list_of_items( $titles ) );
 
 	// Output success messages
 	if ( 'yes' === get_option( 'woocommerce_cart_redirect_after_add' ) ) {
-		$return_to = apply_filters( 'woocommerce_continue_shopping_redirect', wp_get_referer() ? wp_get_referer() : home_url() );
+		$return_to = apply_filters( 'woocommerce_continue_shopping_redirect', wc_get_raw_referer() ? wp_validate_redirect( wc_get_raw_referer(), false ) : wc_get_page_permalink( 'shop' ) );
 		$message   = sprintf( '<a href="%s" class="button wc-forward">%s</a> %s', esc_url( $return_to ), esc_html__( 'Continue Shopping', 'woocommerce' ), esc_html( $added_text ) );
 	} else {
 		$message   = sprintf( '<a href="%s" class="button wc-forward">%s</a> %s', esc_url( wc_get_page_permalink( 'cart' ) ), esc_html__( 'View Cart', 'woocommerce' ), esc_html( $added_text ) );
@@ -97,7 +127,7 @@ function wc_format_list_of_items( $items ) {
 	$item_string = '';
 
 	foreach ( $items as $key => $item ) {
-		$item_string .= sprintf( _x( '&ldquo;%s&rdquo;', 'Item name in quotes', 'woocommerce' ), strip_tags( $item ) );
+		$item_string .= $item;
 
 		if ( $key + 2 === sizeof( $items ) ) {
 			$item_string .= ' ' . __( 'and', 'woocommerce' ) . ' ';
@@ -198,12 +228,20 @@ function wc_cart_totals_taxes_total_html() {
  *
  * @access public
  * @param string $coupon
+ * @param bool $echo or return
  */
-function wc_cart_totals_coupon_label( $coupon ) {
-	if ( is_string( $coupon ) )
+function wc_cart_totals_coupon_label( $coupon, $echo = true ) {
+	if ( is_string( $coupon ) ) {
 		$coupon = new WC_Coupon( $coupon );
+	}
 
-	echo apply_filters( 'woocommerce_cart_totals_coupon_label', esc_html( __( 'Coupon:', 'woocommerce' ) . ' ' . $coupon->code ), $coupon );
+	$label = apply_filters( 'woocommerce_cart_totals_coupon_label', esc_html( __( 'Coupon:', 'woocommerce' ) . ' ' . $coupon->code ), $coupon );
+
+	if ( $echo ) {
+		echo $label;
+	} else {
+		return $label;
+	}
 }
 
 /**
@@ -300,8 +338,6 @@ function wc_cart_totals_shipping_method_label( $method ) {
 				$label .= ' <small class="tax_label">' . WC()->countries->inc_tax_or_vat() . '</small>';
 			}
 		}
-	} elseif ( $method->id !== 'free_shipping' ) {
-		$label .= ' (' . __( 'Free', 'woocommerce' ) . ')';
 	}
 
 	return apply_filters( 'woocommerce_cart_shipping_method_full_label', $label, $method );

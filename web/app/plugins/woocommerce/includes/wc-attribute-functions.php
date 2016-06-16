@@ -50,6 +50,17 @@ function wc_attribute_taxonomy_name( $attribute_name ) {
 }
 
 /**
+ * Get the attribute name used when storing values in post meta.
+ *
+ * @param string $attribute_name Attribute name.
+ * @since 2.6.0
+ * @return string
+ */
+function wc_variation_attribute_name( $attribute_name ) {
+	return 'attribute_' . sanitize_title( $attribute_name );
+}
+
+/**
  * Get a product attribute name by ID.
  *
  * @since  2.4.0
@@ -70,6 +81,20 @@ function wc_attribute_taxonomy_name_by_id( $attribute_id ) {
 	}
 
 	return '';
+}
+
+/**
+ * Get a product attribute ID by name.
+ *
+ * @since  2.6.0
+ * @param string $name Attribute name.
+ * @return int
+ */
+function wc_attribute_taxonomy_id_by_name( $name ) {
+	$name       = str_replace( 'pa_', '', $name );
+	$taxonomies = wp_list_pluck( wc_get_attribute_taxonomies(), 'attribute_id', 'attribute_name' );
+
+	return isset( $taxonomies[ $name ] ) ? (int) $taxonomies[ $name ] : 0;
 }
 
 /**
@@ -107,11 +132,15 @@ function wc_attribute_label( $name, $product = '' ) {
  * @return string
  */
 function wc_attribute_orderby( $name ) {
-	global $wpdb;
+	global $wc_product_attributes, $wpdb;
 
 	$name = str_replace( 'pa_', '', sanitize_title( $name ) );
 
-	$orderby = $wpdb->get_var( $wpdb->prepare( "SELECT attribute_orderby FROM " . $wpdb->prefix . "woocommerce_attribute_taxonomies WHERE attribute_name = %s;", $name ) );
+	if ( isset( $wc_product_attributes[ 'pa_' . $name ] ) ) {
+		$orderby = $wc_product_attributes[ 'pa_' . $name ]->attribute_orderby;
+	} else {
+		$orderby = $wpdb->get_var( $wpdb->prepare( "SELECT attribute_orderby FROM " . $wpdb->prefix . "woocommerce_attribute_taxonomies WHERE attribute_name = %s;", $name ) );
+	}
 
 	return apply_filters( 'woocommerce_attribute_orderby', $orderby, $name );
 }
@@ -124,7 +153,7 @@ function wc_attribute_orderby( $name ) {
 function wc_get_attribute_taxonomy_names() {
 	$taxonomy_names = array();
 	$attribute_taxonomies = wc_get_attribute_taxonomies();
-	if ( $attribute_taxonomies ) {
+	if ( ! empty( $attribute_taxonomies ) ) {
 		foreach ( $attribute_taxonomies as $tax ) {
 			$taxonomy_names[] = wc_attribute_taxonomy_name( $tax->attribute_name );
 		}
@@ -147,7 +176,7 @@ function wc_get_attribute_types() {
 
 /**
  * Check if attribute name is reserved.
- * http://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms.
+ * https://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms.
  *
  * @since  2.4.0
  * @param  string $attribute_name

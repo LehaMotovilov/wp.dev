@@ -19,7 +19,7 @@ if ( ! defined( 'WPSEO_VERSION' ) ) {
  * @param array $results Results array for encoding.
  */
 function wpseo_ajax_json_echo_die( $results ) {
-	echo WPSEO_Utils::json_encode( $results );
+	echo wp_json_encode( $results );
 	die();
 }
 
@@ -363,7 +363,7 @@ function ajax_get_keyword_usage() {
 	}
 
 	wp_die(
-		WPSEO_Utils::json_encode( WPSEO_Meta::keyword_usage( $keyword, $post_id ) )
+		wp_json_encode( WPSEO_Meta::keyword_usage( $keyword, $post_id ) )
 	);
 }
 
@@ -375,19 +375,25 @@ add_action( 'wp_ajax_get_focus_keyword_usage',  'ajax_get_keyword_usage' );
 function ajax_get_term_keyword_usage() {
 	$post_id = filter_input( INPUT_POST, 'post_id' );
 	$keyword = filter_input( INPUT_POST, 'keyword' );
-	$taxonomy = filter_input( INPUT_POST, 'taxonomy' );
+	$taxonomyName = filter_input( INPUT_POST, 'taxonomy' );
 
-	if ( ! current_user_can( 'edit_terms' ) ) {
-		die( '-1' );
+	$taxonomy = get_taxonomy( $taxonomyName );
+
+	if ( ! $taxonomy ) {
+		wp_die( 0 );
 	}
 
-	$usage = WPSEO_Taxonomy_Meta::get_keyword_usage( $keyword, $post_id, $taxonomy );
+	if ( ! current_user_can( $taxonomy->cap->edit_terms ) ) {
+		wp_die( -1 );
+	}
+
+	$usage = WPSEO_Taxonomy_Meta::get_keyword_usage( $keyword, $post_id, $taxonomyName );
 
 	// Normalize the result so it it the same as the post keyword usage AJAX request.
 	$usage = $usage[ $keyword ];
 
 	wp_die(
-		WPSEO_Utils::json_encode( $usage )
+		wp_json_encode( $usage )
 	);
 }
 

@@ -28,6 +28,8 @@ web/.htaccess
 
 # WordPress Plugins
 /web/app/db.php
+/web/app/plugins/wordpress-seo/
+/web/app/plugins/query-monitor/
 
 # Assets
 tests/_output/*

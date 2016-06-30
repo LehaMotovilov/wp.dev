@@ -38,7 +38,7 @@
 		"wp-cli/wp-cli" : "^0.23",
 		"wp-coding-standards/wpcs": "dev-master",
 		"johnbillion/query-monitor": "2.11.1",
-		"yoast/wordpress-seo": "3.3.2"
+		"yoast/wordpress-seo": "3.3.3"
 	},
 	"extra": {
 		"webroot-dir": "web/wp",

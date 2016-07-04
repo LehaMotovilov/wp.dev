@@ -10,7 +10,8 @@ Another modern WordPress stack. Enjoy :)
 * WP CLI support - [WP CLI](http://wp-cli.org/)
 * Codeception for testing - [Codeception](http://codeception.com/)
 * PHP Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/)
-* PHP Copy Paste detector - [Copy/Paste Detecto](https://github.com/sebastianbergmann/phpcpd)
+* PHP Copy Paste Detector - [Copy/Paste Detector](https://github.com/sebastianbergmann/phpcpd)
+* PHP Mess Detector - [Mess Detector](https://phpmd.org/)
 * JS Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/javascript/)
 
 ## How to install?
@@ -28,8 +29,9 @@ Another modern WordPress stack. Enjoy :)
 * Deploy example ```vendor/bin/dep deploy production```
 * Run Migrations ```vendor/bin/phinx migrate -e development```
 * Run Tests ```vendor/bin/codecept run```
-* Run PHP Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```
-* Run PHP Copy/Paste check ```vendor/bin/phpcpd --min-lines=3 web/```
+* Run PHP Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/app/themes/twentyfifteen -s```
+* Run PHP Copy Paste Detector check ```vendor/bin/phpcpd --min-lines=3 web/app/themes/twentyfifteen```
+* Run PHP Mess Detector check ```vendor/bin/phpmd web/app/themes/twentyfifteen text cleancode```
 * Run JS Code Style check ```jscs web/app/themes/twentyfifteen```
 * Run WP-CLI example ```vendor/bin/wp core version```
 

@@ -41,6 +41,7 @@
 		"deployer/deployer": "3.3.*",
 		"squizlabs/php_codesniffer": "2.*",
 		"sebastian/phpcpd": "*",
+		"phpmd/phpmd": "@stable",
 		"wp-coding-standards/wpcs": "dev-master"
 	},
 	"extra": {

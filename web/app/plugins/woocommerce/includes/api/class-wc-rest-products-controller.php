@@ -113,6 +113,15 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 	}
 
 	/**
+	 * Get post types.
+	 *
+	 * @return array
+	 */
+	protected function get_post_types() {
+		return array( 'product', 'product_variation' );
+	}
+
+	/**
 	 * Query args.
 	 *
 	 * @param array $args
@@ -325,7 +334,7 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 		$default = array();
 
 		if ( $product->is_type( 'variable' ) ) {
-			foreach ( (array) get_post_meta( $product->id, '_default_attributes', true ) as $key => $value ) {
+			foreach ( array_filter( (array) get_post_meta( $product->id, '_default_attributes', true ), 'strlen' ) as $key => $value ) {
 				if ( 0 === strpos( $key, 'pa_' ) ) {
 					$default[] = array(
 						'id'     => wc_attribute_taxonomy_id_by_name( $key ),
@@ -633,7 +642,7 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 
 		if ( $product->is_type( 'variation' ) && $product->parent ) {
 			$links['up'] = array(
-				'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->parent ) ),
+				'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $product->parent->id ) ),
 			);
 		} elseif ( $product->is_type( 'simple' ) && ! empty( $product->post->post_parent ) ) {
 			$links['up'] = array(
@@ -727,43 +736,31 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 			$gallery = array();
 
 			foreach ( $images as $image ) {
-				if ( isset( $image['position'] ) && 0 === $image['position'] ) {
-					$attachment_id = isset( $image['id'] ) ? absint( $image['id'] ) : 0;
+				$attachment_id = isset( $image['id'] ) ? absint( $image['id'] ) : 0;
 
-					if ( 0 === $attachment_id && isset( $image['src'] ) ) {
-						$upload = wc_rest_upload_image_from_url( esc_url_raw( $image['src'] ) );
+				if ( 0 === $attachment_id && isset( $image['src'] ) ) {
+					$upload = wc_rest_upload_image_from_url( esc_url_raw( $image['src'] ) );
 
-						if ( is_wp_error( $upload ) ) {
-							throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
-						}
-
-						$attachment_id = wc_rest_set_uploaded_image_as_attachment( $upload, $product->id );
+					if ( is_wp_error( $upload ) ) {
+						throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
 					}
 
+					$attachment_id = wc_rest_set_uploaded_image_as_attachment( $upload, $product->id );
+				}
+
+				if ( isset( $image['position'] ) && 0 === $image['position'] ) {
 					set_post_thumbnail( $product->id, $attachment_id );
 				} else {
-					$attachment_id = isset( $image['id'] ) ? absint( $image['id'] ) : 0;
-
-					if ( 0 === $attachment_id && isset( $image['src'] ) ) {
-						$upload = wc_rest_upload_image_from_url( esc_url_raw( $image['src'] ) );
-
-						if ( is_wp_error( $upload ) ) {
-							throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
-						}
-
-						$attachment_id = wc_rest_set_uploaded_image_as_attachment( $upload, $product->id );
-					}
-
 					$gallery[] = $attachment_id;
 				}
 
 				// Set the image alt if present.
-				if ( ! empty( $image['alt'] ) && $attachment_id ) {
+				if ( ! empty( $image['alt'] ) ) {
 					update_post_meta( $attachment_id, '_wp_attachment_image_alt', wc_clean( $image['alt'] ) );
 				}
 
 				// Set the image name if present.
-				if ( ! empty( $image['name'] ) && $attachment_id ) {
+				if ( ! empty( $image['name'] ) ) {
 					wp_update_post( array( 'ID' => $attachment_id, 'post_title' => $image['name'] ) );
 				}
 			}
@@ -772,7 +769,7 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 				update_post_meta( $product->id, '_product_image_gallery', implode( ',', $gallery ) );
 			}
 		} else {
-			delete_post_thumbnail( $product->id );
+			delete_post_meta( $product->id, '_thumbnail_id' );
 			update_post_meta( $product->id, '_product_image_gallery', '' );
 		}
 	}
@@ -1003,10 +1000,10 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 						$attributes[ $attribute_name ] = array(
 							'name'         => $attribute_name,
 							'value'        => '',
-							'position'     => isset( $attribute['position'] ) ? absint( $attribute['position'] ) : 0,
+							'position'     => isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0',
 							'is_visible'   => ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0,
 							'is_variation' => ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0,
-							'is_taxonomy'  => true,
+							'is_taxonomy'  => 1,
 						);
 					}
 
@@ -1024,10 +1021,10 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 					$attributes[ sanitize_title( $attribute_name ) ] = array(
 						'name'         => $attribute_name,
 						'value'        => $values,
-						'position'     => isset( $attribute['position'] ) ? absint( $attribute['position'] ) : 0,
+						'position'     => isset( $attribute['position'] ) ? (string) absint( $attribute['position'] ) : '0',
 						'is_visible'   => ( isset( $attribute['visible'] ) && $attribute['visible'] ) ? 1 : 0,
 						'is_variation' => ( isset( $attribute['variation'] ) && $attribute['variation'] ) ? 1 : 0,
-						'is_taxonomy'  => false,
+						'is_taxonomy'  => 0,
 					);
 				}
 			}
@@ -1168,12 +1165,13 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 				update_post_meta( $product->id, '_stock', '' );
 
 				wc_update_product_stock_status( $product->id, 'instock' );
-			} elseif ( 'variable' === $product_type ) {
-				update_post_meta( $product->id, '_stock', '' );
 			} elseif ( 'yes' === $manage_stock ) {
 				update_post_meta( $product->id, '_backorders', $backorders );
 
-				wc_update_product_stock_status( $product->id, $stock_status );
+				// Stock status is always determined by children so sync later.
+				if ( 'variable' !== $product_type ) {
+					wc_update_product_stock_status( $product->id, $stock_status );
+				}
 
 				// Stock quantity.
 				if ( isset( $request['stock_quantity'] ) ) {
@@ -1368,14 +1366,18 @@ class WC_REST_Products_Controller extends WC_REST_Posts_Controller {
 			if ( isset( $variation['image'] ) && is_array( $variation['image'] ) ) {
 				$image = current( $variation['image'] );
 				if ( $image && is_array( $image ) ) {
-					if ( isset( $image['position'] ) && isset( $image['src'] ) && 0 === $image['position'] ) {
-						$upload = wc_rest_upload_image_from_url( wc_clean( $image['src'] ) );
+					if ( isset( $image['position'] ) && 0 === $image['position'] ) {
+						$attachment_id = isset( $image['id'] ) ? absint( $image['id'] ) : 0;
 
-						if ( is_wp_error( $upload ) ) {
-							throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
+						if ( 0 === $attachment_id && isset( $image['src'] ) ) {
+							$upload = wc_rest_upload_image_from_url( wc_clean( $image['src'] ) );
+
+							if ( is_wp_error( $upload ) ) {
+								throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
+							}
+
+							$attachment_id = wc_rest_set_uploaded_image_as_attachment( $upload, $product->id );
 						}
-
-						$attachment_id = wc_rest_set_uploaded_image_as_attachment( $upload, $product->id );
 
 						// Set the image alt if present.
 						if ( ! empty( $image['alt'] ) ) {

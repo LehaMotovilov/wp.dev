@@ -131,11 +131,35 @@ class WC_Query {
 	}
 
 	/**
+	 * Endpoint mask describing the places the endpoint should be added.
+	 *
+	 * @since 2.6.2
+	 * @return int
+	 */
+	protected function get_endpoints_mask() {
+		if ( 'page' === get_option( 'show_on_front' ) ) {
+			$page_on_front     = get_option( 'page_on_front' );
+			$myaccount_page_id = get_option( 'woocommerce_myaccount_page_id' );
+			$checkout_page_id  = get_option( 'woocommerce_checkout_page_id' );
+
+			if ( in_array( $page_on_front, array( $myaccount_page_id, $checkout_page_id ) ) ) {
+				return EP_ROOT | EP_PAGES;
+			}
+		}
+
+		return EP_PAGES;
+	}
+
+	/**
 	 * Add endpoints for query vars.
 	 */
 	public function add_endpoints() {
+		$mask = $this->get_endpoints_mask();
+
 		foreach ( $this->query_vars as $key => $var ) {
-			add_rewrite_endpoint( $var, EP_ROOT | EP_PAGES );
+			if ( ! empty( $var ) ) {
+				add_rewrite_endpoint( $var, $mask );
+			}
 		}
 	}
 
@@ -240,6 +264,11 @@ class WC_Query {
 				$q->set( 'page_id', (int) get_option( 'page_on_front' ) );
 				$q->set( 'post_type', 'product' );
 			}
+		}
+
+		// Fix product feeds
+		if ( $q->is_feed() && $q->is_post_type_archive( 'product' ) ) {
+			$q->is_comment_feed = false;
 		}
 
 		// Special check for shops with the product archive on front
@@ -398,8 +427,6 @@ class WC_Query {
 	 * @return array
 	 */
 	public function get_catalog_ordering_args( $orderby = '', $order = '' ) {
-		global $wpdb;
-
 		// Get ordering from query string unless defined
 		if ( ! $orderby ) {
 			$orderby_value = isset( $_GET['orderby'] ) ? wc_clean( $_GET['orderby'] ) : apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby' ) );

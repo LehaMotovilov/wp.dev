@@ -28,7 +28,7 @@ function wc_template_redirect() {
 
 	// When on the checkout with an empty cart, redirect to cart page
 	elseif ( is_page( wc_get_page_id( 'checkout' ) ) && WC()->cart->is_empty() && empty( $wp->query_vars['order-pay'] ) && ! isset( $wp->query_vars['order-received'] ) ) {
-		wc_add_notice( __( 'Checkout is not available whilst your cart is empty.', 'woocommerce' ) );
+		wc_add_notice( __( 'Checkout is not available whilst your cart is empty.', 'woocommerce' ), 'notice' );
 		wp_redirect( wc_get_page_permalink( 'cart' ) );
 		exit;
 	}
@@ -40,7 +40,7 @@ function wc_template_redirect() {
 	}
 
 	// Redirect to the product page if we have a single product
-	elseif ( is_search() && is_post_type_archive( 'product' ) && apply_filters( 'woocommerce_redirect_single_search_result', true ) && 1 === $wp_query->found_posts ) {
+	elseif ( is_search() && is_post_type_archive( 'product' ) && apply_filters( 'woocommerce_redirect_single_search_result', true ) && 1 === absint( $wp_query->found_posts ) ) {
 		$product = wc_get_product( $wp_query->post );
 
 		if ( $product && $product->is_visible() ) {
@@ -134,7 +134,7 @@ add_filter( 'loop_end', 'woocommerce_reset_loop' );
 
 /**
  * Products RSS Feed.
- *
+ * @deprecated 2.6
  * @access public
  */
 function wc_products_rss_feed() {
@@ -448,7 +448,7 @@ if ( ! function_exists( 'woocommerce_demo_store' ) ) {
 			$notice = __( 'This is a demo store for testing purposes &mdash; no orders shall be fulfilled.', 'woocommerce' );
 		}
 
-		echo apply_filters( 'woocommerce_demo_store', '<p class="demo_store">' . wp_kses_post( $notice ) . '</p>'  );
+		echo apply_filters( 'woocommerce_demo_store', '<p class="demo_store">' . wp_kses_post( $notice ) . '</p>', $notice );
 	}
 }
 
@@ -1028,6 +1028,10 @@ if ( ! function_exists( 'woocommerce_quantity_input' ) ) {
 
 		$args = apply_filters( 'woocommerce_quantity_input_args', wp_parse_args( $args, $defaults ), $product );
 
+		// Set min and max value to empty string if not set.
+		$args['min_value'] = isset( $args['min_value'] ) ? $args['min_value'] : '';
+		$args['max_value'] = isset( $args['max_value'] ) ? $args['max_value'] : '';
+
 		// Apply sanity to min/max args - min cannot be lower than 0
 		if ( '' !== $args['min_value'] && is_numeric( $args['min_value'] ) && $args['min_value'] < 0 ) {
 			$args['min_value'] = 0; // Cannot be lower than 0
@@ -1314,6 +1318,9 @@ if ( ! function_exists( 'woocommerce_cart_totals' ) ) {
 	 * @subpackage	Cart
 	 */
 	function woocommerce_cart_totals() {
+		if ( is_checkout() ) {
+			return;
+		}
 		wc_get_template( 'cart/cart-totals.php' );
 	}
 }
@@ -1328,11 +1335,14 @@ if ( ! function_exists( 'woocommerce_cross_sell_display' ) ) {
 	 * @param  string $orderby (default: 'rand')
 	 */
 	function woocommerce_cross_sell_display( $posts_per_page = 2, $columns = 2, $orderby = 'rand' ) {
+		if ( is_checkout() ) {
+			return;
+		}
 		wc_get_template( 'cart/cross-sells.php', array(
-				'posts_per_page' => $posts_per_page,
-				'orderby'        => $orderby,
-				'columns'        => $columns
-			) );
+			'posts_per_page' => $posts_per_page,
+			'orderby'        => $orderby,
+			'columns'        => $columns
+		) );
 	}
 }
 
@@ -1426,7 +1436,7 @@ if ( ! function_exists( 'woocommerce_breadcrumb' ) ) {
 
 		$breadcrumbs = new WC_Breadcrumb();
 
-		if ( $args['home'] ) {
+		if ( ! empty( $args['home'] ) ) {
 			$breadcrumbs->add_crumb( $args['home'], apply_filters( 'woocommerce_breadcrumb_home_url', home_url() ) );
 		}
 

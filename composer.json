@@ -32,13 +32,16 @@
 		"symfony/console": "2.*",
 		"robmorgan/phinx": "0.5.*",
 		"vlucas/phpdotenv": "2.2.*",
-		"deployer/deployer": "3.3.*",
-		"codeception/codeception": "*",
-		"squizlabs/php_codesniffer": "2.*",
 		"wp-cli/wp-cli" : "^0.23",
-		"wp-coding-standards/wpcs": "dev-master",
 		"johnbillion/query-monitor": "2.11.1",
 		"yoast/wordpress-seo": "3.3.3"
+	},
+	"require-dev": {
+		"codeception/codeception": "*",
+		"deployer/deployer": "3.3.*",
+		"squizlabs/php_codesniffer": "2.*",
+		"sebastian/phpcpd": "*",
+		"wp-coding-standards/wpcs": "dev-master"
 	},
 	"extra": {
 		"webroot-dir": "web/wp",

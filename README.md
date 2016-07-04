@@ -10,6 +10,7 @@ Another modern WordPress stack. Enjoy :)
 * WP CLI support - [WP CLI](http://wp-cli.org/)
 * Codeception for testing - [Codeception](http://codeception.com/)
 * PHP Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/)
+* PHP Copy Paste detector - [Copy/Paste Detecto](https://github.com/sebastianbergmann/phpcpd)
 * JS Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/javascript/)
 
 ## How to install?
@@ -28,6 +29,7 @@ Another modern WordPress stack. Enjoy :)
 * Run Migrations ```vendor/bin/phinx migrate -e development```
 * Run Tests ```vendor/bin/codecept run```
 * Run PHP Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/ -s```
+* Run PHP Copy/Paste check ```vendor/bin/phpcpd --min-lines=3 web/```
 * Run JS Code Style check ```jscs web/app/themes/twentyfifteen```
 * Run WP-CLI example ```vendor/bin/wp core version```
 

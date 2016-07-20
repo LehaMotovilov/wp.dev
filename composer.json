@@ -34,7 +34,7 @@
 		"vlucas/phpdotenv": "2.2.*",
 		"wp-cli/wp-cli" : "^0.23",
 		"johnbillion/query-monitor": "2.11.4",
-		"yoast/wordpress-seo": "3.3.4"
+		"yoast/wordpress-seo": "3.4"
 	},
 	"require-dev": {
 		"codeception/codeception": "*",

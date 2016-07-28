@@ -10,6 +10,10 @@
 	],
 	"repositories": [
 		{
+			"type": "composer",
+			"url": "https://wpackagist.org"
+		},
+		{
 			"type": "package",
 			"package": {
 				"name": "wordpress",
@@ -33,10 +37,14 @@
 		"robmorgan/phinx": "0.5.*",
 		"vlucas/phpdotenv": "2.2.*",
 		"wp-cli/wp-cli" : "^0.23",
-		"johnbillion/query-monitor": "2.11.4",
-		"yoast/wordpress-seo": "3.4"
+		"wpackagist-plugin/query-monitor": "2.11.4",
+		"wpackagist-plugin/wordpress-seo": "3.4",
+		"wpackagist-plugin/regenerate-thumbnails": "2.2.6",
+		"wpackagist-plugin/rest-api": "2.0-beta13",
+		"wpackagist-plugin/woocommerce": "2.6.4"
 	},
 	"require-dev": {
+		"wpackagist-plugin/theme-check": "20160523.1",
 		"codeception/codeception": "*",
 		"deployer/deployer": "3.3.*",
 		"squizlabs/php_codesniffer": "2.*",

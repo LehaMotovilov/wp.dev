@@ -35,5 +35,9 @@ web/.htaccess
 /web/app/plugins/rest-api/
 /web/app/plugins/theme-check/
 
+# WordPress Themes
+/web/app/themes/twentysixteen/
+/web/app/themes/twentyfifteen/
+
 # Assets
 tests/_output/*

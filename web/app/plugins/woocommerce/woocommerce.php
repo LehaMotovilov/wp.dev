@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: WooCommerce
- * Plugin URI: https://www.woothemes.com/woocommerce/
+ * Plugin URI: https://woocommerce.com/
  * Description: An e-commerce toolkit that helps you sell anything. Beautifully.
- * Version: 2.6.2
+ * Version: 2.6.4
  * Author: WooThemes
  * Author URI: https://woothemes.com
  * Requires at least: 4.4
@@ -35,7 +35,7 @@ final class WooCommerce {
 	 *
 	 * @var string
 	 */
-	public $version = '2.6.2';
+	public $version = '2.6.4';
 
 	/**
 	 * The single instance of the class.

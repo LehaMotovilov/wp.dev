@@ -29,10 +29,10 @@ Another modern WordPress stack. Enjoy :)
 
 * Deploy example ```vendor/bin/dep deploy production```
 * Run Migrations ```vendor/bin/phinx migrate -e development```
-* Run Tests ```vendor/bin/codecept run```
-* Run PHP Code Style check ```vendor/bin/phpcs --standard=phpcs.ruleset.xml web/app/themes/twentyfifteen -s```
-* Run PHP Copy Paste Detector check ```vendor/bin/phpcpd --min-lines=3 web/app/themes/twentyfifteen```
-* Run PHP Mess Detector check ```vendor/bin/phpmd web/app/themes/twentyfifteen text cleancode```
+* Run Tests ```composer tests```
+* Run PHP Code Style check ```composer cs```
+* Run PHP Copy Paste Detector check ```composer cp```
+* Run PHP Mess Detector check ```composer md```
 * Run JS Code Style check ```jscs web/app/themes/twentyfifteen```
 * Run WP-CLI example ```vendor/bin/wp core version```
 

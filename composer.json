@@ -62,5 +62,11 @@
 			"web/app/plugins/{$name}/": ["type:wordpress-plugin"],
 			"web/app/themes/{$name}/": ["type:wordpress-theme"]
 		}
+	},
+	"scripts": {
+		"tests": "vendor/bin/codecept run",
+		"cs": "vendor/bin/phpcs --standard=phpcs.ruleset.xml web/app/themes/twentyfifteen -s",
+		"cp": "vendor/bin/phpcpd --min-lines=3 web/app/themes/twentyfifteen",
+		"md": "vendor/bin/phpmd web/app/themes/twentyfifteen text phpmd.ruleset.xml"
 	}
 }

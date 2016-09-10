@@ -34,6 +34,8 @@ web/.htaccess
 /web/app/plugins/regenerate-thumbnails/
 /web/app/plugins/rest-api/
 /web/app/plugins/theme-check/
+/web/app/plugins/debug-*/
+/web/app/plugins/developer/
 
 # WordPress Themes
 /web/app/themes/twentysixteen/

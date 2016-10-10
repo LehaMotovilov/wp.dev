@@ -1,5 +1,6 @@
 ## wp.dev
 Another modern WordPress stack. Enjoy :)
+I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)
 
 ## Some features:
 

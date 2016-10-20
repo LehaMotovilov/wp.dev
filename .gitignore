@@ -28,14 +28,10 @@ web/.htaccess
 
 # WordPress Plugins
 /web/app/db.php
-/web/app/plugins/wordpress-seo/
-/web/app/plugins/query-monitor/
-/web/app/plugins/woocommerce/
-/web/app/plugins/regenerate-thumbnails/
-/web/app/plugins/rest-api/
-/web/app/plugins/theme-check/
-/web/app/plugins/debug-*/
-/web/app/plugins/developer/
+/web/app/plugins/*/
+!/web/app/plugins/some-custom-plugin/
+/web/app/mu-plugins/*/
+!/web/app/plugins/some-custom-mu-plugin/
 
 # WordPress Themes
 /web/app/themes/twentysixteen/

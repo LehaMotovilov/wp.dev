@@ -18,8 +18,6 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 
 ## How to install?
 
-* ```mkdir test && cd test```
-* ```git clone git@github.com:LehaMotovilov/wp.dev.git .```
 * ```composer install```
 * ```mv configs/.env.example configs/.env && nano configs/.env```
 * Import example DB ```vendor/bin/wp db import configs/db/dump.sql```

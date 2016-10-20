@@ -27,10 +27,10 @@
 		"wpackagist-plugin/debug-bar-extender": "0.5",
 		"wpackagist-plugin/debug-bar-constants": "1.6.1",
 		"wpackagist-plugin/developer": "1.2.6",
-		"wpackagist-plugin/wordpress-seo": "3.7.0",
+		"wpackagist-plugin/wordpress-seo": "3.7.1",
 		"wpackagist-plugin/regenerate-thumbnails": "2.2.6",
 		"wpackagist-plugin/rest-api": "2.0-beta15",
-		"wpackagist-plugin/woocommerce": "2.6.4"
+		"wpackagist-plugin/woocommerce": "2.6.5"
 	},
 	"require-dev": {
 		"wpackagist-plugin/theme-check": "20160523.1",
@@ -44,7 +44,10 @@
 	"extra": {
 		"wordpress-install-dir": "web/wp",
 		"installer-paths": {
-			"web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+			"web/app/mu-plugins/{$name}/": [
+				"type:wordpress-muplugin",
+				"wpackagist-plugin/query-monitor"
+			],
 			"web/app/plugins/{$name}/": ["type:wordpress-plugin"],
 			"web/app/themes/{$name}/": ["type:wordpress-theme"]
 		}

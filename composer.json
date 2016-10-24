@@ -30,7 +30,7 @@
 		"wpackagist-plugin/wordpress-seo": "3.7.1",
 		"wpackagist-plugin/regenerate-thumbnails": "2.2.6",
 		"wpackagist-plugin/rest-api": "2.0-beta15",
-		"wpackagist-plugin/woocommerce": "2.6.5"
+		"wpackagist-plugin/woocommerce": "2.6.6"
 	},
 	"require-dev": {
 		"wpackagist-plugin/theme-check": "20160523.1",

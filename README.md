@@ -20,20 +20,20 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 
 * ```composer install```
 * ```mv configs/.env.example configs/.env && nano configs/.env```
-* Import example DB ```vendor/bin/wp db import configs/db/dump.sql```
+* Import example DB ```wp-cli/wp-cli.phar db import configs/db/dump.sql```
 * Login admin/admin - http://wp.dev/wp/wp-admin/
 * Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
 
 ## How to use?
 
 * Deploy example ```vendor/bin/dep deploy production```
-* Run Migrations ```vendor/bin/phinx migrate -e development```
+* Run Migrations ```composer migrate:dev```
 * Run Tests ```composer tests```
 * Run PHP Code Style check ```composer cs```
 * Run PHP Copy Paste Detector check ```composer cp```
 * Run PHP Mess Detector check ```composer md```
 * Run JS Code Style check ```jscs web/app/themes/twentyfifteen```
-* Run WP-CLI example ```vendor/bin/wp core version```
+* Run WP-CLI example ```wp-cli/wp-cli.phar core version```
 
 ## Apache config
 ```

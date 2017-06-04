@@ -21,7 +21,7 @@
 		"robmorgan/phinx": "0.8.0",
 		"wpackagist-theme/twentyfifteen": "1.7",
 		"wpackagist-theme/twentysixteen": "1.3",
-		"wpackagist-theme/storefront": "2.2.2",
+		"wpackagist-theme/storefront": "2.2.3",
 		"wpackagist-plugin/query-monitor": "2.13.4",
 		"wpackagist-plugin/debug-bar": "0.9",
 		"wpackagist-plugin/debug-bar-extender": "0.5",
@@ -34,7 +34,7 @@
 	},
 	"require-dev": {
 		"wpackagist-plugin/theme-check": "20160523.1",
-		"codeception/codeception": "2.3.0",
+		"codeception/codeception": "2.3.3",
 		"deployer/deployer": "4.3.0",
 		"squizlabs/php_codesniffer": "2.9.0",
 		"sebastian/phpcpd": "3.0.0",

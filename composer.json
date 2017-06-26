@@ -30,7 +30,7 @@
 		"wpackagist-plugin/wordpress-seo": "4.9",
 		"wpackagist-plugin/wordpress-importer": "0.6.3",
 		"wpackagist-plugin/regenerate-thumbnails": "2.2.6",
-		"wpackagist-plugin/woocommerce": "3.0.8"
+		"wpackagist-plugin/woocommerce": "3.0.9"
 	},
 	"require-dev": {
 		"wpackagist-plugin/theme-check": "20160523.1",

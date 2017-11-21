@@ -2,7 +2,6 @@
 vendor/*
 !vendor/.gitkeep
 composer.phar
-composer.lock
 npm-debug.log
 
 # Node Package Manager

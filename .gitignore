@@ -1,11 +1,6 @@
 # Vendor (e.g. Composer)
 vendor/*
 !vendor/.gitkeep
-composer.phar
-npm-debug.log
-
-# Node Package Manager
-node_modules
 
 # WordPress Core
 /web/wp

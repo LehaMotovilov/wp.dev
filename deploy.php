@@ -2,12 +2,13 @@
 /**
  * This is an example of a deploy.php.
  */
+namespace Deployer;
 
 // Load default tasks.
 require( __DIR__ . '/vendor/deployer/deployer/recipe/common.php' );
 
 // Load server's configs.
-serverList( __DIR__ . '/configs/deploy.yml' );
+inventory( __DIR__ . '/configs/deploy.yml' );
 
 // Repo with project.
 set( 'repository', 'https://github.com/LehaMotovilov/wp.dev' );
@@ -18,15 +19,12 @@ set( 'shared_dirs', ['web/app/uploads', 'vendor'] );
 // Main config with environment variables.
 set( 'shared_files', ['configs/.env'] );
 
-// Writable dirs.
-set( 'writable_dirs', ['web/app/uploads', 'web/app/ewww'] );
-
 // Flush cache.
 task( 'deploy:cache', function () {
 	run(
 		'cd {{release_path}} &&
-		vendor/wp-cli/wp-cli/bin/wp transient delete-all --allow-root &&
-		vendor/wp-cli/wp-cli/bin/wp cache flush --allow-root'
+		wp-cli/wp-cli.phar transient delete-all --allow-root &&
+		wp-cli/wp-cli.phar cache flush --allow-root'
 	);
 } )->desc('Transient deleted and Cache flushed');
 
@@ -35,10 +33,9 @@ task( 'deploy:reload', function () {
 	run(
 		'sudo service nginx restart &&
 		sudo service php5-fpm restart &&
-		sudo /etc/init.d/memcached restart &&
 		sudo service mysql restart'
 	);
-} )->desc('Services nginx, php5-fpm, memcached, mysql are restarted');
+} )->desc('Services nginx, php5-fpm, mysql are restarted');
 
 // Run DB migrations.
 task( 'deploy:migrations', function () {
@@ -54,7 +51,6 @@ task('deploy', [
 	'deploy:release',
 	'deploy:update_code',
 	'deploy:shared',
-	'deploy:writable',
 	'deploy:vendors',
 	'deploy:symlink',
 	'deploy:cache',
@@ -62,4 +58,3 @@ task('deploy', [
 	'deploy:migrations',
 	'cleanup'
 ])->desc('Deploy your project');
-

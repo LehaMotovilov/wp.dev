@@ -37,7 +37,7 @@
 		"codeception/codeception": "2.4.0",
 		"deployer/deployer": "6.1.0",
 		"squizlabs/php_codesniffer": "3.2.3",
-		"sebastian/phpcpd": "3.0.1",
+		"sebastian/phpcpd": "4.0.0",
 		"phpmd/phpmd": "2.6.0",
 		"wp-coding-standards/wpcs": "0.14.1"
 	},

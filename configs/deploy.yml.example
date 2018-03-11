@@ -1,18 +1,18 @@
-production:
+site.com:
   host: site.com
   user: sshuser
   password: sshpassword
   stage: production
   deploy_path: /usr/share/nginx/html/
 
-staging:
+stage.site.com:
   host: stage.site.com
   user: sshuser
   password: sshpassword
   stage: staging
   deploy_path: /usr/share/nginx/html/
 
-development:
+dev.site.com:
   host: dev.site.com
   user: sshuser
   password: sshpassword

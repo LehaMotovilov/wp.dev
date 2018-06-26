@@ -18,7 +18,7 @@
 		"php": ">=7.0",
 		"johnpbloch/wordpress": "4.9.6",
 		"vlucas/phpdotenv": "2.4.0",
-		"robmorgan/phinx": "0.10.0",
+		"robmorgan/phinx": "0.10.3",
 		"wpackagist-theme/twentyfifteen": "2.0",
 		"wpackagist-theme/twentysixteen": "1.5",
 		"wpackagist-theme/storefront": "2.3.2",
@@ -30,7 +30,7 @@
 		"wpackagist-plugin/wordpress-seo": "7.6.1",
 		"wpackagist-plugin/wordpress-importer": "0.6.4",
 		"wpackagist-plugin/regenerate-thumbnails": "3.0.2",
-		"wpackagist-plugin/woocommerce": "3.4.2"
+		"wpackagist-plugin/woocommerce": "3.4.3"
 	},
 	"require-dev": {
 		"wpackagist-plugin/theme-check": "20160523.1",

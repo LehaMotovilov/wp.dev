@@ -3,10 +3,10 @@
   <description>A custom set of rules to check WP project.</description>
 
   <!-- Exclude the Composer Vendor directory. -->
-	<exclude-pattern>/vendor/*</exclude-pattern>
+  <exclude-pattern>/vendor/*</exclude-pattern>
 
-	<!-- Exclude the Node Modules directory. -->
-	<exclude-pattern>/node_modules/*</exclude-pattern>
+  <!-- Exclude the Node Modules directory. -->
+  <exclude-pattern>/node_modules/*</exclude-pattern>
 
   <!-- Ignore all assets. -->
   <exclude-pattern>*.css</exclude-pattern>
@@ -17,8 +17,8 @@
   <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/fig-r/psr2r-sniffer" />
 
   <!-- Add in some extra rules from other standards. -->
-	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-	<rule ref="Generic.Commenting.Todo"/>
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+  <rule ref="Generic.Commenting.Todo"/>
 
   <!-- Include WordPress standards. -->
   <rule ref="WordPress-Docs"/>

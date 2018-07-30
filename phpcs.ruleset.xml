@@ -1,49 +1,27 @@
 <?xml version="1.0"?>
 <ruleset name="WP.Dev">
-    <description>A custom set of rules to check WP project.</description>
+  <description>A custom set of rules to check WP project.</description>
 
-    <!-- Don't validate not our code -->
-    <exclude-pattern>/bower_components/*</exclude-pattern>
-    <exclude-pattern>/configs/*</exclude-pattern>
-    <exclude-pattern>/migrations/*</exclude-pattern>
-    <exclude-pattern>/node_modules/*</exclude-pattern>
-    <exclude-pattern>/tests/*</exclude-pattern>
-    <exclude-pattern>/vendor/*</exclude-pattern>
-    <exclude-pattern>/web/wp/*</exclude-pattern>
-    <exclude-pattern>/web/app/themes/*/includes/theme-options/*</exclude-pattern>
-    <exclude-pattern>/web/app/db.php</exclude-pattern>
-    <exclude-pattern>/web/app/languages/*</exclude-pattern>
-    <exclude-pattern>/web/app/uploads/*</exclude-pattern>
-    <exclude-pattern>/web/app/upgrade/*</exclude-pattern>
+  <!-- Exclude the Composer Vendor directory. -->
+	<exclude-pattern>/vendor/*</exclude-pattern>
 
-    <!-- Temp ignore all plugins -->
-    <exclude-pattern>/web/app/plugins/*</exclude-pattern>
+	<!-- Exclude the Node Modules directory. -->
+	<exclude-pattern>/node_modules/*</exclude-pattern>
 
-	<!-- Ignore all default themes -->
-	<exclude-pattern>/web/app/themes/twentyfifteen/*</exclude-pattern>
-	<exclude-pattern>/web/app/themes/twentyfourteen/*</exclude-pattern>
-    <exclude-pattern>/web/app/themes/twentysixteen/*</exclude-pattern>
+  <!-- Ignore all assets. -->
+  <exclude-pattern>*.css</exclude-pattern>
+  <exclude-pattern>*.scss</exclude-pattern>
+  <exclude-pattern>*.less</exclude-pattern>
+  <exclude-pattern>*.js</exclude-pattern>
 
-    <!-- Ignore all assets -->
-    <exclude-pattern>*.css</exclude-pattern>
-    <exclude-pattern>*.js</exclude-pattern>
-    <exclude-pattern>*.less</exclude-pattern>
+  <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/fig-r/psr2r-sniffer" />
 
-    <!-- Strange but without this, nothing works. -->
-    <rule ref="vendor/wp-coding-standards/wpcs/WordPress/Sniffs/Arrays/ArrayDeclarationSniff.php"/>
+  <!-- Add in some extra rules from other standards. -->
+	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+	<rule ref="Generic.Commenting.Todo"/>
 
-	<!-- WordPress Core + Docs + Extra Code Style -->
-	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-Core" />
-	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-Docs" />
-	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-Extra" />
-
-	<!-- WordPress-VIP -->
-	<rule ref="vendor/wp-coding-standards/wpcs/WordPress-VIP">
-		<!-- Ignore -->
-		<exclude name="WordPress.VIP.RestrictedFunctions" />
-		<exclude name="WordPress.VIP.DirectDatabaseQuery" />
-		<exclude name="WordPress.VIP.SuperGlobalInputUsage" />
-		<!-- END Ignore -->
-	</rule>
-
+  <!-- Include WordPress standards. -->
+  <rule ref="WordPress-Docs"/>
+  <rule ref="WordPress-Core"/>
+  <rule ref="WordPress-Extra"/>
 </ruleset>

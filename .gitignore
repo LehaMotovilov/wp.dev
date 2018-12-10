@@ -30,6 +30,7 @@ web/.htaccess
 # WordPress Themes
 /web/app/themes/twentysixteen/
 /web/app/themes/twentyfifteen/
+/web/app/themes/twentynineteen/
 /web/app/themes/storefront/
 
 # Assets

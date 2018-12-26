@@ -16,29 +16,29 @@
 	],
 	"require": {
 		"php": ">=7.0",
-		"johnpbloch/wordpress": "5.0.0",
+		"johnpbloch/wordpress": "5.0.2",
 		"vlucas/phpdotenv": "2.5.1",
 		"robmorgan/phinx": "0.10.6",
-		"wpackagist-theme/twentyfifteen": "2.1",
-		"wpackagist-theme/twentysixteen": "1.6",
-		"wpackagist-theme/twentynineteen": "1.0",
-		"wpackagist-theme/storefront": "2.4.1",
+		"wpackagist-theme/twentyfifteen": "2.2",
+		"wpackagist-theme/twentysixteen": "1.7",
+		"wpackagist-theme/twentynineteen": "1.1",
+		"wpackagist-theme/storefront": "2.4.2",
 		"wpackagist-plugin/health-check": "1.2.3",
 		"wpackagist-plugin/redis-cache": "1.4.1",
-		"wpackagist-plugin/query-monitor": "3.2.1",
-		"wpackagist-plugin/wp-smushit": "3.0.1",
-		"wpackagist-plugin/wordpress-seo": "9.2.1",
+		"wpackagist-plugin/query-monitor": "3.2.2",
+		"wpackagist-plugin/wp-smushit": "3.0.2",
+		"wpackagist-plugin/wordpress-seo": "9.3",
 		"wpackagist-plugin/wordpress-importer": "0.6.4",
 		"wpackagist-plugin/regenerate-thumbnails": "3.0.2",
-		"wpackagist-plugin/woocommerce": "3.5.2"
+		"wpackagist-plugin/woocommerce": "3.5.3"
 	},
 	"require-dev": {
 		"wpackagist-plugin/theme-check": "20160523.1",
 		"deployer/deployer": "6.3.0",
-		"squizlabs/php_codesniffer": "3.3.2",
+		"squizlabs/php_codesniffer": "3.4.0",
 		"sebastian/phpcpd": "4.1.0",
 		"phpmd/phpmd": "2.6.0",
-		"wp-coding-standards/wpcs": "1.2.0"
+		"wp-coding-standards/wpcs": "1.2.1"
 	},
 	"extra": {
 		"wordpress-install-dir": "web/wp",

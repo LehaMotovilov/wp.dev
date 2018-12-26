@@ -4,11 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d40450d110f03b6ba02c8ecd7966ef20",
+    "content-hash": "1ad15d72140bd32d30af939c8bc86ad4",
     "packages": [
         {
             "name": "cakephp/cache",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cache.git",
@@ -51,16 +51,16 @@
         },
         {
             "name": "cakephp/collection",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/collection.git",
-                "reference": "a6a410771e0fa97613fa060bba861e666a821c2e"
+                "reference": "5e28b596c85d163f8c8350c213c34b6102b641ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/collection/zipball/a6a410771e0fa97613fa060bba861e666a821c2e",
-                "reference": "a6a410771e0fa97613fa060bba861e666a821c2e",
+                "url": "https://api.github.com/repos/cakephp/collection/zipball/5e28b596c85d163f8c8350c213c34b6102b641ec",
+                "reference": "5e28b596c85d163f8c8350c213c34b6102b641ec",
                 "shasum": ""
             },
             "require": {
@@ -93,20 +93,20 @@
                 "collections",
                 "iterators"
             ],
-            "time": "2018-09-15T21:32:30+00:00"
+            "time": "2018-12-14T09:39:58+00:00"
         },
         {
             "name": "cakephp/core",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
-                "reference": "ae0fd1dd3bdf2eb1cb0c291a0573dc898d9ce6d6"
+                "reference": "02b4d6579246d7011e5062058c50c041ab542fa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/core/zipball/ae0fd1dd3bdf2eb1cb0c291a0573dc898d9ce6d6",
-                "reference": "ae0fd1dd3bdf2eb1cb0c291a0573dc898d9ce6d6",
+                "url": "https://api.github.com/repos/cakephp/core/zipball/02b4d6579246d7011e5062058c50c041ab542fa9",
+                "reference": "02b4d6579246d7011e5062058c50c041ab542fa9",
                 "shasum": ""
             },
             "require": {
@@ -142,20 +142,20 @@
                 "core",
                 "framework"
             ],
-            "time": "2018-11-13T02:29:05+00:00"
+            "time": "2018-12-13T23:20:56+00:00"
         },
         {
             "name": "cakephp/database",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/database.git",
-                "reference": "73f20ff84f032923b23627f28049044a7c264977"
+                "reference": "b5649125528f9230d81c7b870edecfbe19ecac21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/database/zipball/73f20ff84f032923b23627f28049044a7c264977",
-                "reference": "73f20ff84f032923b23627f28049044a7c264977",
+                "url": "https://api.github.com/repos/cakephp/database/zipball/b5649125528f9230d81c7b870edecfbe19ecac21",
+                "reference": "b5649125528f9230d81c7b870edecfbe19ecac21",
                 "shasum": ""
             },
             "require": {
@@ -192,20 +192,20 @@
                 "database abstraction",
                 "pdo"
             ],
-            "time": "2018-11-01T20:19:53+00:00"
+            "time": "2018-12-14T12:11:25+00:00"
         },
         {
             "name": "cakephp/datasource",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/datasource.git",
-                "reference": "174b9cc23aa82b00a816f4e82dbddcbee9a39ccb"
+                "reference": "d98a1675da0b62da834f86c976b2337db38adb49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/datasource/zipball/174b9cc23aa82b00a816f4e82dbddcbee9a39ccb",
-                "reference": "174b9cc23aa82b00a816f4e82dbddcbee9a39ccb",
+                "url": "https://api.github.com/repos/cakephp/datasource/zipball/d98a1675da0b62da834f86c976b2337db38adb49",
+                "reference": "d98a1675da0b62da834f86c976b2337db38adb49",
                 "shasum": ""
             },
             "require": {
@@ -242,7 +242,7 @@
                 "entity",
                 "query"
             ],
-            "time": "2018-12-02T03:04:13+00:00"
+            "time": "2018-12-13T23:20:56+00:00"
         },
         {
             "name": "cakephp/utility",
@@ -419,20 +419,20 @@
         },
         {
             "name": "johnpbloch/wordpress",
-            "version": "5.0.0",
+            "version": "5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnpbloch/wordpress.git",
-                "reference": "391c36c97f55384bbb3e38146752dc9ac6235d4c"
+                "reference": "572ca625f4ee58414bf6c1955105f7fb3a636aa8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnpbloch/wordpress/zipball/391c36c97f55384bbb3e38146752dc9ac6235d4c",
-                "reference": "391c36c97f55384bbb3e38146752dc9ac6235d4c",
+                "url": "https://api.github.com/repos/johnpbloch/wordpress/zipball/572ca625f4ee58414bf6c1955105f7fb3a636aa8",
+                "reference": "572ca625f4ee58414bf6c1955105f7fb3a636aa8",
                 "shasum": ""
             },
             "require": {
-                "johnpbloch/wordpress-core": "5.0.0",
+                "johnpbloch/wordpress-core": "5.0.2",
                 "johnpbloch/wordpress-core-installer": "^1.0",
                 "php": ">=5.3.2"
             },
@@ -454,27 +454,27 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2018-12-09T20:56:03+00:00"
+            "time": "2018-12-19T23:42:21+00:00"
         },
         {
             "name": "johnpbloch/wordpress-core",
-            "version": "5.0.0",
+            "version": "5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnpbloch/wordpress-core.git",
-                "reference": "a11a6399a3681ffbbf7e27ac4e372d836529fdb7"
+                "reference": "5b941ba835e52dc919bd11e49ab5fc75a71e29e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnpbloch/wordpress-core/zipball/a11a6399a3681ffbbf7e27ac4e372d836529fdb7",
-                "reference": "a11a6399a3681ffbbf7e27ac4e372d836529fdb7",
+                "url": "https://api.github.com/repos/johnpbloch/wordpress-core/zipball/5b941ba835e52dc919bd11e49ab5fc75a71e29e0",
+                "reference": "5b941ba835e52dc919bd11e49ab5fc75a71e29e0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "provide": {
-                "wordpress/core-implementation": "5.0.0"
+                "wordpress/core-implementation": "5.0.2"
             },
             "type": "wordpress-core",
             "notification-url": "https://packagist.org/downloads/",
@@ -494,7 +494,7 @@
                 "cms",
                 "wordpress"
             ],
-            "time": "2018-12-09T20:55:56+00:00"
+            "time": "2018-12-19T23:42:15+00:00"
         },
         {
             "name": "johnpbloch/wordpress-core-installer",
@@ -1117,15 +1117,15 @@
         },
         {
             "name": "wpackagist-plugin/query-monitor",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/query-monitor/",
-                "reference": "tags/3.2.1"
+                "reference": "tags/3.2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/query-monitor.3.2.1.zip",
+                "url": "https://downloads.wordpress.org/plugin/query-monitor.3.2.2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1177,15 +1177,15 @@
         },
         {
             "name": "wpackagist-plugin/woocommerce",
-            "version": "3.5.2",
+            "version": "3.5.3",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/woocommerce/",
-                "reference": "tags/3.5.2"
+                "reference": "tags/3.5.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/woocommerce.3.5.2.zip",
+                "url": "https://downloads.wordpress.org/plugin/woocommerce.3.5.3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1217,15 +1217,15 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "9.2.1",
+            "version": "9.3",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/9.2.1"
+                "reference": "tags/9.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.9.2.1.zip",
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.9.3.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1237,15 +1237,15 @@
         },
         {
             "name": "wpackagist-plugin/wp-smushit",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wp-smushit/",
-                "reference": "tags/3.0.1"
+                "reference": "tags/3.0.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wp-smushit.3.0.1.zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-smushit.3.0.2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1257,15 +1257,15 @@
         },
         {
             "name": "wpackagist-theme/storefront",
-            "version": "2.4.1",
+            "version": "2.4.2",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/storefront/",
-                "reference": "2.4.1"
+                "reference": "2.4.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/storefront.2.4.1.zip",
+                "url": "https://downloads.wordpress.org/theme/storefront.2.4.2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1277,15 +1277,15 @@
         },
         {
             "name": "wpackagist-theme/twentyfifteen",
-            "version": "2.1",
+            "version": "2.2",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/twentyfifteen/",
-                "reference": "2.1"
+                "reference": "2.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/twentyfifteen.2.1.zip",
+                "url": "https://downloads.wordpress.org/theme/twentyfifteen.2.2.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1297,15 +1297,15 @@
         },
         {
             "name": "wpackagist-theme/twentynineteen",
-            "version": "1.0",
+            "version": "1.1",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/twentynineteen/",
-                "reference": "1.0"
+                "reference": "1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/twentynineteen.1.0.zip",
+                "url": "https://downloads.wordpress.org/theme/twentynineteen.1.1.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1317,15 +1317,15 @@
         },
         {
             "name": "wpackagist-theme/twentysixteen",
-            "version": "1.6",
+            "version": "1.7",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/twentysixteen/",
-                "reference": "1.6"
+                "reference": "1.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/twentysixteen.1.6.zip",
+                "url": "https://downloads.wordpress.org/theme/twentysixteen.1.7.zip",
                 "reference": null,
                 "shasum": null
             },
@@ -1834,16 +1834,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.3.2",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "6ad28354c04b364c3c71a34e4a18b629cc3b231e"
+                "reference": "379deb987e26c7cd103a7b387aea178baec96e48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/6ad28354c04b364c3c71a34e4a18b629cc3b231e",
-                "reference": "6ad28354c04b364c3c71a34e4a18b629cc3b231e",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/379deb987e26c7cd103a7b387aea178baec96e48",
+                "reference": "379deb987e26c7cd103a7b387aea178baec96e48",
                 "shasum": ""
             },
             "require": {
@@ -1881,7 +1881,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-09-23T23:08:17+00:00"
+            "time": "2018-12-19T23:57:18+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -2096,16 +2096,16 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git",
-                "reference": "7aa217ab38156c5cb4eae0f04ae376027c407a9b"
+                "reference": "f328bcafd97377e8e5e5d7b244d5ddbf301a3a5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress-Coding-Standards/WordPress-Coding-Standards/zipball/7aa217ab38156c5cb4eae0f04ae376027c407a9b",
-                "reference": "7aa217ab38156c5cb4eae0f04ae376027c407a9b",
+                "url": "https://api.github.com/repos/WordPress-Coding-Standards/WordPress-Coding-Standards/zipball/f328bcafd97377e8e5e5d7b244d5ddbf301a3a5c",
+                "reference": "f328bcafd97377e8e5e5d7b244d5ddbf301a3a5c",
                 "shasum": ""
             },
             "require": {
@@ -2135,7 +2135,7 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2018-11-12T10:13:12+00:00"
+            "time": "2018-12-18T09:43:51+00:00"
         },
         {
             "name": "wpackagist-plugin/theme-check",

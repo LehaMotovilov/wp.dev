@@ -9,6 +9,7 @@
   <exclude-pattern>/node_modules/*</exclude-pattern>
 
   <!-- Ignore all assets. -->
+  <exclude-pattern>./configs/*</exclude-pattern>
   <exclude-pattern>*.css</exclude-pattern>
   <exclude-pattern>*.scss</exclude-pattern>
   <exclude-pattern>*.less</exclude-pattern>

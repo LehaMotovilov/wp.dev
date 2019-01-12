@@ -20,14 +20,12 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 
 * ```composer install```
 * ```mv configs/.env.example configs/.env && nano configs/.env```
-* Login admin/admin - http://wp.test/wp/wp-admin/
 * Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
 
 ## How to use?
 
 * Deploy example ```vendor/bin/dep deploy production```
 * Run Migrations ```composer migrate:dev```
-* Run Tests ```composer tests```
 * Run PHP Code Style check ```composer cs```
 * Run PHP Copy Paste Detector check ```composer cp```
 * Run PHP Mess Detector check ```composer md```

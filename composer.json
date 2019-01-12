@@ -24,8 +24,6 @@
 		"wpackagist-theme/twentynineteen": "1.2",
 		"wpackagist-theme/storefront": "2.4.2",
 		"wpackagist-plugin/woo-gutenberg-products-block": "1.2.0",
-		"wpackagist-plugin/health-check": "1.2.3",
-		"wpackagist-plugin/redis-cache": "1.4.1",
 		"wpackagist-plugin/query-monitor": "3.2.2",
 		"wpackagist-plugin/wp-smushit": "3.0.2",
 		"wpackagist-plugin/wordpress-seo": "9.4",

@@ -19,7 +19,7 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 ## How to install?
 
 * ```composer install```
-* ```mv configs/.env.example configs/.env && nano configs/.env```
+* ```cp configs/.env.example configs/.env && nano configs/.env```
 * Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
 
 ## How to use?

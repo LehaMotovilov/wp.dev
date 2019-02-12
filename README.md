@@ -24,9 +24,16 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 
 ## How to use?
 
-* Deploy example ```vendor/bin/dep deploy production```
+* Deploy example ```./vendor/bin/dep deploy production```
 * Run Migrations ```composer migrate:dev```
 * Run PHP Code Style check ```composer cs```
 * Run PHP Copy Paste Detector check ```composer cp```
 * Run PHP Mess Detector check ```composer md```
-* Run WP-CLI example ```wp-cli/wp-cli.phar --info```
+* Run WP-CLI example ```./wp-cli/wp-cli.phar --info```
+
+### How to backup DB and images locally?
+
+* ```vagrant ssh```
+* ```cd /srv/www/``` <-- and add project folder here
+* ```./wp-cli/wp-cli.phar db export ./backups/db-export.sql```
+* ```tar -czf ./backups/uploads.tar.gz web/app/uploads/```

@@ -13,7 +13,6 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 * PHP Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/)
 * PHP Copy Paste Detector - [Copy/Paste Detector](https://github.com/sebastianbergmann/phpcpd)
 * PHP Mess Detector - [Mess Detector](https://phpmd.org/)
-* JS Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/javascript/)
 
 ## How to install?
 

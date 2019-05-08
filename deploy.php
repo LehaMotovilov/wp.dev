@@ -37,16 +37,14 @@ task( 'deploy:reload', function () {
 	);
 } )->desc('Services nginx, php5-fpm, mysql are restarted');
 
-// Run DB migrations.
-task( 'deploy:migrations', function () {
-	run(
-		'cd {{release_path}} &&
-		vendor/bin/phinx migrate -e development'
-	);
-} )->desc('DB migrations');
+// Delete .git folder.
+set('clear_paths', [
+	'.git'
+]);
 
 // Run deploy.
 task('deploy', [
+	'deploy:info',
 	'deploy:prepare',
 	'deploy:release',
 	'deploy:update_code',
@@ -55,6 +53,9 @@ task('deploy', [
 	'deploy:symlink',
 	'deploy:cache',
 	'deploy:reload',
-	'deploy:migrations',
+	'deploy:clear_paths',
 	'cleanup'
 ])->desc('Deploy your project');
+
+// Print simple success.
+after('deploy', 'success');

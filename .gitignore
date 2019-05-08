@@ -32,7 +32,3 @@ web/.htaccess
 /web/app/themes/twentyfifteen/
 /web/app/themes/twentynineteen/
 /web/app/themes/storefront/
-
-# Assets
-tests/_output/*
-tests/_support/_generated/*

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "469dbefda35b2c9463a307a28824dbde",
+    "content-hash": "04f4a81a3dc30f62ec8387daeceb39eb",
     "packages": [
         {
             "name": "composer/installers",
@@ -508,15 +508,15 @@
         },
         {
             "name": "wpackagist-plugin/wordpress-seo",
-            "version": "11.8",
+            "version": "11.9",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
-                "reference": "tags/11.8"
+                "reference": "tags/11.9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.11.8.zip"
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.11.9.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
@@ -544,15 +544,15 @@
         },
         {
             "name": "wpackagist-theme/storefront",
-            "version": "2.5.1",
+            "version": "2.5.3",
             "source": {
                 "type": "svn",
                 "url": "https://themes.svn.wordpress.org/storefront/",
-                "reference": "2.5.1"
+                "reference": "2.5.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/theme/storefront.2.5.1.zip"
+                "url": "https://downloads.wordpress.org/theme/storefront.2.5.3.zip"
             },
             "require": {
                 "composer/installers": "~1.0"

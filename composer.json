@@ -21,11 +21,11 @@
 		"wpackagist-theme/twentyfifteen": "2.5",
 		"wpackagist-theme/twentysixteen": "2.0",
 		"wpackagist-theme/twentynineteen": "1.4",
-		"wpackagist-theme/storefront": "2.5.1",
+		"wpackagist-theme/storefront": "2.5.3",
 		"wpackagist-plugin/woo-gutenberg-products-block": "2.3.0",
 		"wpackagist-plugin/query-monitor": "3.3.7",
 		"wpackagist-plugin/wp-smushit": "3.2.4",
-		"wpackagist-plugin/wordpress-seo": "11.8",
+		"wpackagist-plugin/wordpress-seo": "11.9",
 		"wpackagist-plugin/wordpress-importer": "0.6.4",
 		"wpackagist-plugin/regenerate-thumbnails": "3.1.1",
 		"wpackagist-plugin/woocommerce": "3.7.0"

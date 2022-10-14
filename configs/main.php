@@ -79,6 +79,11 @@
 	define( 'EMPTY_TRASH_DAYS',	0 ); // Don't use trash.
 
 	/**
+	 * Default theme.
+	 */
+	define( 'WP_DEFAULT_THEME', 'twentytwentytwo' );
+
+	/**
 	 * Bootstrap WordPress.
 	 */
 	if ( !defined( 'ABSPATH' ) ) {

@@ -14,7 +14,7 @@ inventory( __DIR__ . '/configs/deploy.yml' );
 set( 'repository', 'https://github.com/LehaMotovilov/wp.dev' );
 
 // Lets share uploads and vendor folders.
-set( 'shared_dirs', ['web/app/uploads', 'vendor'] );
+set( 'shared_dirs', ['public_html/app/uploads', 'vendor'] );
 
 // Main config with environment variables.
 set( 'shared_files', ['configs/.env'] );

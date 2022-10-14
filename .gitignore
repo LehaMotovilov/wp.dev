@@ -3,13 +3,13 @@ vendor/*
 !vendor/.gitkeep
 
 # WordPress Core
-/web/wp
+/public_html/wp
 
 # Uploads / Upgrade
-web/app/uploads/*
-!web/app/uploads/.gitkeep
-web/app/upgrade/*
-!web/app/upgrade/.gitkeep
+public_html/app/uploads/*
+!public_html/app/uploads/.gitkeep
+public_html/app/upgrade/*
+!public_html/app/upgrade/.gitkeep
 
 # Environment Variables
 /configs/.env
@@ -17,18 +17,18 @@ web/app/upgrade/*
 
 # .htaccess and other stuff
 .idea/
-web/.htaccess
+public_html/.htaccess
 .DS_Store
 
 # WordPress Plugins
-/web/app/db.php
-/web/app/plugins/*/
-!/web/app/plugins/some-custom-plugin/
-/web/app/mu-plugins/*/
-!/web/app/plugins/some-custom-mu-plugin/
+/public_html/app/db.php
+/public_html/app/plugins/*/
+!/public_html/app/plugins/some-custom-plugin/
+/public_html/app/mu-plugins/*/
+!/public_html/app/plugins/some-custom-mu-plugin/
 
 # WordPress Themes
-/web/app/themes/twentysixteen/
-/web/app/themes/twentyfifteen/
-/web/app/themes/twentynineteen/
-/web/app/themes/storefront/
+/public_html/app/themes/twentysixteen/
+/public_html/app/themes/twentyfifteen/
+/public_html/app/themes/twentynineteen/
+/public_html/app/themes/storefront/

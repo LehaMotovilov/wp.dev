@@ -30,8 +30,8 @@
 	 * Custom Content Directory.
 	 */
 	define( 'CONTENT_DIR', 		'/app' );
-	define( 'WEB_ROOT_PATH',	dirname( __DIR__ ) . '/web' );
-	define( 'WP_CONTENT_DIR', 	dirname( __DIR__ ) . '/web' . CONTENT_DIR );
+	define( 'WEB_ROOT_PATH', dirname(__DIR__) . '/public_html');
+	define( 'WP_CONTENT_DIR', 	dirname(__DIR__) . '/public_html' . CONTENT_DIR );
 	define( 'WP_CONTENT_URL', 	WP_HOME . CONTENT_DIR );
 
 	/**
@@ -82,5 +82,5 @@
 	 * Bootstrap WordPress.
 	 */
 	if ( !defined( 'ABSPATH' ) ) {
-		define( 'ABSPATH', dirname( __DIR__ ) . '/web/wp/' );
+		define( 'ABSPATH', dirname(__DIR__) . '/public_html/wp/');
 	}

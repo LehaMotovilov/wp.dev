@@ -18,7 +18,7 @@
 		"php": ">=7.0",
 		"johnpbloch/wordpress": "6.0.2",
 		"vlucas/phpdotenv": "5.4.1",
-		"wpackagist-theme/twentytwentyone": "1.6",
+		"wpackagist-theme/twentytwentytwo": "1.2",
 		"wpackagist-plugin/query-monitor": "3.10.1",
 		"wpackagist-plugin/wordpress-seo": "19.8",
 		"wpackagist-plugin/wordpress-importer": "0.8",

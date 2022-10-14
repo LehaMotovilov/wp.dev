@@ -3,7 +3,7 @@
 	 * Dynamically load environment variables from file .env
      */
   if ( file_exists( __DIR__ . '/.env' ) ) {
-		$dotenv = Dotenv\Dotenv::create( __DIR__ );
+	  	$dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__);
 		$dotenv->load();
 		$dotenv->required([
 			'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'WP_HOME', 'WP_SITEURL', 'DB_PREFIX'

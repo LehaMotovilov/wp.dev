@@ -38,7 +38,7 @@
 		"wp-coding-standards/wpcs": "2.1.1"
 	},
 	"extra": {
-		"wordpress-install-dir": "web/wp",
+		"wordpress-install-dir": "public_html/wp",
 		"installer-paths": {
 			"web/app/mu-plugins/{$name}/": [
 				"type:wordpress-muplugin",
@@ -49,8 +49,8 @@
 		}
 	},
 	"scripts": {
-		"cs": "vendor/bin/phpcs --standard=phpcs.ruleset.xml web/app/themes/twentyfifteen -s",
-		"cp": "vendor/bin/phpcpd --min-lines=3 web/app/themes/twentyfifteen",
-		"md": "vendor/bin/phpmd web/app/themes/twentyfifteen text phpmd.ruleset.xml"
+		"cs": "vendor/bin/phpcs --standard=phpcs.ruleset.xml public_html/app/themes/twentyfifteen -s",
+		"cp": "vendor/bin/phpcpd --min-lines=3 public_html/app/themes/twentyfifteen",
+		"md": "vendor/bin/phpmd public_html/app/themes/twentyfifteen text phpmd.ruleset.xml"
 	}
 }

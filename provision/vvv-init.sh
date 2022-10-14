@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Provision WordPress Stable
-
 set -eo pipefail
 
-echo " * Custom site template provisioner ${VVV_SITE_NAME} - downloads and installs a copy of WP stable for testing, building client sites, etc"
+echo " * Site provisioner - ${VVV_SITE_NAME}"
 
-# fetch the first host as the primary domain. If none is available, generate a default using the site name
+# Fetch the first host as the primary domain. If none is available, generate a default using the site name.
 DB_NAME=$(get_config_value 'db_name' "${VVV_SITE_NAME}")
 DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*]/}
+DB_USER=$(get_config_value 'db_user' 'wp')
+DB_PASSWORD=$(get_config_value 'db_password' 'wp')
+DB_PREFIX=$(get_config_value 'db_prefix' 'wp_')
 PUBLIC_DIR=$(get_config_value 'public_dir' "public_html")
 
 PUBLIC_DIR_PATH="${VVV_PATH_TO_SITE}"
@@ -74,8 +75,17 @@ END_HEREDOC
 
 # Install wp, plugins, themes and other dependencies.
 composer_install() {
-	echo -e "Composer install - ${VVV_PATH_TO_SITE}"
-	composer install --no-interaction
+	noroot composer install --no-interaction
+}
+
+# Setup default config via ENV variables.
+setup_config() {
+	noroot cp -f "${VVV_PATH_TO_SITE}/configs/.env.example" "${VVV_PATH_TO_SITE}/configs/.env"
+
+	sed -i "s/DB_EXAMPLE_NAME/'${DB_NAME}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_USER/'${DB_USER}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_PASSWORD/'${DB_PASSWORD}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_PREFIX/'${DB_PREFIX}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
 }
 
 cd "${VVV_PATH_TO_SITE}"
@@ -84,5 +94,6 @@ setup_database
 setup_nginx_folders
 copy_nginx_configs
 composer_install
+setup_config
 
-echo " * Site Template provisioner script completed for ${VVV_SITE_NAME}"
+echo " * Site provisioner script completed for ${VVV_SITE_NAME}"

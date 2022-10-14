@@ -9,6 +9,7 @@ DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*]/}
 DB_USER=$(get_config_value 'db_user' 'wp')
 DB_PASSWORD=$(get_config_value 'db_password' 'wp')
 DB_PREFIX=$(get_config_value 'db_prefix' 'wp_')
+SITE_TITLE=$(get_config_value 'site_title' "${DOMAIN}")
 PUBLIC_DIR=$(get_config_value 'public_dir' "public_html")
 
 PUBLIC_DIR_PATH="${VVV_PATH_TO_SITE}"

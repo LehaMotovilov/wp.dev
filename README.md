@@ -16,6 +16,21 @@ I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagra
 
 ## How to install?
 
+### Install with VVV
+* Install https://varyingvagrantvagrants.org/
+* Add new site into ```config/config.yml```
+```
+  wp.test:
+    skip_provisioning: false
+    repo: https://github.com/LehaMotovilov/wp.dev
+    hosts:
+      - wp.test
+```
+* Run ```vagrant provision```
+* Done, website is here - http://wp.test/
+
+### Custom install
+* Install ubuntu, php, nginx, mariadb
 * ```composer install```
 * ```cp configs/.env.example configs/.env && nano configs/.env```
 * Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```

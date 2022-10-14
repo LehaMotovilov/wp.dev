@@ -82,10 +82,10 @@ composer_install() {
 setup_config() {
 	noroot cp -f "${VVV_PATH_TO_SITE}/configs/.env.example" "${VVV_PATH_TO_SITE}/configs/.env"
 
-	sed -i "s/DB_EXAMPLE_NAME/'${DB_NAME}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
-	sed -i "s/DB_EXAMPLE_USER/'${DB_USER}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
-	sed -i "s/DB_EXAMPLE_PASSWORD/'${DB_PASSWORD}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
-	sed -i "s/DB_EXAMPLE_PREFIX/'${DB_PREFIX}'/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_NAME/${DB_NAME}/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_USER/${DB_USER}/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_PASSWORD/${DB_PASSWORD}/g" "${VVV_PATH_TO_SITE}/configs/.env"
+	sed -i "s/DB_EXAMPLE_PREFIX/${DB_PREFIX}/g" "${VVV_PATH_TO_SITE}/configs/.env"
 }
 
 cd "${VVV_PATH_TO_SITE}"

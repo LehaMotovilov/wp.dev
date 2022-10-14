@@ -99,6 +99,14 @@ install_wp() {
   echo " * WordPress was installed, with the username '${ADMIN_USER}', and the password '${ADMIN_PASSWORD}' at '${ADMIN_EMAIL}'"
 }
 
+cd "${VVV_PATH_TO_SITE}"
+
+setup_database
+setup_nginx_folders
+copy_nginx_configs
+composer_install
+setup_config
+
 if ! $(noroot wp core is-installed ); then
 	echo " * WordPress is present but isn't installed to the database, checking for SQL dumps in wp-content/database.sql or the main backup folder."
 	if [ -f "${PUBLIC_DIR_PATH}/wp-content/database.sql" ]; then
@@ -109,14 +117,5 @@ if ! $(noroot wp core is-installed ); then
 	  install_wp
 	fi
 fi
-
-
-cd "${VVV_PATH_TO_SITE}"
-
-setup_database
-setup_nginx_folders
-copy_nginx_configs
-composer_install
-setup_config
 
 echo " * Site provisioner script completed for ${VVV_SITE_NAME}"

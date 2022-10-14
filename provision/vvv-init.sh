@@ -88,6 +88,29 @@ setup_config() {
 	sed -i "s/DB_EXAMPLE_PREFIX/${DB_PREFIX}/g" "${VVV_PATH_TO_SITE}/configs/.env"
 }
 
+install_wp() {
+  echo " * Installing WordPress"
+  ADMIN_USER=$(get_config_value 'admin_user' "admin")
+  ADMIN_PASSWORD=$(get_config_value 'admin_password' "password")
+  ADMIN_EMAIL=$(get_config_value 'admin_email' "admin@local.test")
+
+  echo " * Installing using wp core install --url=\"${DOMAIN}\" --title=\"${SITE_TITLE}\" --admin_name=\"${ADMIN_USER}\" --admin_email=\"${ADMIN_EMAIL}\" --admin_password=\"${ADMIN_PASSWORD}\""
+  noroot wp core install --url="${DOMAIN}" --title="${SITE_TITLE}" --admin_name="${ADMIN_USER}" --admin_email="${ADMIN_EMAIL}" --admin_password="${ADMIN_PASSWORD}"
+  echo " * WordPress was installed, with the username '${ADMIN_USER}', and the password '${ADMIN_PASSWORD}' at '${ADMIN_EMAIL}'"
+}
+
+if ! $(noroot wp core is-installed ); then
+	echo " * WordPress is present but isn't installed to the database, checking for SQL dumps in wp-content/database.sql or the main backup folder."
+	if [ -f "${PUBLIC_DIR_PATH}/wp-content/database.sql" ]; then
+	  restore_db_backup "${PUBLIC_DIR_PATH}/wp-content/database.sql"
+	elif [ -f "/srv/database/backups/${VVV_SITE_NAME}.sql" ]; then
+	  restore_db_backup "/srv/database/backups/${VVV_SITE_NAME}.sql"
+	else
+	  install_wp
+	fi
+fi
+
+
 cd "${VVV_PATH_TO_SITE}"
 
 setup_database

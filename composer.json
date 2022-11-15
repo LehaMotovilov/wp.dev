@@ -17,7 +17,7 @@
 	"require": {
 		"php": ">=7.4",
 		"johnpbloch/wordpress": "6.0.2",
-		"vlucas/phpdotenv": "5.4.1",
+		"vlucas/phpdotenv": "5.5.0",
 		"wpackagist-theme/twentytwentytwo": "1.2",
 		"wpackagist-plugin/query-monitor": "3.10.1",
 		"wpackagist-plugin/wordpress-seo": "19.8",

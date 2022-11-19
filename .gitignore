@@ -1,6 +1,7 @@
 # Vendor (e.g. Composer)
 vendor/*
 !vendor/.gitkeep
+/log
 
 # WordPress Core
 /public_html/wp
@@ -31,4 +32,5 @@ public_html/.htaccess
 /public_html/app/themes/twentysixteen/
 /public_html/app/themes/twentyfifteen/
 /public_html/app/themes/twentynineteen/
+/public_html/app/themes/twentytwentytwo/
 /public_html/app/themes/storefront/

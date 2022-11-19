@@ -1,4 +1,8 @@
 <?php
+	/**
+	 * https://make.wordpress.org/core/2020/07/24/new-wp_get_environment_type-function-in-wordpress-5-5/
+	 */
+	define( 'WP_ENVIRONMENT_TYPE', 'production' );
 
 	/**
 	 * FTP config

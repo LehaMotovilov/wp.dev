@@ -34,8 +34,7 @@
 		"wordpress-install-dir": "public_html/wp",
 		"installer-paths": {
 			"public_html/app/mu-plugins/{$name}/": [
-				"type:wordpress-muplugin",
-				"wpackagist-plugin/query-monitor"
+				"type:wordpress-muplugin"
 			],
 			"public_html/app/plugins/{$name}/": ["type:wordpress-plugin"],
 			"public_html/app/themes/{$name}/": ["type:wordpress-theme"]

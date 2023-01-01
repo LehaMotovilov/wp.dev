@@ -20,7 +20,7 @@
 		"vlucas/phpdotenv": "5.5.0",
 		"wpackagist-theme/twentytwentytwo": "1.3",
 		"wpackagist-plugin/query-monitor": "3.10.1",
-		"wpackagist-plugin/wordpress-seo": "19.11",
+		"wpackagist-plugin/wordpress-seo": "19.13",
 		"wpackagist-plugin/regenerate-thumbnails": "3.1.5"
 	},
 	"require-dev": {

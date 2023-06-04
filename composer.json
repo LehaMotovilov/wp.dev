@@ -19,7 +19,7 @@
 		"johnpbloch/wordpress": "6.2.2",
 		"vlucas/phpdotenv": "5.5.0",
 		"wpackagist-theme/twentytwentytwo": "1.4",
-		"wpackagist-plugin/query-monitor": "3.12.2",
+		"wpackagist-plugin/query-monitor": "3.12.3",
 		"wpackagist-plugin/wordpress-seo": "20.8",
 		"wpackagist-plugin/regenerate-thumbnails": "3.1.5"
 	},

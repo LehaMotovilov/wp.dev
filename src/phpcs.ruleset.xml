@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="WP.Dev">
+  <description>A custom set of rules to check WP project.</description>
+
+  <!-- Exclude the Composer Vendor directory. -->
+  <exclude-pattern>/vendor/*</exclude-pattern>
+
+  <!-- Exclude the Node Modules directory. -->
+  <exclude-pattern>/node_modules/*</exclude-pattern>
+
+  <!-- Ignore all assets. -->
+  <exclude-pattern>./configs/*</exclude-pattern>
+  <exclude-pattern>*.css</exclude-pattern>
+  <exclude-pattern>*.scss</exclude-pattern>
+  <exclude-pattern>*.less</exclude-pattern>
+  <exclude-pattern>*.js</exclude-pattern>
+
+  <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/fig-r/psr2r-sniffer" />
+
+  <!-- Add in some extra rules from other standards. -->
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+  <rule ref="Generic.Commenting.Todo"/>
+
+  <!-- Include WordPress standards. -->
+  <rule ref="WordPress-Docs"/>
+  <rule ref="WordPress-Core"/>
+  <rule ref="WordPress-Extra"/>
+</ruleset>

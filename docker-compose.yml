@@ -1,0 +1,58 @@
+version: '3.8'
+
+# Services
+services:
+
+    # PHP Service
+    php:
+        build:
+            dockerfile: ./provision/php/php-dockerfile
+        env_file:
+            - ./provision/config/.env
+        restart: unless-stopped
+        volumes:
+            - './src:/var/www/html'
+        depends_on:
+            - mariadb
+        links:
+            - mariadb
+  
+    # Nginx Service
+    nginx:
+        image: nginx:latest
+        ports:
+            - 80:80
+        links:
+            - 'php'
+        restart: unless-stopped
+        volumes:
+            - './src:/var/www/html'
+            - './provision/nginx:/etc/nginx/conf.d'
+        depends_on:
+            - php
+
+    # MariaDB Service
+    mariadb:
+        image: mariadb:10.11
+        env_file:
+            - ./provision/config/.env
+        restart: unless-stopped
+        command: --init-file /data/application/init.sql
+        volumes:
+            - ./provision/db/init.sql:/data/application/init.sql
+            - mysqldata:/var/lib/mysql
+
+    # phpMyAdmin Service
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        restart: unless-stopped
+        ports:
+            - 8080:80
+        environment:
+            PMA_HOST: mariadb
+        depends_on:
+            - mariadb
+
+# Volumes
+volumes:
+  mysqldata:

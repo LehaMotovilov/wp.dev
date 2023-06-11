@@ -1,51 +1,33 @@
 ## wp.dev
-Another modern WordPress stack. Enjoy :)
-I highly recommend to use it with [VVV](https://github.com/Varying-Vagrant-Vagrants/VVV)
+Another modern WordPress stack. Enjoy 🤓 👍
 
-## Some features:
+## Features:
 
-* For deploy - [Deployer](http://deployer.org/)
+* Docker support - [Docker](https://www.docker.com/)
 * Dependency Manager for PHP - [Composer](https://getcomposer.org/)
 * Dependency Manager for WP (plugins/themes) - [WordPress Packagist](https://wpackagist.org/)
 * For environment variables - [phpdotenv](https://github.com/vlucas/phpdotenv)
 * WP CLI support - [WP CLI](http://wp-cli.org/)
-* Codeception for testing - [Codeception](http://codeception.com/)
 * PHP Code Style for WordPress - [Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/)
-* PHP Copy Paste Detector - [Copy/Paste Detector](https://github.com/sebastianbergmann/phpcpd)
 * PHP Mess Detector - [Mess Detector](https://phpmd.org/)
 
 ## How to install?
 
-### Install with VVV
-* Install https://varyingvagrantvagrants.org/
-* Add new site into ```config/config.yml```
-```
-  wp.test:
-    skip_provisioning: false
-    repo: https://github.com/LehaMotovilov/wp.dev
-    hosts:
-      - wp.test
-```
-* Run ```vagrant provision```
-* Done, website is here - http://wp.test/
+### Install with Docker
+* Install [Docker](https://www.docker.com/)
+* Run ```docker-compose up -d```
+* Run ```docker-compose exec php composer install```
+* Run ```docker-compose exec php composer wp:import```
+* Open website - [localhost](http://localhost/)
+* Admin area(credentials: admin/admin) - [localhost](http://localhost/wp/wp-admin)
 
-### Custom install
-* Install ubuntu, php, nginx, mariadb
-* ```composer install```
-* ```cp configs/.env.example configs/.env && nano configs/.env```
-* Optional ```mv configs/deploy.yml.example configs/deploy.yml && nano configs/deploy.yml```
+### How to use?
 
-## How to use?
-
-* Deploy example ```./vendor/bin/dep deploy production```
-* Run PHP Code Style check ```composer cs```
-* Run PHP Copy Paste Detector check ```composer cp```
-* Run PHP Mess Detector check ```composer md```
-* Run WP-CLI example ```./wp-cli/wp-cli.phar --info```
+* Run PHP Code Style check ```docker-compose exec php composer cs```
+* Run PHP Mess Detector check ```docker-compose exec php composer md```
+* Run WP-CLI example ```docker-compose exec php composer wp:info```
 
 ### How to backup DB and images locally?
 
-* ```vagrant ssh```
-* ```cd /srv/www/``` <-- and add project folder here
-* ```./wp-cli/wp-cli.phar db export ./backups/db-export.sql```
-* ```tar -czf ./backups/uploads.tar.gz web/app/uploads/```
+* Export DB and Uploads ```docker-compose exec php composer wp:export```
+* Import DB and Uploads ```docker-compose exec php composer wp:import```

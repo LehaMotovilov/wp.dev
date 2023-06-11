@@ -1,36 +1,29 @@
 # Vendor (e.g. Composer)
-vendor/*
-!vendor/.gitkeep
+src/vendor/*
+!src/vendor/.gitkeep
 /log
 
 # WordPress Core
-/public_html/wp
+src/public_html/wp
 
-# Uploads / Upgrade
-public_html/app/uploads/*
-!public_html/app/uploads/.gitkeep
-public_html/app/upgrade/*
-!public_html/app/upgrade/.gitkeep
-
-# Environment Variables
-/configs/.env
-/configs/deploy.yml
+# Uploads / Upgrade / Backups
+src/public_html/app/uploads/*
+!src/public_html/app/uploads/.gitkeep
+src/public_html/app/upgrade/*
+!src/public_html/app/upgrade/.gitkeep
+!src/backups/.gitkeep
 
 # .htaccess and other stuff
 .idea/
-public_html/.htaccess
+.vscode/
 .DS_Store
 
 # WordPress Plugins
-/public_html/app/db.php
-/public_html/app/plugins/*/
-!/public_html/app/plugins/some-custom-plugin/
-/public_html/app/mu-plugins/*/
-!/public_html/app/plugins/some-custom-mu-plugin/
+/src/public_html/app/db.php
+/src/public_html/app/plugins/*/
+!/src/public_html/app/plugins/some-custom-plugin/
+/src/public_html/app/mu-plugins/*/
+!/src/public_html/app/plugins/some-custom-mu-plugin/
 
 # WordPress Themes
-/public_html/app/themes/twentysixteen/
-/public_html/app/themes/twentyfifteen/
-/public_html/app/themes/twentynineteen/
-/public_html/app/themes/twentytwentytwo/
-/public_html/app/themes/storefront/
+/src/public_html/app/themes/twentytwentytwo/

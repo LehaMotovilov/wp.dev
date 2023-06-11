@@ -1,5 +1,6 @@
 ## wp.dev
-Another modern WordPress stack. Enjoy 🤓 👍
+Here's another modern WordPress stack, proudly made in Ukraine 🇺🇦🇺🇦🇺🇦. 
+This local environment for WordPress in Docker comes with composer and other essential tools to help you get started.
 
 ## Features:
 

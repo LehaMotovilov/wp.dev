@@ -26,4 +26,4 @@ src/public_html/app/upgrade/*
 !/src/public_html/app/plugins/some-custom-mu-plugin/
 
 # WordPress Themes
-/src/public_html/app/themes/twentytwentytwo/
+/src/public_html/app/themes/twentytwentyfour/

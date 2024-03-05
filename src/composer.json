@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"authors": [
 		{
-			"name": "Aleksey Motovilov",
+			"name": "Oleksii Motovilov",
 			"email": "lehaqs@gmail.com"
 		}
 	],
@@ -15,18 +15,16 @@
 		}
 	],
 	"require": {
-		"php": ">=8.0",
+		"php": ">=8.1",
 		"johnpbloch/wordpress": "6.4.3",
-		"vlucas/phpdotenv": "5.5.0",
-		"wpackagist-theme/twentytwentytwo": "1.4",
-		"wpackagist-plugin/query-monitor": "3.15.0",
-		"wpackagist-plugin/wordpress-seo": "22.2",
-		"wpackagist-plugin/regenerate-thumbnails": "3.1.6"
+		"vlucas/phpdotenv": "5.6.0",
+		"wpackagist-theme/twentytwentyfour": "1.0",
+		"wpackagist-plugin/query-monitor": "3.15.0"
 	},
 	"require-dev": {
 		"squizlabs/php_codesniffer": "3.9.0",
-		"phpmd/phpmd": "2.13.0",
-		"wp-coding-standards/wpcs": "3.0.0",
+		"phpmd/phpmd": "2.15.0",
+		"wp-coding-standards/wpcs": "3.0.1",
 		"wp-cli/wp-cli-bundle": "2.10.0"
 	},
 	"extra": {
@@ -53,7 +51,8 @@
 	"config": {
 		"allow-plugins": {
 			"johnpbloch/wordpress-core-installer": true,
-			"composer/installers": true
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	}
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ec1ae808f1af83f1b8760d852a1ed3f",
+    "content-hash": "ec914c8ebd583a9db701753b8cf506fb",
     "packages": [
         {
             "name": "composer/installers",
@@ -761,15 +761,15 @@
         },
         {
             "name": "wpackagist-plugin/query-monitor",
-            "version": "3.16.2",
+            "version": "3.16.3",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/query-monitor/",
-                "reference": "tags/3.16.2"
+                "reference": "tags/3.16.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/query-monitor.3.16.2.zip"
+                "url": "https://downloads.wordpress.org/plugin/query-monitor.3.16.3.zip"
             },
             "require": {
                 "composer/installers": "^1.0 || ^2.0"
